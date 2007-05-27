@@ -54,7 +54,7 @@ def easter_related_holidays(year):
     
     return easter_days
 
-def holidays(start, end):
+def holidays_german(start, end):
     """Returns a list of dates between start and end that are holidays."""
     hdays = []
     # Berechne alle Feiertage in den Jahren a bis b.
@@ -65,14 +65,18 @@ def holidays(start, end):
         for month, day in STATIC_GERMAN_HOLIDAYS:
             hdays.append(datetime.date(year, month, day))
         hdays += easter_related_holidays(year)
-    
     return hdays
 
 def workdays(start, end):
-    """Calculates the number of working days between two given dates."""
-    def day_before(day):
-        """Returns the day before 'day'."""
-        return datetime.date.fromordinal(day.toordinal() - 1)
+    """Calculates the number of working days (Mo-Fr) between two given dates.
+    
+    Whereas the workdays are calculated siilar to Python slice notation: [start : end[
+    Example:
+    >>> workdays(datetime.date(2007, 1, 26), datetime.date(2007,  1,  27)) # Fr - Sa
+    1
+    >>> workdays(datetime.date(2007, 1, 28), datetime.date(2007,  1,  29)) # Su - Mo
+    0
+    """
     
     def day_after(day):
         """Returns the day after 'day'."""
@@ -82,15 +86,14 @@ def workdays(start, end):
         raise ValueError, "can't handle  negative timespan! %r > %r" % (start, end)
     
     # Wenn Anfangstag auf Wochenende liegt, addiere Tage bis Montag
-    while start.isoweekday() >= 6:
+    while start.isoweekday() > 5:
         start = day_after(start)
     
     # Wenn Endtag auf Wochenende liegt, substrahiere Tage bis Freitag
-    while end.isoweekday() >= 6:
-        end = day_before(end)
+    while end.isoweekday() > 5:
+        end = day_after(end)
     
-    delta = end - start
-    days = delta.days
+    days = (end - start).days
     
     # Count weekends:
     # if weekday start < weekday end: n / 7
@@ -98,84 +101,180 @@ def workdays(start, end):
     number_of_weekends = days / 7
     if start.isoweekday() > end.isoweekday():
         number_of_weekends += 1
-    
     days = days - 2 * number_of_weekends
+    if days < 0:
+        raise RuntimeError, "%r days difference %r|%r|%r" % (days, start, end, number_of_weekends)
     return days
 
 def workdays_german(start, end):
     """Calculates the number of working days between two given dates while considering german holidays."""    
     days = workdays(start, end)
     # Deduct Holidays (but only the ones not on weekends)
-    holid = [x for x in holidays(start, end) if (x >= start) and (x < end) and (x.isoweekday() < 6)]
+    holid = [x for x in holidays_german(start, end) if (x >= start) and (x < end) and (x.isoweekday() < 6)]
     return days - len(holid)
     
 def workdayhours_german(start, end):
     """Calculates the number of hours expect weekends and german holidays between two given datetimes."""
-    noncountingdays = (end.date() - start.date()) - datetime.timedelta(workdays_german(start.date(), end.date()))
+    noncountingdays = (end.date() - start.date()) - \
+                       datetime.timedelta(workdays_german(start.date(), end.date()))
     delta = (end - start - noncountingdays)
     return (delta.days * 24) + (delta.seconds / 60.0 / 60.0)
+
+def is_workday_german(day):
+    """Checks if a day is a workday in germany (NRW).
     
+    >>> is_workday_german(datetime.date(2007, 1, 1))
+    False
+    >>> is_workday_german(datetime.date(2007, 1, 2))
+    True
+    """
+    if day.isoweekday() > 5:
+        return False # weekend
+    if day in holidays_german(day, day):
+        return False
+    return True
+
+def next_workday_german(startday):
+    """Returns the next workday after start.
+    
+    >>> next_workday_german(datetime.date(2006, 12, 29))
+    datetime.date(2007, 1, 2)
+    """
+    
+    day_ordinal = startday.toordinal() + 1
+    while not is_workday_german(datetime.date.fromordinal(day_ordinal)):
+        day_ordinal += 1
+    return datetime.date.fromordinal(day_ordinal)
+
 class WorkdayTests(unittest.TestCase):
-    #     November 2006         December 2006          January 2007
-    #  S  M Tu  W Th  F  S   S  M Tu  W Th  F  S   S  M Tu  W Th  F  S
-    #           1  2  3  4                  1  2   1  2  3  4  5  6  7
-    #  5  6  7  8  9 10 11   3  4  5  6  7  8  9   8  9 10 11 12 13 14
-    # 12 13 14 15 16 17 18  10 11 12 13 14 15 16  15 16 17 18 19 20 21
-    # 19 20 21 22 23 24 25  17 18 19 20 21 22 23  22 23 24 25 26 27 28
-    # 26 27 28 29 30        24 25 26 27 28 29 30  29 30 31            
-    #                       31
+    """Testcases for workdays module. Calendar hint:
+        November 2006         December 2006          January 2007 
+     S  M Tu  W Th  F  S   S  M Tu  W Th  F  S   S  M Tu  W Th  F  S
+              1  2  3  4                  1  2      1  2  3  4  5  6
+     5  6  7  8  9 10 11   3  4  5  6  7  8  9   7  8  9 10 11 12 13
+    12 13 14 15 16 17 18  10 11 12 13 14 15 16  14 15 16 17 18 19 20
+    19 20 21 22 23 24 25  17 18 19 20 21 22 23  21 22 23 24 25 26 27
+    26 27 28 29 30        24 25 26 27 28 29 30  28 29 30 31         
+                          31
+    """
     
-    def test_wokdays(self):
+    def test_workdays(self):
         """Simple minded tests for workdays()"""
         date = datetime.date
-        self.assertEqual(0, workdays(date(2006, 11, 29), date(2006, 11, 29)))
-        self.assertEqual(1, workdays(date(2006, 11, 29), date(2006, 11, 30)))
-        self.assertEqual(1, workdays(date(2006, 11, 30), date(2006, 12,  1)))
-        self.assertEqual(5, workdays(date(2006, 12, 12), date(2006, 12, 19)))
-        self.assertEqual(0, workdays(date(2006, 11, 20), date(2006, 11, 20)))
-        self.assertEqual(1, workdays(date(2006, 11, 20), date(2006, 11, 21)))
-        self.assertEqual(4, workdays(date(2006, 11, 20), date(2006, 11, 24)))
-        self.assertEqual(4, workdays(date(2006, 11, 20), date(2006, 11, 25)))
-        self.assertEqual(4, workdays(date(2006, 11, 20), date(2006, 11, 26)))
-        self.assertEqual(5, workdays(date(2006, 11, 20), date(2006, 11, 27)))
-        self.assertEqual(5, workdays(date(2006, 12, 25), date(2007,  1,  1)))
-        self.assertEqual(0, workdays(date(2006, 12, 17), date(2006, 12, 18)))
-        self.assertEqual(1, workdays(date(2006, 12, 17), date(2006, 12, 19)))
-        self.assertEqual(4, workdays(date(2006, 12, 17), date(2006, 12, 22)))
-        self.assertEqual(4, workdays(date(2006, 12, 17), date(2006, 12, 23)))
-        self.assertEqual(4, workdays(date(2006, 12, 17), date(2006, 12, 24)))
-        self.assertEqual(5, workdays(date(2006, 12, 17), date(2006, 12, 25)))
+        
+        self.assertEqual(0,   workdays(date(2007, 1, 25), date(2007,  1,  25))) # Th - Th
+        self.assertEqual(1,   workdays(date(2007, 1, 25), date(2007,  1,  26))) # Th - Fr
+        self.assertEqual(2,   workdays(date(2007, 1, 25), date(2007,  1,  27))) # Th - Sa
+        self.assertEqual(1,   workdays(date(2007, 1, 26), date(2007,  1,  27))) # Fr - Sa
+        self.assertEqual(1,   workdays(date(2007, 1, 26), date(2007,  1,  28))) # Fr - Su
+        self.assertEqual(1,   workdays(date(2007, 1, 26), date(2007,  1,  29))) # Fr - Mo
+        self.assertEqual(0,   workdays(date(2007, 1, 28), date(2007,  1,  29))) # Su - Mo
+        self.assertEqual(2,   workdays(date(2007, 1, 26), date(2007,  1,  30))) # Fr - Tu
+        self.assertEqual(1,   workdays(date(2007, 1, 28), date(2007,  1,  30))) # Su - Tu
+        
+        self.assertEqual(0,   workdays(date(2007, 1, 26), date(2007,  1,  26))) # Fr - Fr
+        self.assertEqual(1,   workdays(date(2007, 1, 26), date(2007,  1,  27))) # Fr - Sa
+        self.assertEqual(1,   workdays(date(2007, 1, 26), date(2007,  1,  28))) # Fr - Su
+        self.assertEqual(0,   workdays(date(2007, 1, 27), date(2007,  1,  28))) # Sa - So
+        self.assertEqual(0,   workdays(date(2007, 1, 27), date(2007,  1,  29))) # Sa - Mo
+        self.assertEqual(1,   workdays(date(2007, 1, 27), date(2007,  1,  30))) # Fr - Tu
+        
+        self.assertEqual(0,   workdays(date(2006, 11, 29), date(2006, 11, 29))) # We - We
+        self.assertEqual(1,   workdays(date(2006, 11, 29), date(2006, 11, 30))) # We - Th
+        self.assertEqual(1,   workdays(date(2006, 11, 30), date(2006, 12,  1))) # Th - Fr
+        self.assertEqual(5,   workdays(date(2006, 12, 12), date(2006, 12, 19))) # Tu - Tu
+        self.assertEqual(0,   workdays(date(2006, 11, 20), date(2006, 11, 20)))
+        self.assertEqual(1,   workdays(date(2006, 11, 20), date(2006, 11, 21)))
+        self.assertEqual(4,   workdays(date(2006, 11, 20), date(2006, 11, 24)))
+        self.assertEqual(5,   workdays(date(2006, 11, 20), date(2006, 11, 25))) # Mo - Sa
+        self.assertEqual(5,   workdays(date(2006, 11, 20), date(2006, 11, 26))) # Mo - Su
+        self.assertEqual(5,   workdays(date(2006, 11, 20), date(2006, 11, 27)))
+        self.assertEqual(5,   workdays(date(2006, 12, 25), date(2007,  1,  1)))
+        self.assertEqual(6,   workdays(date(2006, 12, 8),  date(2006, 12, 18)))
+        self.assertEqual(5,   workdays(date(2006, 12, 9),  date(2006, 12, 18)))
+        self.assertEqual(0,   workdays(date(2006, 12, 17), date(2006, 12, 18)))
+        self.assertEqual(1,   workdays(date(2006, 12, 17), date(2006, 12, 19)))
+        self.assertEqual(4,   workdays(date(2006, 12, 17), date(2006, 12, 22)))
+        self.assertEqual(5,   workdays(date(2006, 12, 17), date(2006, 12, 23))) # Su - Sa
+        self.assertEqual(5,   workdays(date(2006, 12, 17), date(2006, 12, 24))) # Su - Su
+        self.assertEqual(5,   workdays(date(2006, 12, 17), date(2006, 12, 25)))
         self.assertEqual(261, workdays(date(2004, 1, 1), date(2004,  12,  31)))
-        self.assertEqual(259, workdays(date(2005, 1, 1), date(2005,  12,  31)))
-        self.assertEqual(259, workdays(date(2006, 1, 1), date(2006,  12,  31)))
+        self.assertEqual(260, workdays(date(2005, 1, 1), date(2005,  12,  31)))
+        self.assertEqual(260, workdays(date(2006, 1, 1), date(2006,  12,  31)))
         self.assertEqual(260, workdays(date(2007, 1, 1), date(2007,  12,  31)))
         self.assertEqual(261, workdays(date(2008, 1, 1), date(2008,  12,  31)))
-        # TODO: this fails!
-        #self.assertEqual(261+259, workdays(date(2004, 1, 1), date(2005,  12,  31)))
-        #self.assertEqual(261+259+259, workdays(date(2004, 1, 1), date(2006,  12,  31)))
-        #self.assertEqual(261+259+259+260, workdays(date(2004, 1, 1), date(2007,  12,  31)))
-        #self.assertEqual(261+259+259+260+261, workdays(date(2004, 1, 1), date(2008,  12,  31)))
+        self.assertEqual(260+260, workdays(date(2005, 1, 1), date(2006,  12,  31)))
+        self.assertEqual(260+260+260, workdays(date(2005, 1, 1), date(2007,  12,  31)))
+        # TODO: this fails! leap year issue?
+        # self.assertEqual(261+260, workdays(date(2004, 1, 1), date(2005,  12,  31)))
+        # self.assertEqual(261+260+260, workdays(date(2004, 1, 1), date(2006,  12,  31)))
+        # self.assertEqual(260+260+260+261, workdays(date(2005, 1, 1), date(2008,  12,  31)))
     
     def test_workdays_german(self):
         """Simple minded tests for workdays_german()"""
         date = datetime.date
-        self.assertEqual(3, workdays_german(date(2006, 12, 25), date(2007,  1,  1)))
-        self.assertEqual(1, workdays_german(date(2007, 02, 02), date(2007, 02, 05)))
-        self.assertEqual(253, workdays_german(date(2005, 1, 1), date(2005,  12,  31)))
-        self.assertEqual(251, workdays_german(date(2006, 1, 1), date(2006,  12,  31)))
-        self.assertEqual(251, workdays_german(date(2007, 1, 1), date(2007,  12,  31)))
-        self.assertEqual(253, workdays_german(date(2008, 1, 1), date(2008,  12,  31)))
-        # TODO: this fails!
-        # self.assertEqual(253+251, workdays_german(date(2005, 1, 1), date(2006,  12,  31)))
-        # self.assertEqual(253+251+251, workdays_german(date(2005, 1, 1), date(2007,  12,  31)))
-        # self.assertEqual(253+251+251+253, workdays_german(date(2005, 1, 1), date(2008,  12,  31)))
+        self.assertEqual(0,   workdays_german(date(2007, 1, 25), date(2007,  1,  25))) # Th - Th
+        self.assertEqual(1,   workdays_german(date(2007, 1, 25), date(2007,  1,  26))) # Th - Fr
+        self.assertEqual(2,   workdays_german(date(2007, 1, 25), date(2007,  1,  27))) # Th - Sa
+        self.assertEqual(1,   workdays_german(date(2007, 1, 26), date(2007,  1,  27))) # Fr - Sa
+        self.assertEqual(1,   workdays_german(date(2007, 1, 26), date(2007,  1,  28))) # Fr - Su
+        self.assertEqual(1,   workdays_german(date(2007, 1, 26), date(2007,  1,  29))) # Fr - Mo
+        self.assertEqual(0,   workdays_german(date(2007, 1, 28), date(2007,  1,  29))) # Su - Mo
+        self.assertEqual(2,   workdays_german(date(2007, 1, 26), date(2007,  1,  30))) # Fr - Tu
+        self.assertEqual(1,   workdays_german(date(2007, 1, 28), date(2007,  1,  30))) # Su - Tu
+        
+        self.assertEqual(0,   workdays_german(date(2007, 1, 26), date(2007,  1,  26))) # Fr - Fr
+        self.assertEqual(1,   workdays_german(date(2007, 1, 26), date(2007,  1,  27))) # Fr - Sa
+        self.assertEqual(1,   workdays_german(date(2007, 1, 26), date(2007,  1,  28))) # Fr - Su
+        self.assertEqual(0,   workdays_german(date(2007, 1, 27), date(2007,  1,  28))) # Sa - So
+        self.assertEqual(0,   workdays_german(date(2007, 1, 27), date(2007,  1,  29))) # Sa - Mo
+        self.assertEqual(1,   workdays_german(date(2007, 1, 27), date(2007,  1,  30))) # Fr - Tu
+        
+        self.assertEqual(3,   workdays_german(date(2006, 12, 25), date(2007,  1,  1)))
+        self.assertEqual(1,   workdays_german(date(2007, 02, 02), date(2007, 02, 05)))
+        self.assertEqual(252, workdays_german(date(2005, 1, 1), date(2005,  12,  31)))
+        self.assertEqual(250, workdays_german(date(2006, 1, 1), date(2006,  12,  31)))
+        self.assertEqual(249, workdays_german(date(2007, 1, 1), date(2007,  12,  31)))
+        self.assertEqual(251, workdays_german(date(2008, 1, 1), date(2008,  12,  31)))
+        # Christi Himmelfahrt
+        self.assertEqual(1,   workdays_german(date(2007, 5, 16), date(2007,  5,  17)))
+        self.assertEqual(1,   workdays_german(date(2007, 5, 16), date(2007,  5,  18)))
+        # Pfingsten
+        self.assertEqual(1,   workdays_german(date(2007, 5, 24), date(2007,  5,  25))) # Th - Fr
+        self.assertEqual(1,   workdays_german(date(2007, 5, 25), date(2007,  5,  26))) # Fr - Sa
+        self.assertEqual(1,   workdays_german(date(2007, 5, 25), date(2007,  5,  27))) # Fr - So
+        self.assertEqual(1,   workdays_german(date(2007, 5, 25), date(2007,  5,  28))) # Fr - Mo
+        self.assertEqual(1,   workdays_german(date(2007, 5, 25), date(2007,  5,  29))) # Fr - Tu
+        # Christi Himmelfahrt
+        self.assertEqual(1,   workdays_german(date(2007, 6, 6), date(2007,  6,  7)))
+        self.assertEqual(1,   workdays_german(date(2007, 6, 6), date(2007,  6,  8)))
+        self.assertEqual(252+250, workdays_german(date(2005, 1, 1), date(2006,  12,  31)))
+        self.assertEqual(252+250+249, workdays_german(date(2005, 1, 1), date(2007,  12,  31)))
+        # TODO: this fails! leap year issue?
+        # self.assertEqual(252+250+249+251, workdays_german(date(2005, 1, 1), date(2008,  12,  31)))
         
     def test_workdayhours_german(self):
         """Simple minded tests for workdays_german()"""
         date = datetime.datetime
         self.assertEqual(72, workdayhours_german(date(2006, 12, 25), date(2007,  1,  1)))
         self.assertEqual(24, workdayhours_german(date(2007, 02, 02), date(2007, 02, 05)))
-        self.assertAlmostEqual(30.2, workdayhours_german(date(2007, 02, 02, 10, 47), date(2007, 02, 05, 16, 59)))
+        self.assertAlmostEqual(30.2, workdayhours_german(date(2007, 02, 02, 10, 47),
+                                                         date(2007, 02, 05, 16, 59)))
         
+    def test_next_workday_german(self):
+        """Simple minded tests for next_workday_german()"""
+        date = datetime.date
+        self.assertEqual(date(2007, 5, 21), next_workday_german(date(2007, 5, 18))) # Fr
+        self.assertEqual(date(2007, 5, 22), next_workday_german(date(2007, 5, 21))) # Mo
+        self.assertEqual(date(2007, 5, 25), next_workday_german(date(2007, 5, 24))) # Th
+        # Pfingsten
+        self.assertEqual(date(2007, 5, 29), next_workday_german(date(2007, 5, 25))) # Fr
+        self.assertEqual(date(2007, 5, 29), next_workday_german(date(2007, 5, 26))) # Sa
+        self.assertEqual(date(2007, 5, 29), next_workday_german(date(2007, 5, 27))) # Su
+        self.assertEqual(date(2007, 5, 29), next_workday_german(date(2007, 5, 28))) # Mo ( Holiday)
+        self.assertEqual(date(2007, 5, 31), next_workday_german(date(2007, 5, 30))) 
+    
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
     unittest.main()
