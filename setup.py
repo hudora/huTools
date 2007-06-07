@@ -2,7 +2,7 @@ import ez_setup
 ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 
-setup(name='huBarcode',
+setup(name='huTools',
       maintainer='Maximillian Dornseif',
       maintainer_email='md@hudora.de',
       url='http://www.hosted-projects.com/trac/hudora/public/wiki', # /huTools',
@@ -18,5 +18,5 @@ setup(name='huBarcode',
             '': ['*.txt', '*.rst'],
         },
       
-      zip_safe = True,      
+      zip_safe = True,
 )
