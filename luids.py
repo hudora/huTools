@@ -7,7 +7,7 @@ Tools for generating various local unique IDs.
 
 This module tries to generate IDs which are guaranteed to be unique on a machine. Compared with the fine uuid
 module in python 2.5 we try to be unique only on a single host and not globally. In turn we provide stronger
-guarantees that no ID will be ever duplicate on a machine. Therfor our IDs are perfect for generatin unique
+guarantees that no ID will be ever duplicate on a machine. Therfor our IDs are perfect for generating unique
 filenames in a directory used by severall processes/threads.
 
 See http://docs.python.org/lib/module-uuid.html and http://zesty.ca/python/uuid.py for the Python standard
@@ -44,7 +44,7 @@ def unique_machine32():
     Assuming 16bit PIDs this should result in unique IDs on a machine even with multi-threading. But there 
     are degenerated scenarios (more than 2**16 concurrent/fast spawning processes, while there are more than 
     2**8 threads bussy generating unique IDs) where the IDs might not be unique.
-    To avoid these use unique_process64.
+    To avoid these use unique_machine64.
     """
 
     global _counter
@@ -63,17 +63,17 @@ def unique_machine64():
     """
     Generate an ID which should never repeat on this machine.
     
-    This function is suggestet as the base for generating filenames and the like. Processes/Threads 
-    running on the same machine shouldnever be able to generate the same ID and no ID should be created 
+    This function is suggested as the base for generating filenames and the like. Processes/Threads 
+    running on the same machine should never be able to generate the same ID and no ID should be created 
     twice.
-
+    
     What goes where:
     TTTT     ^
         PP   ^
         cccc
         
     The first two words are the current timestamp. The next word is the current  PID xored with the most
-    significant word of a counter. The last byte is the most significant ford of a counter. 
+    significant word of a counter. The last byte is the most significant word of a counter. 
     The counter is being increased by 1 in every call. This should make this function thread 
     save unless you call it more than 2**16 times per second.
     """
@@ -89,15 +89,21 @@ def unique_machine64():
         _counter_lock.release()
     return ret
     
-def unique_hostname():
+_hostname = None
+def luid():
     """Generate an ID which should be globally unique.
     
     This only works if gethostname() returns an unique name. This usually is true to a certain degree if you 
     use your machine in an NIS/NFS configuration. So this function is mainly usefull to generate unique
-    filenames for NFS-shared filesystems."""
+    filenames for NFS-shared filesystems.
     
-    return "%s%x" % (socket.gethostname(), unique_machine64())
-
+    So this is very well suited for generationg IDs in a setup where you controll all the machines and thus
+    hostnames."""
+    
+    global _hostname
+    if not _hostname:
+        _hostname = socket.gethostname()
+    return "%s%x" % (_hostname, unique_machine64())
 
 # Testcases
 
