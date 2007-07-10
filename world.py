@@ -23,4 +23,6 @@ COUNTRY_CHOICES = (('DE', 'Deutschland'),
                    ('SE', 'Schweden'),
                    ('GR', 'Griechenland'),
                    ('DK', 'Daenemark'),
+                   ('US', 'USA'),
+                   ('AR', 'Argentinien'),
                   )
