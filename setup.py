@@ -1,11 +1,21 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(name='huTools',
       maintainer='Maximillian Dornseif',
       maintainer_email='md@hudora.de',
-      url='http://www.hosted-projects.com/trac/hudora/public/wiki', # /huTools',
-      version='0.2.1',
-      description='various tools and toys to make Python coding more fun',
+      url='http://www.hudora.de/code/',
+      version='0.2.2',
+      description='Various tiny tools and toys to make Python coding less work more fun.',
+      long_description='''huTools is a collection of many totally non earth shattering modules:
+      Various tiny tools and toys to make Python coding less work more fun:
+      
+      * calendar - date besed calculations and format conversions for HTTP and ATOM.
+      * checksummming         - calculate various checksums including EAN/GTIN/NVE/SSCC and DPD GeoPost
+      * luids                 - locally unique user-ids with strong guarantees of beeing unique.
+      * printing              - access printers (very primitive)
+      * ReReadingConfigParser - ConfigParser which detects changes in config files
+      * unicode               - real-world unicode handling (very primitive)
+      * world                 - country codes (very primitive)''',
       license='BSD',
       classifiers=['Intended Audience :: Developers',
                    'Programming Language :: Python'],

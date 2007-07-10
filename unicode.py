@@ -1,4 +1,12 @@
-from types import *
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
+"""
+
+from types import StringType
+
+__revision__ = "$Revision$"
 
 def deUTF8(data):
     """This is meant to help with utf-8 data appearing where unicode should apperar."""

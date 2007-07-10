@@ -4,11 +4,13 @@
 workdays.py - calculate the number of workdays between two datetime objects.
 
 Created by Christian Klein on 2006-11-28. Fiddeled with by Maximillian Dornseif.
-BSD Licensed
+BSD Licensed.
 """
 
 import datetime
 import unittest
+
+__revision__ = "$Revision$"
 
 STATIC_GERMAN_HOLIDAYS = ((01, 01), # Neujahr
                           (05, 01), # Tag der Arbeit
@@ -134,8 +136,8 @@ def is_workday_german(day):
         return False
     return True
 
-def next_workday_german(startday):
-    """Returns the next workday after start.
+def next_workday_german(startday=datetime.datetime.today()):
+    """Returns the next workday after startday.
     
     >>> next_workday_german(datetime.date(2006, 12, 29))
     datetime.date(2007, 1, 2)
@@ -145,6 +147,19 @@ def next_workday_german(startday):
     while not is_workday_german(datetime.date.fromordinal(day_ordinal)):
         day_ordinal += 1
     return datetime.date.fromordinal(day_ordinal)
+
+def previous_workday_german(startday=datetime.datetime.today()):
+    """Returns the workday before startday.
+    
+    >>> previous_workday_german(datetime.date(2007, 1, 2))
+    datetime.date(2006, 12, 29)
+    """
+    
+    day_ordinal = startday.toordinal() - 1
+    while not is_workday_german(datetime.date.fromordinal(day_ordinal)):
+        day_ordinal -= 1
+    return datetime.date.fromordinal(day_ordinal)
+
 
 class WorkdayTests(unittest.TestCase):
     """Testcases for workdays module. Calendar hint:

@@ -13,7 +13,7 @@ filenames in a directory used by severall processes/threads.
 See http://docs.python.org/lib/module-uuid.html and http://zesty.ca/python/uuid.py for the Python standard
 uuid module.
 
-Created by Maximillian Dornseif on 2006-11-08.
+Created by Maximillian Dornseif on 2006-11-08. BSD Licensed.
 """
 
 import os, time, socket
@@ -23,7 +23,9 @@ try:
     import thread as _thread
 except ImportError:
     import dummy_thread as _thread
-    
+
+__revision__ = "$Revision$"
+
 _counter = 0
 _counter_lock = _thread.allocate_lock()
 def unique_machine32():

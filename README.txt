@@ -1,1 +1,1 @@
-See http://hosted-projects.com/trac/hudora/public/
+See __init__.py for some documentation.

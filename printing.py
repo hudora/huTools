@@ -3,10 +3,12 @@
 """
 printing.py simple minded toolkit for printing on CUPS.
 
-Created by Maximillian Dornseif on 2006-11-19.
+Created by Maximillian Dornseif on 2006-11-19. BSD Licensed.
 """
 
 import os
+
+__revision__ = "$Revision$"
 
 def print_file(filename, jobname=None, printer=None, copies=1):
     """Print a file."""

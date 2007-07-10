@@ -10,6 +10,8 @@ Copyright (c) 2007 HUDORA GmbH. All rights reserved.
 import unittest
 import datetime, time, email.utils
 
+__revision__ = "$Revision$"
+
 def rfc3339_date(date):
     """Formates a datetime object according to RfC 3339."""
     return date.strftime('%Y-%m-%dT%H:%M:%SZ')

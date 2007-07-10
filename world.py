@@ -4,9 +4,11 @@
 world.py - countries of the world (to be procise: countries we do buiseness with)
 
 Created by Maximillian Dornseif on 2007-05-01.
-Copyright (c) 2007 HUDORA GmbH. All rights reserved.
+Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
 """
-                  
+
+__revision__ = "$Revision$"
+
 COUNTRY_CHOICES = (('DE', 'Deutschland'),
                    ('AT', 'Östereich'),
                    ('CH', 'Schweiz'),

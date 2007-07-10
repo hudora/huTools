@@ -1,5 +1,5 @@
-#!/usr/bin/python
-
+#!/usr/bin/env python
+# encoding: utf-8
 """ReReadingConfigParser is designed to be mainly compatible with
 ConfigParser but checks before access to values if the
 configuration file on disk has changed and re-reads the file if
@@ -23,10 +23,8 @@ remove_section() are not supported.
 
 Authors:
 
-This Software was written by drt@un.bewaff.net for the twisd AG,
+This Software was written by md@hudora.de for the twisd AG,
 Bonn, Germany. The twisd AG kindly donated it as Freie Software.
-
-
 """
 
 __version__ = '$Id$'
@@ -35,6 +33,7 @@ __copyright__ = """(c) 2001 twisd AG, Bonn - http://www.twisd.de/
 further distribution is granted under the terms of LGPL or classical
 MIT Licence."""
 
+__revision__ = "$Revision$"
 
 from ConfigParser import *
 import os, sys, stat

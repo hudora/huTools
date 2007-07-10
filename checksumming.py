@@ -9,6 +9,7 @@ Created by Maximillian Dornseif on 2006-11-05.
 This file can be used under an BSD License.
 """
 
+__revision__ = "$Revision$"
 
 import doctest, unittest
 

@@ -3,3 +3,5 @@
 """
 Copyright (c) 2006 HUDORA GmbH. Published under a 'BSD License'.
 """
+
+__revision__ = "$Revision$"

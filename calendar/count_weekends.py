@@ -1,4 +1,8 @@
+# alternative implementation of workdays. kept for testing purposes.
+
 from datetime import *
+
+__revision__ = "$Revision$"
 
 def calculate_weekenddays_between(datetime1, datetime2):
     """
@@ -16,7 +20,7 @@ def calculate_weekenddays_between(datetime1, datetime2):
         d1 = datetime2
         d2 = datetime1
 
-	## monday1 = the monday after d1
+        ## monday1 = the monday after d1
     monday1 = (d1 + timedelta(8 - d1.isoweekday())).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
     ## monday2 = the monday before d2
     monday2 = (d2 - timedelta( d2.isoweekday() - 1)).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
