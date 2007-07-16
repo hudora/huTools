@@ -21,10 +21,11 @@ COUNTRY_CHOICES = (('DE', 'Deutschland'),
                    ('LI', 'Lichtenstein'),
                    ('LU', 'Luxenburg'),
                    ('PT', 'Portugal'),
-                   ('CZ', 'Tschechische Republik'),
+                   ('CZ', 'Tschechien'),
                    ('SE', 'Schweden'),
                    ('GR', 'Griechenland'),
                    ('DK', 'Daenemark'),
                    ('US', 'USA'),
                    ('AR', 'Argentinien'),
+                   ('HU', 'Ungarn')
                   )
