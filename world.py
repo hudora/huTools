@@ -28,4 +28,6 @@ COUNTRY_CHOICES = (('DE', 'Deutschland'),
                    ('US', 'USA'),
                    ('AR', 'Argentinien'),
                    ('HU', 'Ungarn')
+                   ('LV', 'Lettland'),
+                   ('PL', 'Polen'),
                   )
