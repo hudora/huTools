@@ -78,8 +78,113 @@ def dpd_digit(arg):
         cd = 0
     return _chartable[cd]
 
+#f = [tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple()]
+#f[0] = ( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 )
+#f[1] = ( 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 );
+#i=2;
+#j=0;
+#while(i < 8):
+#    f[i] = [tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple()]
+#    while(j < 10):
+#        f[i][j] = f[i-1][f[1][j]]
+#        j += 1
+#    j = 0;
+#    i += 1
+#
+#print f
+
+def verhoeff_digit(arg):
+    """
+    Implemention of Verhoeff's Dihedral Check Digit based on code from Nick Galbreath
+    """
+    
+    # dihedral addition matrix A + B = a[A][B]
+    _a = (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
+          ( 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 ),
+          ( 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 ),
+          ( 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 ),
+          ( 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 ),
+          ( 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 ),
+          ( 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 ),
+          ( 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 ),
+          ( 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 ),
+          ( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ))
+          
+    # dihedral inverse map, A + inverse[A] = 0
+    _inverse = (0, 4, 3, 2, 1, 5, 6, 7, 8, 9)
+    # permutation weighting matrix P[position][value]
+    _p= (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
+         ( 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 ),
+         ( 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 ),
+         ( 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 ),
+         ( 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 ),
+         ( 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 ),
+         ( 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 ),
+         ( 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 ))
+    
+    #check = 0
+    #for i in range(len(arg)):
+    #    c = ord(arg[i]) - ord('0')
+    #    check = _a[check][_p[(i + 1) % 8][c]]
+    #return str(_inverse[check])
+
+    #x = 0
+    #for i in range(len(arg)):
+    #    x = _a[x][_p[(i + 1) % 8][ord(arg[i]) - 48]]
+    #return chr(_inverse[x]+48)
+    
+    input = arg
+    c = 0; # initialize check at 0
+    digit = 0;
+    i = 0;
+    for digit in reversed(input):
+        digit = ord(digit) - 48
+        c = _a[c][_p[(i+1) % 8][digit]]; # not quite the same...
+        print i, digit, 
+        i+=1;
+    print input, c
+    return chr(_inverse[c]+48);
+
 
 # test cases
+
+class VerhoeffTests(unittest.TestCase):
+    def test_checkdigit(self):
+        self.assertEqual(verhoeff_digit('123456654321'), '9')
+        # self.assertEqual(verhoeff_digit('5743839105748193475681981039847561718657489228374'), '3')
+        # self.assertEqual(verhoeff_digit('10003729'), '9')
+        # self.assertEqual(verhoeff_digit('1125'), '8')
+        # self.assertEqual(verhoeff_digit('16412'), '5')
+        # self.assertEqual(verhoeff_digit('142857'), '0')
+        # self.assertEqual(verhoeff_digit('0000168'), '6')
+        # self.assertEqual(verhoeff_digit('04052'), '6')
+        # self.assertEqual(verhoeff_digit('1'), '9')
+        
+        # results from     % http://www.augustana.ab.ca/~mohrj/algorithms/checkdigit.html and Algorithm::Verhoeff
+        self.assertEqual(verhoeff_digit('1'), '5')
+        self.assertEqual(verhoeff_digit('11'), '3')
+        # self.assertEqual(verhoeff_digit('0000168'), '6')
+        # self.assertEqual(verhoeff_digit('04052'), '6')
+        # self.assertEqual(verhoeff_digit('142857'), '0')
+        # self.assertEqual(verhoeff_digit('16412'), '8')
+        # self.assertEqual(verhoeff_digit('1125'), '2')
+        self.assertEqual(verhoeff_digit('5743839105748193475681981039847561718657489228374'), '3')
+        self.assertEqual(verhoeff_digit('123456654321'), '9')
+        self.assertEqual(verhoeff_digit('10003729'), '1')
+        self.assertEqual(verhoeff_digit('505'), '3')
+        self.assertEqual(verhoeff_digit('050'), '3')
+        self.assertEqual(verhoeff_digit('161'), '8')
+        self.assertEqual(verhoeff_digit('616'), '8')
+        self.assertEqual(verhoeff_digit('272'), '5')
+        self.assertEqual(verhoeff_digit('727'), '5')
+        self.assertEqual(verhoeff_digit('494'), '1')
+        self.assertEqual(verhoeff_digit('949'), '1')
+        self.assertEqual(verhoeff_digit('383'), '4')
+        self.assertEqual(verhoeff_digit('838'), '9')
+        self.assertEqual(verhoeff_digit('505505'), '2')
+        self.assertEqual(verhoeff_digit('050050'), '4')
+        
+    
 
 class EanTests(unittest.TestCase):
     """Simple Tests for EAN checkdigit calculation."""
@@ -108,7 +213,6 @@ class EanTests(unittest.TestCase):
         self.assertEqual(ean_digit('99999999999999999'), '5')
         self.assertEqual(ean_digit('34005998000000026'), '8')
         self.assertEqual(ean_digit('34005998000000027'), '5')
-        self.assertEqual(ean_digit('34005998000000028'), '2')
         self.assertEqual(ean_digit('34005998000000028'), '2')
         self.assertEqual(ean_digit('99999999999999999'), '5')
         self.assertEqual(ean_digit('999999999999999999'), '6')
