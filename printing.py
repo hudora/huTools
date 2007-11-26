@@ -17,7 +17,21 @@ def print_file(filename, jobname=None, printer=None, copies=1):
         args.append('-P %r' % str(printer))
     for c in range(copies):
         os.system('/usr/local/bin/lpr %s %r' % (' '.join(args), filename))
-    os.system('echo "/usr/local/bin/lpr %s %r" > /tmp/foo' % (' '.join(args), filename))
-    if jobname:
-        args.append('-J %r' % jobname.replace("'", ""))
-    os.system('echo "/usr/local/bin/lpr %s %r" >> /tmp/foo' % (' '.join(args), filename))
+    #os.system('echo "/usr/local/bin/lpr %s %r" > /tmp/foo' % (' '.join(args), filename))
+    #if jobname:
+    #    args.append('-J %r' % jobname.replace("'", ""))
+    #os.system('echo "/usr/local/bin/lpr %s %r" >> /tmp/foo' % (' '.join(args), filename))
+
+def print_data(data, jobname=None, printer=None, copies=1, printserver='printserver.local.hudora.biz'):
+    """Print a file."""
+    args = ['-n %d' % copies]
+    if printer:
+        args.append('-d %r' % str(printer))
+    if printserver:
+        args.append('-h %r' % str(printserver))
+    #if jobname:
+    #    args.append('-t %r' % jobname.replace("'\";./ ", "_"))
+    for c in range(copies):
+        fd = os.popen('/usr/local/bin/lp %s > /tmp/huTools_lplog' % (' '.join(args),), 'w')
+        fd.write(data)
+        fd.close()
