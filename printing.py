@@ -20,14 +20,15 @@ def print_file(filename, jobname=None, printer=None, copies=1):
 
 def print_data(data, jobname=None, printer=None, copies=1, printserver='printserver.local.hudora.biz'):
     """Print a file."""
-    args = ['-n %d' % copies]
+    args = [] # ['-n %d' % copies]
     if printer:
         args.append('-P %r' % str(printer))
     #if printserver:
     #    args.append('-H %r' % str(printserver))
     #if jobname:
     #    args.append('-J %r' % jobname.replace("'\";./ ", "_"))
+    os.system('echo /usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args),))
     for c in range(copies):
-        fd = os.popen('/usr/local/bin/lpr %s > /tmp/huTools_lplog' % (' '.join(args),), 'w')
+        fd = os.popen('/usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args),), 'w')
         fd.write(data)
         fd.close()

@@ -23,6 +23,7 @@ setup(name='huTools',
       zip_safe=False, 
       package_dir = {'huTools': ''},
       packages = ['huTools', 'huTools.calendar'],
+      zip_safe = False,      
       # This seems to be broken with certain Python versions:
       #package_data = {
       #      # If any package contains *.txt or *.rst files, include them:
