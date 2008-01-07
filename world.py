@@ -33,5 +33,5 @@ COUNTRY_CHOICES = (('DE', 'Deutschland'),
                    ('LT', 'Littauen'),
                    ('SK', 'Slowakei'),
                    ('HR', 'Kroatioen'),
-                   ('IE', 'Irrland'),
+                   ('IE', 'Irland'),
                   )
