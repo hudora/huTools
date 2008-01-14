@@ -9,7 +9,8 @@ Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
 
 __revision__ = "$Revision$"
 
-COUNTRY_CHOICES = (('DE', 'Deutschland'),
+COUNTRY_CHOICES = (('DE', 'Deutschland')) \
+                   + sorted((
                    ('AT', 'Östereich'),
                    ('CH', 'Schweiz'),
                    ('BE', 'Belgien'),
@@ -34,4 +35,6 @@ COUNTRY_CHOICES = (('DE', 'Deutschland'),
                    ('SK', 'Slowakei'),
                    ('HR', 'Kroatioen'),
                    ('IE', 'Irland'),
-                  )
+                   ('SI', 'Slowenien'),
+                   ('EE', 'Estland'),
+                  ))
