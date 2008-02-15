@@ -12,7 +12,7 @@ from pylint.lint import PyLinter
 from pylint import checkers, config
 import sqlobject
 
-DATABASE_URI = "sqlite:/Users/chris/Desktop/database.db"
+DATABASE_URI = "sqlite:///Users/chris/Desktop/database.db"
 MINIMUM_SCORE = 8.0
 
 #from sqlobject import SQLObject, StringCol, FloatCol, sqlhub, connectionForURI
@@ -71,25 +71,28 @@ def main(repos, revision):
     
     client = pysvn.Client()
     diff = client.diff_summarize(repos,
-               revision1=pysvn.Revision(pysvn.opt_revision_kind.number, revision-1),
-               revision2=pysvn.Revision(pysvn.opt_revision_kind.number, revision))
+             revision1=pysvn.Revision(pysvn.opt_revision_kind.number, revision-1),
+             revision2=pysvn.Revision(pysvn.opt_revision_kind.number, revision))
 
     conn = sqlobject.connectionForURI(DATABASE_URI)
     sqlobject.sqlhub.processConnection = conn
     #PythonScore.createTable()
 
     func = lambda f: os.path.splitext(f.path)[-1] == ".py"
-    for f in filter(func, diff):
-        path = os.path.join(repos, f.path)
+    for entry in filter(func, diff):
+        path = os.path.join(repos, entry.path)
         score, old_score, credit = process_file(path)
-        PythonScore(username="test", pathname=path, revision="1",
+        
+        info = client.info(path)
+        
+        PythonScore(username=info['commit_author'], pathname=path, revision="1",
                 score=score, old_score=old_score, credit=credit)
     
 
 if __name__ == "__main__":
     # We are probably called as a subversion post-commit hook
     if len(sys.argv) <= 2:
-        sys.stderr.write("Usage: %s revision filename\n" % (sys.argv[0]))
+        sys.stderr.write("Usage: %s repository revision\n" % (sys.argv[0]))
         sys.exit()
 
     main(sys.argv[1], int(sys.argv[2]))
