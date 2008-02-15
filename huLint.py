@@ -53,7 +53,7 @@ def process_file(filename):
     if score < 0:
         credit = 2.0 * score
     elif score < old_score:
-        score = -1.5 * (old_score - score)
+        credit = -1.5 * (old_score - score)
     elif score < MINIMUM_SCORE:
         credit = -1.5 * (MINIMUM_SCORE - score)
     else:
@@ -61,24 +61,35 @@ def process_file(filename):
 
     return score, old_score, credit
 
-def main(args):
+def main(repos, revision):
     """
-    Main function, pass the filename of the file/module
-    that should be analyzed.
+    Main function.
     """
+
+    import pysvn
+    import os.path
+    
+    client = pysvn.Client()
+    diff = client.diff_summarize(repos,
+               revision1=pysvn.Revision(pysvn.opt_revision_kind.number, revision-1),
+               revision2=pysvn.Revision(pysvn.opt_revision_kind.number, revision))
+
     conn = sqlobject.connectionForURI(DATABASE_URI)
     sqlobject.sqlhub.processConnection = conn
     #PythonScore.createTable()
 
-    score, old_score, credit = process_file(args[0])
-    PythonScore(username="test", pathname=args[0], revision="1",
+    func = lambda f: os.path.splitext(f.path)[-1] == ".py"
+    for f in filter(func, diff):
+        path = os.path.join(repos, f.path)
+        score, old_score, credit = process_file(path)
+        PythonScore(username="test", pathname=path, revision="1",
                 score=score, old_score=old_score, credit=credit)
     
 
 if __name__ == "__main__":
-    
-    if len(sys.argv) <= 1:
-        sys.stderr.write("Usage: %s filename\n" % (sys.argv[0]))
+    # We are probably called as a subversion post-commit hook
+    if len(sys.argv) <= 2:
+        sys.stderr.write("Usage: %s revision filename\n" % (sys.argv[0]))
         sys.exit()
 
-    main(sys.argv[1:])
+    main(sys.argv[1], int(sys.argv[2]))
