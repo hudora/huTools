@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 setup(name='huTools',
       maintainer='Maximillian Dornseif',
       maintainer_email='md@hudora.de',
-      url='http://www.hudora.de/code/',
-      version='0.2.1',
+      url='https://cybernetics.hudora.biz/projects/wiki/huTools',
+      version='0.3',
       description='Various tiny tools and toys to make Python coding less work more fun.',
       long_description='''huTools is a collection of many totally non earth shattering modules:
       Various tiny tools and toys to make Python coding less work more fun:
