@@ -20,7 +20,6 @@ setup(name='huTools',
       classifiers=['Intended Audience :: Developers',
                    'Programming Language :: Python'],
       
-      zip_safe=False, 
       package_dir = {'huTools': ''},
       packages = ['huTools', 'huTools.calendar'],
       zip_safe = False,      
