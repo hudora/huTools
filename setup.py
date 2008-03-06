@@ -4,7 +4,7 @@ setup(name='huTools',
       maintainer='Maximillian Dornseif',
       maintainer_email='md@hudora.de',
       url='https://cybernetics.hudora.biz/projects/wiki/huTools',
-      version='0.31',
+      version='0.32',
       description='Various tiny tools and toys to make Python coding less work more fun.',
       long_description='''huTools is a collection of many totally non earth shattering modules:
       Various tiny tools and toys to make Python coding less work more fun:
@@ -20,7 +20,6 @@ setup(name='huTools',
       classifiers=['Intended Audience :: Developers',
                    'Programming Language :: Python'],
       
-      package_dir = {'huTools': ''},
       packages = find_packages(),
       zip_safe = False,      
 )
