@@ -12,10 +12,10 @@ import unittest
 
 __revision__ = "$Revision$"
 
-STATIC_GERMAN_HOLIDAYS = ((01, 01), # Neujahr
-                          (05, 01), # Tag der Arbeit
-                          (10, 03), # Tag der deutschen Einheit
-                          (11, 01), # Allerheiligen
+STATIC_GERMAN_HOLIDAYS = (( 1,  1), # Neujahr
+                          ( 5,  1), # Tag der Arbeit
+                          (10,  3), # Tag der deutschen Einheit
+                          (11,  1), # Allerheiligen
                           (12, 25), # Erster Weihnachtstag
                           (12, 26), # Zweiter Weihnachtstag
 )
@@ -85,7 +85,7 @@ def workdays(start, end):
         return datetime.date.fromordinal(day.toordinal() + 1)
     
     if start > end:
-        raise ValueError, "can't handle  negative timespan! %r > %r" % (start, end)
+        raise ValueError("can't handle  negative timespan! %r > %r" % (start, end))
     
     # Wenn Anfangstag auf Wochenende liegt, addiere Tage bis Montag
     while start.isoweekday() > 5:
@@ -105,7 +105,7 @@ def workdays(start, end):
         number_of_weekends += 1
     days = days - 2 * number_of_weekends
     if days < 0:
-        raise RuntimeError, "%r days difference %r|%r|%r" % (days, start, end, number_of_weekends)
+        raise RuntimeError("%r days difference %r|%r|%r" % (days, start, end, number_of_weekends))
     return days
 
 def workdays_german(start, end):
@@ -246,7 +246,7 @@ class WorkdayTests(unittest.TestCase):
         self.assertEqual(1,   workdays_german(date(2007, 1, 27), date(2007,  1,  30))) # Fr - Tu
         
         self.assertEqual(3,   workdays_german(date(2006, 12, 25), date(2007,  1,  1)))
-        self.assertEqual(1,   workdays_german(date(2007, 02, 02), date(2007, 02, 05)))
+        self.assertEqual(1,   workdays_german(date(2007,  2, 2), date(2007,  2,  5)))
         self.assertEqual(252, workdays_german(date(2005, 1, 1), date(2005,  12,  31)))
         self.assertEqual(250, workdays_german(date(2006, 1, 1), date(2006,  12,  31)))
         self.assertEqual(249, workdays_german(date(2007, 1, 1), date(2007,  12,  31)))
@@ -272,9 +272,9 @@ class WorkdayTests(unittest.TestCase):
         """Simple minded tests for workdays_german()"""
         date = datetime.datetime
         self.assertEqual(72, workdayhours_german(date(2006, 12, 25), date(2007,  1,  1)))
-        self.assertEqual(24, workdayhours_german(date(2007, 02, 02), date(2007, 02, 05)))
-        self.assertAlmostEqual(30.2, workdayhours_german(date(2007, 02, 02, 10, 47),
-                                                         date(2007, 02, 05, 16, 59)))
+        self.assertEqual(24, workdayhours_german(date(2007,  2,  2), date(2007,  2,  5)))
+        self.assertAlmostEqual(30.2, workdayhours_german(date(2007,  2,  2, 10, 47),
+                                                         date(2007,  2,  5, 16, 59)))
         
     def test_next_workday_german(self):
         """Simple minded tests for next_workday_german()"""

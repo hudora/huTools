@@ -1,6 +1,6 @@
-# alternative implementation of workdays. kept for testing purposes.
+"""Alternative implementation of workdays. kept for testing purposes."""
 
-from datetime import *
+from datetime import timedelta, datetime
 
 __revision__ = "$Revision$"
 
@@ -10,7 +10,7 @@ def calculate_weekenddays_between(datetime1, datetime2):
         The result is returned in form of a positive timedelta object. This means that
         it doesn't matter the order of the datetimes given as parameters.
     """
-    if datetime1==datetime2:
+    if datetime1 == datetime2:
         return timedelta(0)
     ## The dates are ordered so d1 < d2
     if datetime1 < datetime2:
@@ -23,7 +23,7 @@ def calculate_weekenddays_between(datetime1, datetime2):
         ## monday1 = the monday after d1
     monday1 = (d1 + timedelta(8 - d1.isoweekday())).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
     ## monday2 = the monday before d2
-    monday2 = (d2 - timedelta( d2.isoweekday() - 1)).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    monday2 = (d2 - timedelta(d2.isoweekday() - 1)).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
 
     ## if monday1 <= monday2 => the dates are not in the same week
     if monday1 <= monday2:
@@ -53,7 +53,7 @@ def calculate_workingdays_between(datetime1, datetime2):
         The result is returned in form of a positive timedelta object. This means that
         it doesn't matter the order of the datetimes given as parameters.
     """
-    if datetime1==datetime2:
+    if datetime1 == datetime2:
         return timedelta(0)
     ## The dates are ordered so d1 < d2
     if datetime1 < datetime2:

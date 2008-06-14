@@ -136,9 +136,5 @@ class uuidsTests(unittest.TestCase):
             self.assertTrue((uuid <= 0xffffffffffff) and (uuid >= 0))
             seen.add(uuid)
     
-    def test_unique_hostname(self):
-        """Basic tests for unique_hostname."""
-        uuid = unique_hostname()
-
 if __name__ == '__main__':
     unittest.main()

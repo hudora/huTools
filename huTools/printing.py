@@ -15,7 +15,8 @@ def print_file(filename, jobname=None, printer=None, copies=1):
     args = [] # '-n %d' % copies]
     if printer:
         args.append('-P %r' % str(printer))
-    for c in range(copies):
+    # we create several separate print job
+    for i in range(copies):
         os.system('/usr/local/bin/lpr %s %r' % (' '.join(args), filename))
 
 def print_data(data, jobname=None, printer=None, copies=1, printserver='printserver.local.hudora.biz'):
@@ -28,7 +29,7 @@ def print_data(data, jobname=None, printer=None, copies=1, printserver='printser
     #if jobname:
     #    args.append('-J %r' % jobname.replace("'\";./ ", "_"))
     os.system('echo /usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args),))
-    for c in range(copies):
+    for i in range(copies):
         fd = os.popen('/usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args),), 'w')
         fd.write(data)
         fd.close()

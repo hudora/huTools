@@ -46,7 +46,7 @@ def _ean_digit2(arg):
         summe = summe + int(arg[i]) * weight[i]
     ret = ( magic - (summe % magic) ) % magic
     if ret < 0 or ret >= magic:
-        raise RuntimeError, "EAN checkDigit: something wrong."
+        raise RuntimeError("EAN checkDigit: something wrong.")
     return str(ret)
 
 def dpd_digit(arg):
@@ -65,18 +65,18 @@ def dpd_digit(arg):
     _chartable = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     mod = 36
-    cd = mod
+    cdigit = mod
     for char in arg:
-        cd = cd + _chartable.index(char.upper())
-        if cd > mod:
-            cd = cd - mod
-        cd = 2 * cd
-        if cd > mod:
-            cd = cd - mod - 1
-    cd = mod + 1 - cd
-    if cd == mod:
-        cd = 0
-    return _chartable[cd]
+        cdigit = cdigit + _chartable.index(char.upper())
+        if cdigit > mod:
+            cdigit = cdigit - mod
+        cdigit = 2 * cdigit
+        if cdigit > mod:
+            cdigit = cdigit - mod - 1
+    cdigit = mod + 1 - cdigit
+    if cdigit == mod:
+        cdigit = 0
+    return _chartable[cdigit]
 
 #f = [tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple()]
 #f[0] = ( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 )
@@ -99,51 +99,37 @@ def verhoeff_digit(arg):
     """
     
     # dihedral addition matrix A + B = a[A][B]
-    _a = (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
-          ( 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 ),
-          ( 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 ),
-          ( 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 ),
-          ( 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 ),
-          ( 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 ),
-          ( 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 ),
-          ( 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 ),
-          ( 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 ),
-          ( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ))
+    _amatrix = (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
+                ( 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 ),
+                ( 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 ),
+                ( 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 ),
+                ( 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 ),
+                ( 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 ),
+                ( 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 ),
+                ( 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 ),
+                ( 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 ),
+                ( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ))
           
     # dihedral inverse map, A + inverse[A] = 0
     _inverse = (0, 4, 3, 2, 1, 5, 6, 7, 8, 9)
     # permutation weighting matrix P[position][value]
-    _p= (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
-         ( 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 ),
-         ( 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 ),
-         ( 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 ),
-         ( 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 ),
-         ( 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 ),
-         ( 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 ),
-         ( 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 ))
+    _pmatrix = (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
+                ( 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 ),
+                ( 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 ),
+                ( 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 ),
+                ( 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 ),
+                ( 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 ),
+                ( 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 ),
+                ( 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 ))
     
-    #check = 0
-    #for i in range(len(arg)):
-    #    c = ord(arg[i]) - ord('0')
-    #    check = _a[check][_p[(i + 1) % 8][c]]
-    #return str(_inverse[check])
-
-    #x = 0
-    #for i in range(len(arg)):
-    #    x = _a[x][_p[(i + 1) % 8][ord(arg[i]) - 48]]
-    #return chr(_inverse[x]+48)
-    
-    input = arg
-    c = 0; # initialize check at 0
-    digit = 0;
-    i = 0;
-    for digit in reversed(input):
+    check = 0 # initialize check at 0
+    digit = 0
+    i = 0
+    for digit in reversed(arg):
         digit = ord(digit) - 48
-        c = _a[c][_p[(i+1) % 8][digit]]; # not quite the same...
-        print i, digit, 
-        i+=1;
-    print input, c
-    return chr(_inverse[c]+48);
+        check = _amatrix[check][_pmatrix[(i+1) % 8][digit]] # not quite the same...
+        i += 1
+    return chr(_inverse[check]+48)
 
 
 # test cases
@@ -160,7 +146,7 @@ class VerhoeffTests(unittest.TestCase):
         # self.assertEqual(verhoeff_digit('04052'), '6')
         # self.assertEqual(verhoeff_digit('1'), '9')
         
-        # results from     % http://www.augustana.ab.ca/~mohrj/algorithms/checkdigit.html and Algorithm::Verhoeff
+        # results from http://www.augustana.ab.ca/~mohrj/algorithms/checkdigit.html and Algorithm::Verhoeff
         self.assertEqual(verhoeff_digit('1'), '5')
         self.assertEqual(verhoeff_digit('11'), '3')
         # self.assertEqual(verhoeff_digit('0000168'), '6')
@@ -231,32 +217,11 @@ class EanTests(unittest.TestCase):
         self.assertEqual(ean_digit('9999999999999999999999999999999'), '3')
         self.assertEqual(ean_digit('99999999999999999999999999999999'), '4')
         self.assertEqual(ean_digit('999999999999999999999999999999999'), '7')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999'), '8')
         self.assertEqual(ean_digit('99999999999999999999999999999999999'), '1')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999'), '2')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999999'), '5')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999'), '6')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999999'), '9')
         self.assertEqual(ean_digit('9999999999999999999999999999999999999999'), '0')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999999'), '3')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999999999'), '4')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999999999999'), '7')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999999999'), '8')
         self.assertEqual(ean_digit('999999999999999999999999999999999999999999999'), '1')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999999999999999'), '2')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999999999999'), '5')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999999999999999'), '6')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999999999999999999'), '9')
         self.assertEqual(ean_digit('99999999999999999999999999999999999999999999999999'), '0')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999999999999999999'), '3')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999999999999999999999'), '4')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999999999999999999'), '7')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999999999999999999999'), '8')
         self.assertEqual(ean_digit('9999999999999999999999999999999999999999999999999999999'), '1')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999999999999999999999'), '2')
-        self.assertEqual(ean_digit('999999999999999999999999999999999999999999999999999999999'), '5')
-        self.assertEqual(ean_digit('9999999999999999999999999999999999999999999999999999999999'), '6')
-        self.assertEqual(ean_digit('99999999999999999999999999999999999999999999999999999999999'), '9')
         self.assertEqual(ean_digit('999999999999999999999999999999999999999999999999999999999999'), '0')
         self.assertEqual(ean_digit('9999999999999999999999999999999999999999999999999999999999999'), '3')
         self.assertEqual(ean_digit('99999999999999999999999999999999999999999999999999999999999999'), '4')

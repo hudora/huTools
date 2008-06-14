@@ -35,8 +35,9 @@ MIT Licence."""
 
 __revision__ = "$Revision$"
 
-from ConfigParser import *
-import os, sys, stat
+from ConfigParser import ConfigParser
+import os
+import stat
 
 
 class ReReadingConfigParser(ConfigParser):
@@ -52,9 +53,9 @@ class ReReadingConfigParser(ConfigParser):
         self.config_name = fpname 
         return ConfigParser.read(self, fpname)
 
-    def readfp(self, fp, filename=None):
+    def readfp(self, fdescriptor, filename=None):
         if filename is None:
-            filename = fp.name
+            filename = fdescriptor.name
             ConfigParser.read(self, filename)
 
     def sections(self):
@@ -65,9 +66,9 @@ class ReReadingConfigParser(ConfigParser):
         self.ReReadIfChanged()
         return ConfigParser.options(self, section)
     
-    def get(self, section, option, raw=0, vars=None):
+    def get(self, section, option, raw=0, myvars=None):
         self.ReReadIfChanged()
-        return ConfigParser.get(self, section, option, raw, vars)
+        return ConfigParser.get(self, section, option, raw, myvars)
     
     # ReReadingConfigParser is read only, so overwrite configuration
     # changing commands
@@ -77,7 +78,7 @@ class ReReadingConfigParser(ConfigParser):
     def set(self, section, option, value):
         raise NotImplementedError
 
-    def write(self, fp):
+    def write(self, fdescriptor):
         raise NotImplementedError
 
     def remove_option(self, section, option):
@@ -90,21 +91,21 @@ class ReReadingConfigParser(ConfigParser):
 def test():
     import time
     
-    cf = ReReadingConfigParser()
-    fp = open('ReReadingConfigParser.TESTFILE', 'w')
-    fp.write('[TESTSECTION]\nvalue: 1\n')
-    fp.close()
+    cparser = ReReadingConfigParser()
+    fdescriptor = open('ReReadingConfigParser.TESTFILE', 'w')
+    fdescriptor.write('[TESTSECTION]\nvalue: 1\n')
+    fdescriptor.close()
     
-    cf.read('ReReadingConfigParser.TESTFILE')
-    assert cf.get('TESTSECTION', 'value') == '1'
+    cparser.read('ReReadingConfigParser.TESTFILE')
+    assert cparser.get('TESTSECTION', 'value') == '1'
 
     # to be sure mtime has changed
     time.sleep(2)
-    fp = open('ReReadingConfigParser.TESTFILE', 'w')
-    fp.write('[TESTSECTION]\nvalue: 2\n')
-    fp.close()
+    fdescriptor = open('ReReadingConfigParser.TESTFILE', 'w')
+    fdescriptor.write('[TESTSECTION]\nvalue: 2\n')
+    fdescriptor.close()
 
-    assert cf.get('TESTSECTION', 'value') == '2'
+    assert cparser.get('TESTSECTION', 'value') == '2'
     os.unlink('ReReadingConfigParser.TESTFILE')
 
     print 'ok'
