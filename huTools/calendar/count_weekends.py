@@ -1,3 +1,4 @@
+# encoding: utf-8
 """Alternative implementation of workdays. kept for testing purposes."""
 
 from datetime import timedelta, datetime

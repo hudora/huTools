@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-formats.py - formating of timestamps.
+formats.py - formating and parsing of timestamps.
 
 Created by Maximillian Dornseif on 2007-06-24.
 Copyright (c) 2007 HUDORA GmbH. All rights reserved.
@@ -34,7 +34,7 @@ def rfc2616_date_parse(data):
     return datetime.datetime.fromtimestamp(email.utils.mktime_tz(email.utils.parsedate_tz(data)))
     
 
-class FormatsTests(unittest.TestCase):
+class _FormatsTests(unittest.TestCase):
     # TODO: investigate handling of timezones.
     
     def test_rfc3339_date(self):

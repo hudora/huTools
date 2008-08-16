@@ -134,7 +134,7 @@ def verhoeff_digit(arg):
 
 # test cases
 
-class VerhoeffTests(unittest.TestCase):
+class _VerhoeffTests(unittest.TestCase):
     def test_checkdigit(self):
         self.assertEqual(verhoeff_digit('123456654321'), '9')
         # self.assertEqual(verhoeff_digit('5743839105748193475681981039847561718657489228374'), '3')
@@ -172,7 +172,7 @@ class VerhoeffTests(unittest.TestCase):
         
     
 
-class EanTests(unittest.TestCase):
+class _EanTests(unittest.TestCase):
     """Simple Tests for EAN checkdigit calculation."""
     def test_ean_digit1(self):
         """Test known EANs and their checksumms."""
@@ -250,7 +250,7 @@ class EanTests(unittest.TestCase):
         self.assertEqual(_ean_digit2('34005998000000027'), '5')
         self.assertEqual(_ean_digit2('34005998000000028'), '2')
 
-class DPDTests(unittest.TestCase):
+class _DPDTests(unittest.TestCase):
     def test_checkdigit(self):
         self.assertEqual(dpd_digit(''), '1')
         self.assertEqual(dpd_digit('2'), 'X')

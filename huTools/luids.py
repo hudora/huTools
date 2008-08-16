@@ -109,7 +109,7 @@ def luid():
 
 # Testcases
 
-class uuidsTests(unittest.TestCase):
+class _uuidsTests(unittest.TestCase):
     """Simple Testcases for uuid generation."""
     
     def test_unique_machine32(self):

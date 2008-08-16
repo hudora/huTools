@@ -161,7 +161,7 @@ def previous_workday_german(startday=datetime.datetime.today()):
     return datetime.date.fromordinal(day_ordinal)
 
 
-class WorkdayTests(unittest.TestCase):
+class _WorkdayTests(unittest.TestCase):
     """Testcases for workdays module. Calendar hint:
         November 2006         December 2006          January 2007 
      S  M Tu  W Th  F  S   S  M Tu  W Th  F  S   S  M Tu  W Th  F  S

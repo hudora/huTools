@@ -3,23 +3,15 @@ from setuptools import setup, find_packages
 setup(name='huTools',
       maintainer='Maximillian Dornseif',
       maintainer_email='md@hudora.de',
-      url='https://cybernetics.hudora.biz/projects/wiki/huTools',
+      url='https://cybernetics.hudora.biz/projects/wiki/huTools/',
       version='0.32',
       description='Various tiny tools and toys to make Python coding less work more fun.',
       long_description='''huTools is a collection of many totally non earth shattering modules:
-      Various tiny tools and toys to make Python coding less work more fun:
-      
-      * calendar              - date based calculations and format conversions for HTTP and ATOM.
-      * checksummming         - calculate various checksums including EAN/GTIN/NVE/SSCC and DPD GeoPost
-      * luids                 - locally unique user-ids with strong guarantees of beeing unique.
-      * printing              - access printers (very primitive)
-      * ReReadingConfigParser - ConfigParser which detects changes in config files
-      * unicode               - real-world unicode handling (very primitive)
-      * world                 - country codes (very primitive)''',
+      Various tiny tools and toys to make Python coding less work more fun. 
+      See https://cybernetics.hudora.biz/projects/wiki/huTools/ for further Information.''',
       license='BSD',
       classifiers=['Intended Audience :: Developers',
                    'Programming Language :: Python'],
-      
       packages = find_packages(),
-      zip_safe = False,      
+      zip_safe = False,
 )
