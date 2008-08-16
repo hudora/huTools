@@ -72,6 +72,7 @@ class ReReadingConfigParser(ConfigParser):
     
     # ReReadingConfigParser is read only, so overwrite configuration
     # changing commands
+    
     def add_section(self, section):
         raise NotImplementedError
     

@@ -15,7 +15,6 @@ import sqlobject
 DATABASE_URI = "sqlite:///Users/chris/Desktop/database.db"
 MINIMUM_SCORE = 8.0
 
-#from sqlobject import SQLObject, StringCol, FloatCol, sqlhub, connectionForURI
 
 class PythonScore(sqlobject.SQLObject):
     """
@@ -40,15 +39,15 @@ def process_file(filename):
     checkers.initialize(linter)
     linter.read_config_file()
     linter.quiet = 1
-
-    filemods = linter.expand_files((filename,))
+    
+    filemods = linter.expand_files((filename, ))
     if filemods:
         old_stats = config.load_results(filemods[0].get('basename'))
         old_score = old_stats.get('global_note', 0.0)
-
+    
     linter.check(filename)
     score = eval(linter.config.evaluation, {}, linter.stats)
-
+    
     # Calculate the credit for both scores
     if score < 0:
         credit = 2.0 * score
@@ -58,8 +57,9 @@ def process_file(filename):
         credit = -1.5 * (MINIMUM_SCORE - score)
     else:
         credit = score - old_score
-
+    
     return score, old_score, credit
+    
 
 def main(repos, revision):
     """

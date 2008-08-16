@@ -16,7 +16,9 @@ uuid module.
 Created by Maximillian Dornseif on 2006-11-08. BSD Licensed.
 """
 
-import os, time, socket
+import os
+import time
+import socket
 import unittest
 
 try:
@@ -28,6 +30,8 @@ __revision__ = "$Revision$"
 
 _counter = 0
 _counter_lock = _thread.allocate_lock()
+
+
 def unique_machine32():
     """
     Generate an ID which has a low probability of repeating on this machine.
@@ -52,15 +56,15 @@ def unique_machine32():
     global _counter
     try: # Entering critical section.
         _counter_lock.acquire()
-        now      = time.time()
-        intnow   = long(now)
+        intnow = long(time.time())
         _counter = (_counter + 1) % 0xff
         # shift more significant bytes of time up so they don't overlap PID
-        ret = (os.getpid() ^ (intnow << 16) ^ (intnow >> 16)  ^ (_counter << 24)) % 0xffffffff
+        ret = (os.getpid() ^ (intnow << 16) ^ (intnow >> 16) ^ (_counter << 24)) % 0xffffffff
     finally:
         _counter_lock.release()
     return ret
     
+
 def unique_machine64():
     """
     Generate an ID which should never repeat on this machine.
@@ -83,15 +87,17 @@ def unique_machine64():
     global _counter
     try: # Entering critical section.
         _counter_lock.acquire()
-        now      = time.time()
-        intnow   = long(now)
+        intnow = long(time.time())
         _counter = (_counter + 1) % 0xffffffff
         ret = ((intnow << 32) ^ (os.getpid() << 16) ^ (_counter)) % 0xffffffffffff
     finally:
         _counter_lock.release()
     return ret
     
+
 _hostname = None
+
+
 def luid():
     """Generate an ID which should be globally unique.
     
@@ -107,7 +113,9 @@ def luid():
         _hostname = socket.gethostname()
     return "%s%x" % (_hostname, unique_machine64())
 
+
 # Testcases
+
 
 class _uuidsTests(unittest.TestCase):
     """Simple Testcases for uuid generation."""

@@ -5,6 +5,7 @@ from datetime import timedelta, datetime
 
 __revision__ = "$Revision$"
 
+
 def calculate_weekenddays_between(datetime1, datetime2):
     """
         Returns the number of weekend days between the 2 dates passed as parameters.
@@ -47,6 +48,7 @@ def calculate_weekenddays_between(datetime1, datetime2):
             return d2 - d1
         else:
             return d2 - monday2 - timedelta(5)
+    
 
 def calculate_workingdays_between(datetime1, datetime2):
     """
@@ -64,6 +66,7 @@ def calculate_workingdays_between(datetime1, datetime2):
         d1 = datetime2
         d2 = datetime1
     return d2 - d1 - calculate_weekenddays_between(d1, d2)
+    
 
 def main():
     """

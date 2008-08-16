@@ -11,12 +11,15 @@ This file can be used under an BSD License.
 
 __revision__ = "$Revision$"
 
-import doctest, unittest
+import doctest
+import unittest
 
 # The original code came from QBasic code I written from the EAN-Spec in 1986 or so.
 # The Python code was inspired by bookland.py and was extended to "longer than EAN"
 # by checking the javascript at 
 # http://www.gs1.org/productssolutions/barcodes/support/check_digit_calculator.html
+
+
 def ean_digit(arg):
     """Calculate UPCA/EAN13/NVE checksum for any given string consiting of an arbitary number of digits.
     
@@ -32,7 +35,7 @@ def ean_digit(arg):
         summe += int(arg[index]) * factor
         factor = 4 - factor
     return str((10 - (summe % 10)) % 10)
-
+    
 
 def _ean_digit2(arg):
     """Alternate EAN check digit calculation used for sanity checks."""
@@ -44,10 +47,11 @@ def _ean_digit2(arg):
     summe = 0
     for i in range(len(arg)):         # checksum based on first 12 digits.
         summe = summe + int(arg[i]) * weight[i]
-    ret = ( magic - (summe % magic) ) % magic
+    ret = (magic - (summe % magic)) % magic
     if ret < 0 or ret >= magic:
         raise RuntimeError("EAN checkDigit: something wrong.")
     return str(ret)
+    
 
 def dpd_digit(arg):
     """Calculates the Checksum for DPD Packets.
@@ -93,34 +97,35 @@ def dpd_digit(arg):
 #
 #print f
 
+
 def verhoeff_digit(arg):
     """
     Implemention of Verhoeff's Dihedral Check Digit based on code from Nick Galbreath
     """
     
     # dihedral addition matrix A + B = a[A][B]
-    _amatrix = (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
-                ( 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 ),
-                ( 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 ),
-                ( 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 ),
-                ( 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 ),
-                ( 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 ),
-                ( 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 ),
-                ( 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 ),
-                ( 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 ),
-                ( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ))
+    _amatrix = ((0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
+                (1, 2, 3, 4, 0, 6, 7, 8, 9, 5),
+                (2, 3, 4, 0, 1, 7, 8, 9, 5, 6),
+                (3, 4, 0, 1, 2, 8, 9, 5, 6, 7),
+                (4, 0, 1, 2, 3, 9, 5, 6, 7, 8),
+                (5, 9, 8, 7, 6, 0, 4, 3, 2, 1),
+                (6, 5, 9, 8, 7, 1, 0, 4, 3, 2),
+                (7, 6, 5, 9, 8, 2, 1, 0, 4, 3),
+                (8, 7, 6, 5, 9, 3, 2, 1, 0, 4),
+                (9, 8, 7, 6, 5, 4, 3, 2, 1, 0))
           
     # dihedral inverse map, A + inverse[A] = 0
     _inverse = (0, 4, 3, 2, 1, 5, 6, 7, 8, 9)
     # permutation weighting matrix P[position][value]
-    _pmatrix = (( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
-                ( 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 ),
-                ( 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 ),
-                ( 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 ),
-                ( 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 ),
-                ( 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 ),
-                ( 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 ),
-                ( 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 ))
+    _pmatrix = ((0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
+                (1, 5, 7, 6, 2, 8, 3, 0, 9, 4),
+                (5, 8, 0, 3, 7, 9, 6, 1, 4, 2),
+                (8, 9, 1, 6, 0, 4, 3, 5, 2, 7),
+                (9, 4, 5, 3, 1, 2, 6, 8, 7, 0),
+                (4, 2, 8, 6, 5, 7, 3, 9, 0, 1),
+                (2, 7, 9, 3, 8, 0, 6, 4, 1, 5),
+                (7, 0, 4, 6, 9, 1, 3, 2, 5, 8))
     
     check = 0 # initialize check at 0
     digit = 0
@@ -134,7 +139,9 @@ def verhoeff_digit(arg):
 
 # test cases
 
+
 class _VerhoeffTests(unittest.TestCase):
+    
     def test_checkdigit(self):
         self.assertEqual(verhoeff_digit('123456654321'), '9')
         # self.assertEqual(verhoeff_digit('5743839105748193475681981039847561718657489228374'), '3')
@@ -169,11 +176,11 @@ class _VerhoeffTests(unittest.TestCase):
         self.assertEqual(verhoeff_digit('838'), '9')
         self.assertEqual(verhoeff_digit('505505'), '2')
         self.assertEqual(verhoeff_digit('050050'), '4')
-        
     
 
 class _EanTests(unittest.TestCase):
     """Simple Tests for EAN checkdigit calculation."""
+    
     def test_ean_digit1(self):
         """Test known EANs and their checksumms."""
         self.assertEqual(ean_digit(''), '0')
@@ -249,8 +256,10 @@ class _EanTests(unittest.TestCase):
         self.assertEqual(_ean_digit2('34005998000000026'), '8')
         self.assertEqual(_ean_digit2('34005998000000027'), '5')
         self.assertEqual(_ean_digit2('34005998000000028'), '2')
+    
 
 class _DPDTests(unittest.TestCase):
+    
     def test_checkdigit(self):
         self.assertEqual(dpd_digit(''), '1')
         self.assertEqual(dpd_digit('2'), 'X')

@@ -29,5 +29,9 @@ test:
 	python huTools/calendar/workdays.py
 	python huTools/calendar/formats.py
 
+check:
+	find huTools -name '*.py'  -exec pep8 --ignore=E501,W291 --repeat {} \;
+	pylint huTools
+
 install: build
 	sudo python setup.py install

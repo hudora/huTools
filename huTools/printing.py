@@ -10,6 +10,7 @@ import os
 
 __revision__ = "$Revision$"
 
+
 def print_file(filename, jobname=None, printer=None, copies=1):
     """Print a file."""
     args = [] # '-n %d' % copies]
@@ -18,6 +19,7 @@ def print_file(filename, jobname=None, printer=None, copies=1):
     # we create several separate print job
     for i in range(copies):
         os.system('/usr/local/bin/lpr %s %r' % (' '.join(args), filename))
+    
 
 def print_data(data, jobname=None, printer=None, copies=1, printserver='printserver.local.hudora.biz'):
     """Print a file."""
@@ -28,8 +30,8 @@ def print_data(data, jobname=None, printer=None, copies=1, printserver='printser
     #    args.append('-H %r' % str(printserver))
     #if jobname:
     #    args.append('-J %r' % jobname.replace("'\";./ ", "_"))
-    os.system('echo /usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args),))
+    os.system('echo /usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args), ))
     for i in range(copies):
-        fd = os.popen('/usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args),), 'w')
+        fd = os.popen('/usr/local/bin/lpr %s >> /tmp/huTools_lplog' % (' '.join(args), ), 'w')
         fd.write(data)
         fd.close()
