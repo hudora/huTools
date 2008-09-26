@@ -9,7 +9,7 @@ upload: doc
 publish:
 	# remove development tag
 	perl -npe 's/^tag_build = .dev/# tag_build = .dev/' -i setup.cfg
-	svn commit
+	svn commit -m 'release'
 	python setup.py build sdist bdist_egg upload
 	# add development tag
 	perl -npe 's/^\# tag_build = .dev/tag_build = .dev/' -i setup.cfg

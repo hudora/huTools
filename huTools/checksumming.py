@@ -38,7 +38,8 @@ def ean_digit(arg):
     
 
 def _ean_digit2(arg):
-    """Alternate EAN check digit calculation used for sanity checks."""
+    """Alternate implementation of EAN check digit calculation used for sanity checks."""
+    
     if len(arg) % 2 == 1:
         weight = [3, 1] * ((len(arg) * 2) + 1)
     else:
@@ -51,6 +52,26 @@ def _ean_digit2(arg):
     if ret < 0 or ret >= magic:
         raise RuntimeError("EAN checkDigit: something wrong.")
     return str(ret)
+    
+
+def verify_ean(arg):
+    """Check if a given strin ends withh a valid check digit.
+    
+    >>> verify_ean('4005998000007')
+    True
+    >>> verify_ean('4005998000000')
+    False
+    >>> verify_ean('foobar')
+    False
+    """
+    
+    arg = str(arg)
+    if not arg.isdigit():
+        return False
+    check = arg[-1]
+    if ean_digit(arg[:-1]) != check:
+        return False
+    return True
     
 
 def dpd_digit(arg):
