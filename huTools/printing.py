@@ -8,10 +8,11 @@ Created by Maximillian Dornseif on 2006-11-19. BSD Licensed.
 
 import logging
 from subprocess import Popen, PIPE, call
+import os
 
 __revision__ = "$Revision$"
 
-LOG_FILENAME = '/tmp/huTools_lplog'
+LOG_FILENAME = '/tmp/huTools_lplog.%d' % os.geteuid()
 logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
 
 
