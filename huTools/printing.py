@@ -7,45 +7,40 @@ Created by Maximillian Dornseif on 2006-11-19. BSD Licensed.
 """
 
 import logging
-import tempfile
 from subprocess import Popen, PIPE, call
-import os
+import os, os.path
 
 __revision__ = "$Revision$"
 
 LOG_FILENAME = '/tmp/huTools_lplog.%d' % os.geteuid()
-logging.basicConfig(format="%(asctime)-15s  %(message)s", filename=LOG_FILENAME, level=logging.INFO)
+logging.basicConfig(format="%(asctime)-15s  %(levelname)s %(message)s", filename=LOG_FILENAME, level=logging.INFO)
 
 
 def print_file(filename, jobname=None, printer=None, copies=1):
     """Print a file."""
+
+    if not os.path.exists(filename):
+        logging.error('%s does not exist')
+        return
+
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))
     args.append('"%s"' % filename)
-    assert(filename)
-    assert(filename.strip())
     logging.info(' '.join(args))
     call(args)
 
 
-def print_data(data, jobname=None, printer=None, copies=1,
-        printserver='printserver.local.hudora.biz', debug=True):
+def print_data(data, jobname=None, printer=None, copies=1, printserver='printserver.local.hudora.biz'):
     """Print a datastream."""
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))
 
-    # debugging output to track this f*ckn cups error
-    if debug:
-        tmpname = tempfile.mktemp(dir='/tmp/')
-        open(tmpname, 'w').write(data)
-        logging.info('wrote printerstream to file: ' + tmpname)
-
     #if printserver:
-    #    args.append('-H %r' % str(printserver))
-    #if jobname:
-    #    args.append('-J %r' % jobname.replace("'\";./ ", "_"))
+    #    args.append('-H %s' % printserver)
+    if jobname:
+        args.append('-J %s  ' % jobname.replace("'\";./ ", "_"))
 
     logging.info(' '.join(args))
     pipe = Popen(args, shell=False, stdin=PIPE).stdin
