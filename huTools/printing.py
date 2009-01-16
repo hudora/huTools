@@ -10,6 +10,7 @@ import logging
 from subprocess import Popen, PIPE, call
 import os, os.path
 
+
 __revision__ = "$Revision$"
 
 LOG_FILENAME = '/tmp/huTools_lplog.%d' % os.geteuid()
