@@ -16,7 +16,6 @@ __revision__ = "$Revision$"
 LOG_FILENAME = '/tmp/huTools_lplog.%d' % os.geteuid()
 logging.basicConfig(format="%(asctime)-15s  %(levelname)s %(message)s", filename=LOG_FILENAME, level=logging.INFO)
 
-
 def print_file(filename, jobname=None, printer=None, copies=1):
     """Print a file."""
 
@@ -28,7 +27,7 @@ def print_file(filename, jobname=None, printer=None, copies=1):
     if printer:
         args.append('-P%s' % str(printer))
     args.append('"%s"' % filename)
-    logging.info(' '.join(args))
+    logging.debug(' '.join(args))
     call(args)
 
 
@@ -43,7 +42,7 @@ def print_data(data, jobname=None, printer=None, copies=1, printserver='printser
     if jobname:
         args.append('-J %s  ' % jobname.replace("'\";./ ", "_"))
 
-    logging.info(' '.join(args))
+    logging.debug(' '.join(args))
     pipe = Popen(args, shell=False, stdin=PIPE).stdin
     pipe.write(data)
     pipe.close()
