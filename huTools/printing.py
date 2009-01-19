@@ -6,28 +6,22 @@ printing.py simple minded toolkit for printing on CUPS.
 Created by Maximillian Dornseif on 2006-11-19. BSD Licensed.
 """
 
-import logging
 from subprocess import Popen, PIPE, call
 import os, os.path
 
 
 __revision__ = "$Revision$"
 
-LOG_FILENAME = '/tmp/huTools_lplog.%d' % os.geteuid()
-logging.basicConfig(format="%(asctime)-15s  %(levelname)s %(message)s", filename=LOG_FILENAME, level=logging.INFO)
-
 def print_file(filename, jobname=None, printer=None, copies=1):
     """Print a file."""
 
     if not os.path.exists(filename):
-        logging.error('%s does not exist')
         return
 
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))
     args.append('"%s"' % filename)
-    logging.debug(' '.join(args))
     call(args)
 
 
@@ -42,7 +36,6 @@ def print_data(data, jobname=None, printer=None, copies=1, printserver='printser
     if jobname:
         args.append('-J %s  ' % jobname.replace("'\";./ ", "_"))
 
-    logging.debug(' '.join(args))
     pipe = Popen(args, shell=False, stdin=PIPE).stdin
     pipe.write(data)
     pipe.close()
