@@ -9,6 +9,7 @@ Copyright (c) 2007 HUDORA GmbH. All rights reserved.
 
 
 from decorator import decorator
+import functools
 
 
 def _getattr_(obj, name, default_thunk):
@@ -60,3 +61,15 @@ def method_once(method):
             setattr(self, attrname, method(self, *args, **kwargs))
             return getattr(self, attrname)
     return decorated
+
+
+def none_on_exception(func):
+    """A decorator that returns the return value of a function or None if an exception is raised."""
+
+    @functools.wraps(func)
+    def _decorator(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            return None
+    return _decorator
