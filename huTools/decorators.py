@@ -10,7 +10,7 @@ Copyright (c) 2007 HUDORA GmbH. All rights reserved.
 
 import cPickle as pickle
 import functools
-import md5
+import hashlib
 from decorator import decorator
 
 
@@ -60,22 +60,26 @@ def cache_function(length):
     wait until the function finishes. If this is not desired behavior, you can
     remove the first two lines after the ``else``.
     """
+    
     def decorator(func):
+        
         def inner_func(*args, **kwargs):
             from django.core.cache import cache
             
             raw = [func.__name__, func.__module__, args, kwargs]
             pickled = pickle.dumps(raw, protocol=pickle.HIGHEST_PROTOCOL)
-            key = md5.new(pickled).hexdigest()
+            key = hashlib.md5.new(pickled).hexdigest()
             value = cache.get(key)
-            if cache.has_key(key):
+            if value:
                 return value
             else:
                 # This will set a temporary value while ``func`` is being
                 # processed. When using threads, this is vital, as otherwise
                 # the function can be called several times before it finishes
                 # and is put into the cache.
-                class MethodNotFinishedError(Exception): pass
+                
+                class MethodNotFinishedError(Exception):
+                    pass
                 cache.set(key, MethodNotFinishedError(
                     'The function %s has not finished processing yet. This value will be replaced when it finishes.' % (func.__name__)
                 ), length)
@@ -87,8 +91,11 @@ def cache_function(length):
     
 
 # from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/425445
+
+
 def func_once(func):
     "A decorator that runs a function only once."
+    
     def decorated(*args, **kwargs):
         try:
             return decorated._once_result
@@ -101,6 +108,7 @@ def func_once(func):
 def method_once(method):
     "A decorator that runs a method only once."
     attrname = "_%s_once_result" % id(method)
+    
     def decorated(self, *args, **kwargs):
         try:
             return getattr(self, attrname)
