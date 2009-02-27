@@ -41,4 +41,5 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('NO', 'Norwegen'),
                    ('AU', 'Australien'),
                    ('IL', 'Israel'),
+                   ('FI', 'Finnland'),
                   ])
