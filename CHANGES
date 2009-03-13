@@ -1,1 +1,2 @@
 0.37p1: added Israel
+0.37: Added async.Future and decorators.cache_function
