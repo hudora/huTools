@@ -68,7 +68,7 @@ def cache_function(length):
             
             raw = [func.__name__, func.__module__, args, kwargs]
             pickled = pickle.dumps(raw, protocol=pickle.HIGHEST_PROTOCOL)
-            key = hashlib.md5.new(pickled).hexdigest()
+            key = hashlib.md5(pickled).hexdigest()
             value = cache.get(key)
             if value:
                 return value
