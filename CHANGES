@@ -1,2 +1,3 @@
+0.38: add mobotix.py (jdiemer)
 0.37p1: added Israel
 0.37: Added async.Future and decorators.cache_function
