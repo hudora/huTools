@@ -19,7 +19,7 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('NL', 'Niederlande'),
                    ('IT', 'Italien'),
                    ('GB', 'Grossbritannien'),
-                   ('LI', 'Lichtenstein'),
+                   ('LI', 'Liechtenstein'),
                    ('LU', 'Luxemburg'),
                    ('PT', 'Portugal'),
                    ('CZ', 'Tschechien'),
