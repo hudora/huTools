@@ -86,6 +86,9 @@ def dpd_digit(arg):
     'A'
     """
 
+    if not re.compile('[A-Z0-9]+').match(arg):
+        raise ValueError("Not a valid argument: %r" % arg)
+
     # to calculate the code values - position equals code value
     _chartable = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 

@@ -11,7 +11,7 @@ __revision__ = "$Revision$"
 
 COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    + sorted([
-                   ('AT', 'Östereich'),
+                   ('AT', 'Österreich'),
                    ('CH', 'Schweiz'),
                    ('BE', 'Belgien'),
                    ('FR', 'Frankreich'),
@@ -20,7 +20,7 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('IT', 'Italien'),
                    ('GB', 'Grossbritannien'),
                    ('LI', 'Lichtenstein'),
-                   ('LU', 'Luxenburg'),
+                   ('LU', 'Luxemburg'),
                    ('PT', 'Portugal'),
                    ('CZ', 'Tschechien'),
                    ('SE', 'Schweden'),
@@ -31,9 +31,9 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('HU', 'Ungarn'),
                    ('LV', 'Lettland'),
                    ('PL', 'Polen'),
-                   ('LT', 'Littauen'),
+                   ('LT', 'Litauen'),
                    ('SK', 'Slowakei'),
-                   ('HR', 'Kroatioen'),
+                   ('HR', 'Kroatien'),
                    ('IE', 'Irland'),
                    ('SI', 'Slowenien'),
                    ('EE', 'Estland'),

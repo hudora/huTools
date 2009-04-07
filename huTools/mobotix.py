@@ -2,13 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-    mobotix
-    ~~~~~~~
+Get picture data from a mobotix cam.
     
-    Get picture data from a mobotix cam.
-    
-    Created by Jens Diemer on 2009-03-13.
-    Copyright (c) 2009 HUDORA. All rights reserved.
+Created by Jens Diemer on 2009-03-13.
+Copyright (c) 2009 HUDORA. All rights reserved.
 """
 
 import urllib2
