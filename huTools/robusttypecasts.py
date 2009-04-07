@@ -4,6 +4,24 @@
 
 from types import ListType, TupleType
 import warnings
+import re
+
+
+def only_digits(data):
+    """Removes all non-digits from a string
+
+    >>> only_digits('0123456789')
+    '0123456789'
+    >>> only_digits('ab123')
+    '123'
+    >>> only_digits('1abc')
+    '1'
+    >>> only_digits('abc')
+    ''
+    """
+
+    return re.sub(r'[^0-9]', '', data)
+
 
 def int_or_0(data, default=0):
     """Wandelt "None" in default, lässt alle anderen werte unverändert.
