@@ -44,3 +44,34 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('FI', 'Finnland'),
                    ('RS', 'Republik Serbien'),
                   ])
+
+
+# Stand: Mai 2009
+EUROPEAN_UNION = ['BE', 'IT', 'RO', 'BG', 'LV', 'SE',
+                  'DK', 'LT', 'SK', 'DE', 'LU', 'SI',
+                  'EE', 'MT', 'ES', 'FI', 'NL', 'CZ',
+                  'FR', 'AT', 'HU', 'GR', 'PL', 'GB',
+                  'IE', 'PT', 'CY']
+
+
+def in_european_union(isoland):
+    """
+    Gibt zurück, ob ein Land Mitglied der EU ist.
+
+    >>> in_european_union('DE')
+    True
+    >>> in_european_union('CH')
+    False
+    >>> all(map(in_european_union, EUROPEAN_UNION))
+    True
+    >>> non_eu_countries = set((abrev for abrev, name in COUNTRY_CHOICES)) - set(EUROPEAN_UNION)
+    >>> any(map(in_european_union, non_eu_countries))
+    False
+    """
+
+    return isoland.upper() in EUROPEAN_UNION
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
