@@ -1,3 +1,5 @@
+0.38p3: calendar.formats functions now default to the current time 
+0.38p2: ???
 0.38p1: fixed caching, removed mobotix.py
 0.38: add mobotix.py (jdiemer)
 0.37p1: added Israel

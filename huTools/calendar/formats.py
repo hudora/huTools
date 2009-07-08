@@ -15,8 +15,9 @@ import email.utils
 __revision__ = "$Revision$"
 
 
-def rfc3339_date(date):
+def rfc3339_date(date=None):
     """Formates a datetime object according to RfC 3339."""
+    date = date or datetime.datetime.now()
     return date.strftime('%Y-%m-%dT%H:%M:%SZ')
     
 
@@ -29,8 +30,9 @@ def rfc3339_date_parse(date):
 # Weekday and month names for HTTP date/time formatting; always English!
 
 
-def rfc2616_date(date):
+def rfc2616_date(date=None):
     """Formates a datetime object according to RfC 2616."""
+    date = date or datetime.datetime.now()
     return email.utils.formatdate(time.mktime(date.timetuple()), usegmt=True)
     
 
@@ -60,6 +62,13 @@ class _FormatsTests(unittest.TestCase):
         """Test basic rfc2616_date_parse output."""
         self.assertEqual(rfc2616_date_parse('Sat, 03 Feb 2007 03:05:06 GMT'),
                          datetime.datetime(2007, 2, 3, 4, 5, 6))
+    
+
+class _ApiTests(unittest.TestCase):
+    def test_defaults(self):
+        """Test rfc3339_date defaults"""
+        rfc3339_date()
+        rfc2616_date()
     
 
 if __name__ == '__main__':
