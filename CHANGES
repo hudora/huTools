@@ -1,3 +1,4 @@
+0.38p4: luids.guid128() for generating a 26 character GUIDs
 0.38p3: calendar.formats functions now default to the current time 
 0.38p2: ???
 0.38p1: fixed caching, removed mobotix.py

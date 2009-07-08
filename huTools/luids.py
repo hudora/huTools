@@ -16,6 +16,8 @@ uuid module.
 Created by Maximillian Dornseif on 2006-11-08. BSD Licensed.
 """
 
+import base64
+import hashlib
 import os
 import time
 import socket
@@ -112,7 +114,16 @@ def luid():
     if not _hostname:
         _hostname = socket.gethostname()
     return "%s%x" % (_hostname, unique_machine64())
+    
 
+def guid128(salt='*'):
+    """Generates an 26 character ID which should be globally unique.
+    >>> guid128()
+    'MTB2ONDSL3YWJN3CA6XIG7O4HM'
+    """
+    data = "%r%r%r" % (luid(), salt, time.time())
+    return str(base64.b32encode(hashlib.md5(data).digest()).rstrip('='))
+    
 
 # Testcases
 
@@ -138,11 +149,16 @@ class _uuidsTests(unittest.TestCase):
     def test_unique_machine64(self):
         """Basic tests for unique_machine64."""
         seen = set()
-        for i in range(30000):
+        for i in range(3000):
             uuid = unique_machine64()
             self.assertFalse(uuid in seen)
             self.assertTrue((uuid <= 0xffffffffffff) and (uuid >= 0))
             seen.add(uuid)
     
+    def test_guid128(self):
+        """Basic tests for test_guid128"""
+        self.assertEqual(len(guid128()), 26)
+        
+
 if __name__ == '__main__':
     unittest.main()
