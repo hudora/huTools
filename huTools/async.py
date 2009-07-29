@@ -12,6 +12,8 @@ import sys
 import threading
 
 # from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
+
+
 class Future:
     """This calls a function in a separate thread and returns a function waiting for that thread to finish.
     
@@ -33,7 +35,7 @@ class Future:
         self.__Cond = threading.Condition()   # Notify on this Condition when result is ready
         
         # Run the actual function in a separate thread
-        self.__Thread = threading.Thread(target = self.Wrapper, args = ((func,) + args), **kwargs)
+        self.__Thread = threading.Thread(target = self.Wrapper, args = ((func, ) + args), **kwargs)
         self.__Thread.setName("FutureThread")
         self.__Thread.start()
     

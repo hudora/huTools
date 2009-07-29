@@ -65,6 +65,7 @@ class _FormatsTests(unittest.TestCase):
     
 
 class _ApiTests(unittest.TestCase):
+    
     def test_defaults(self):
         """Test rfc3339_date defaults"""
         rfc3339_date()

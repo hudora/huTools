@@ -1,3 +1,7 @@
+check:
+	find huTools -name '*.py'  -exec pep8 --ignore=E501,W291 --repeat {} \;
+	pylint huTools
+
 build:
 	python setup.py build
 
@@ -26,14 +30,18 @@ doc:
 	sh -c '(cd html/calendar; pydoc -w ../../huTools/calendar/*.py)'
 
 test:
+	python huTools/humessaging.py
+	python huTools/unicode.py
 	python huTools/luids.py
 	python huTools/checksumming.py
 	python huTools/calendar/workdays.py
 	python huTools/calendar/formats.py
 
-check:
-	find huTools -name '*.py'  -exec pep8 --ignore=E501,W291 --repeat {} \;
-	pylint huTools
-
 install: build
 	sudo python setup.py install
+
+clean:
+	rm -Rf build dist html test.db
+	find . -name '*.pyc' -or -name '*.pyo' -delete
+
+.PHONY: build clean install upload check

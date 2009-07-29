@@ -162,8 +162,7 @@ def verhoeff_digit(arg):
     return chr(_inverse[check]+48)
 
 
-
-def build_verhoeff_id(prefix, no, length=4):
+def build_verhoeff_id(prefix, number, length=4):
     """
     Shortcut for building IDs with prefix and verhoeff check digit 
     
@@ -175,11 +174,10 @@ def build_verhoeff_id(prefix, no, length=4):
     >>> build_verhoeff_id("Foo", 1, length=8)
     'Foo000000017'
     """
-    no_str = str(no).rjust(length, "0")
-    checksum = verhoeff_digit(no_str)
-    return prefix + no_str + checksum
-
-
+    number_str = str(number).rjust(length, "0")
+    checksum = verhoeff_digit(number_str)
+    return prefix + number_str + checksum
+    
 
 # test cases
 
