@@ -1,3 +1,5 @@
+default: check test
+
 check:
 	find huTools -name '*.py'  -exec pep8 --ignore=E501,W291 --repeat {} \;
 	pylint huTools
