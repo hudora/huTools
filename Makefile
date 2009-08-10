@@ -1,11 +1,18 @@
-default: check test
+# setting the PATH seems only to work in GNUmake not in BSDmake
+PATH := ./testenv/bin:$(PATH)
+
+default: dependencies check test
 
 check:
-	find huTools -name '*.py'  -exec pep8 --ignore=E501,W291 --repeat {} \;
-	pylint huTools
+	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
+	/usr/local/hudorakit/bin/hd_pylint huTools
 
 build:
 	python setup.py build
+
+dependencies:
+	virtualenv testenv
+	pip -q install -E testenv -r requirements.txt
 
 upload: doc
 	python setup.py build sdist bdist_egg
