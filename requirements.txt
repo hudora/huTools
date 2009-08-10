@@ -1,0 +1,2 @@
+decorator
+simplejson>2.0
