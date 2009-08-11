@@ -13,7 +13,6 @@ import threading
 
 # from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
 
-
 class Future:
     """This calls a function in a separate thread and returns a function waiting for that thread to finish.
     

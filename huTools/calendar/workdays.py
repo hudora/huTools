@@ -248,10 +248,6 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(261, workdays(date(2008, 1, 1), date(2008, 12, 31)))
         self.assertEqual(260+260, workdays(date(2005, 1, 1), date(2006, 12, 31)))
         self.assertEqual(260+260+260, workdays(date(2005, 1, 1), date(2007, 12, 31)))
-        # TODO: this fails! leap year issue?
-        # self.assertEqual(261+260, workdays(date(2004, 1, 1), date(2005,  12,  31)))
-        # self.assertEqual(261+260+260, workdays(date(2004, 1, 1), date(2006,  12,  31)))
-        # self.assertEqual(260+260+260+261, workdays(date(2005, 1, 1), date(2008,  12,  31)))
     
     def test_workdays_german(self):
         """Simple minded tests for workdays_german()."""

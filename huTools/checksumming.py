@@ -20,7 +20,6 @@ import unittest
 # by checking the javascript at 
 # http://www.gs1.org/productssolutions/barcodes/support/check_digit_calculator.html
 
-
 def ean_digit(arg):
     """Calculate UPCA/EAN13/NVE checksum for any given string consiting of an arbitary number of digits.
     
@@ -106,7 +105,7 @@ def dpd_digit(arg):
     if cdigit == mod:
         cdigit = 0
     return _chartable[cdigit]
-
+    
 
 def verhoeff_digit(arg):
     """
