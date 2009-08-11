@@ -39,12 +39,12 @@ doc:
 	sh -c '(cd html/calendar; pydoc -w ../../huTools/calendar/*.py)'
 
 test:
-	python huTools/humessaging.py
-	python huTools/luids.py
-	python huTools/checksumming.py
-	python huTools/calendar/workdays.py
-	python huTools/calendar/formats.py
-	python huTools/unicode.py
+	PYTHONPATH=. python huTools/humessaging.py
+	PYTHONPATH=. python huTools/luids.py
+	PYTHONPATH=. python huTools/checksumming.py
+	PYTHONPATH=. python huTools/calendar/workdays.py
+	PYTHONPATH=. python huTools/calendar/formats.py
+	PYTHONPATH=. python huTools/unicode.py
 
 install: build
 	sudo python setup.py install
