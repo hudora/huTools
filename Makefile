@@ -15,7 +15,7 @@ dependencies:
 	pip -q install -E testenv -r requirements.txt
 
 statistics:
-	sloccount --wide --details . | grep -v -E '(testenv|build|.svn)/' > sloccount.sc
+	sloccount --wide --details huTools | tee sloccount.sc
 
 upload: doc
 	python setup.py build sdist bdist_egg
@@ -53,7 +53,8 @@ install: build
 	sudo python setup.py install
 
 clean:
-	rm -Rf testenv build dist html test.db pylint.out sloccount.sc
+	rm -Rf testenv build dist html test.db pylint.out sloccount.sc pip-log.txt
+	
 	find . -name '*.pyc' -or -name '*.pyo' -delete
 
 .PHONY: build clean install upload check
