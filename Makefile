@@ -15,7 +15,7 @@ dependencies:
 	pip -q install -E testenv -r requirements.txt
 
 statistics:
-	sloccount --wide --details . | grep -v -E '(testenv|build)' > sloccount.sc
+	sloccount --wide --details . | grep -v -E '(testenv|build|.svn)/' > sloccount.sc
 
 upload: doc
 	python setup.py build sdist bdist_egg
