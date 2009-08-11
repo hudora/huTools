@@ -107,21 +107,6 @@ def dpd_digit(arg):
         cdigit = 0
     return _chartable[cdigit]
 
-#f = [tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple()]
-#f[0] = ( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 )
-#f[1] = ( 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 );
-#i=2;
-#j=0;
-#while(i < 8):
-#    f[i] = [tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple(),tuple()]
-#    while(j < 10):
-#        f[i][j] = f[i-1][f[1][j]]
-#        j += 1
-#    j = 0;
-#    i += 1
-#
-#print f
-
 
 def verhoeff_digit(arg):
     """
@@ -180,7 +165,6 @@ def build_verhoeff_id(prefix, number, length=4):
     
 
 # test cases
-
 
 class _VerhoeffTests(unittest.TestCase):
     

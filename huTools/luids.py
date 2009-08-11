@@ -127,7 +127,6 @@ def guid128(salt='*'):
 
 # Testcases
 
-
 class _uuidsTests(unittest.TestCase):
     """Simple Testcases for uuid generation."""
     

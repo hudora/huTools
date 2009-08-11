@@ -29,7 +29,6 @@ def rfc3339_date_parse(date):
 # RfC 2616 is a subset of RFC 1123 date
 # Weekday and month names for HTTP date/time formatting; always English!
 
-
 def rfc2616_date(date=None):
     """Formates a datetime object according to RfC 2616."""
     date = date or datetime.datetime.now()
@@ -43,7 +42,6 @@ def rfc2616_date_parse(data):
 
 class _FormatsTests(unittest.TestCase):
     # TODO: investigate handling of timezones.
-    
     def test_rfc3339_date(self):
         """Test basic rfc3339_date output."""
         self.assertEqual(rfc3339_date(datetime.datetime(2007, 2, 3, 4, 5, 6)), '2007-02-03T04:05:06Z')
