@@ -1,7 +1,7 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
 PATH := ./testenv/bin:$(PATH)
 
-default: dependencies check test
+default: dependencies check test statistics
 
 check:
 	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
