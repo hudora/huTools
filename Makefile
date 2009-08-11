@@ -5,7 +5,7 @@ default: dependencies check test statistics
 
 check:
 	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	/usr/local/hudorakit/bin/hd_pylint huTools | tee pylint.out
+	/usr/local/hudorakit/bin/hd_pylint -f parseable huTools | tee pylint.out
 
 build:
 	python setup.py build
