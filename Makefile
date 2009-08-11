@@ -14,6 +14,9 @@ dependencies:
 	virtualenv testenv
 	pip -q install -E testenv -r requirements.txt
 
+statistics:
+	sloccount --wide --details . | grep -v -E '(testenv|build)' > sloccount.sc
+
 upload: doc
 	python setup.py build sdist bdist_egg
 	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
@@ -50,7 +53,7 @@ install: build
 	sudo python setup.py install
 
 clean:
-	rm -Rf testenv build dist html test.db pylint.out
+	rm -Rf testenv build dist html test.db pylint.out sloccount.sc
 	find . -name '*.pyc' -or -name '*.pyo' -delete
 
 .PHONY: build clean install upload check
