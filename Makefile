@@ -5,7 +5,7 @@ default: dependencies check test
 
 check:
 	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	/usr/local/hudorakit/bin/hd_pylint huTools
+	/usr/local/hudorakit/bin/hd_pylint huTools | tee pylint.out
 
 build:
 	python setup.py build
@@ -50,7 +50,7 @@ install: build
 	sudo python setup.py install
 
 clean:
-	rm -Rf build dist html test.db
+	rm -Rf testenv build dist html test.db pylint.out
 	find . -name '*.pyc' -or -name '*.pyo' -delete
 
 .PHONY: build clean install upload check
