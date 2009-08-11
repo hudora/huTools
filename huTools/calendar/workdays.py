@@ -8,7 +8,9 @@ BSD Licensed.
 """
 
 import datetime
+import doctest
 import unittest
+import sys
 from huTools.decorators import memoize
 
 __revision__ = "$Revision$"
@@ -322,6 +324,6 @@ class _WorkdayTests(unittest.TestCase):
         
     
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+    failure_count, test_count = doctest.testmod()
     unittest.main()
+    sys.exit(failure_count)

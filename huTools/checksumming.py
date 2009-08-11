@@ -9,16 +9,18 @@ Created by Maximillian Dornseif on 2006-11-05.
 This file can be used under an BSD License.
 """
 
+# The original EAN code came from QBasic code I written from the EAN-Spec in 1986 or so.
+# The Python code was inspired by bookland.py and was extended to "longer than EAN"
+# by checking the javascript at 
+# http://www.gs1.org/productssolutions/barcodes/support/check_digit_calculator.html
+
 __revision__ = "$Revision$"
 
 import re
 import doctest
 import unittest
+import sys
 
-# The original code came from QBasic code I written from the EAN-Spec in 1986 or so.
-# The Python code was inspired by bookland.py and was extended to "longer than EAN"
-# by checking the javascript at 
-# http://www.gs1.org/productssolutions/barcodes/support/check_digit_calculator.html
 
 def ean_digit(arg):
     """Calculate UPCA/EAN13/NVE checksum for any given string consiting of an arbitary number of digits.
@@ -163,8 +165,6 @@ def build_verhoeff_id(prefix, number, length=4):
     return prefix + number_str + checksum
     
 
-# test cases
-
 class _VerhoeffTests(unittest.TestCase):
     
     def test_checkdigit(self):
@@ -300,5 +300,6 @@ class _DPDTests(unittest.TestCase):
         
     
 if __name__ == '__main__':
-    doctest.testmod()
+    failure_count, test_count = doctest.testmod()
     unittest.main()
+    sys.exit(failure_count)

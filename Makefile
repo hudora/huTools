@@ -40,11 +40,11 @@ doc:
 
 test:
 	python huTools/humessaging.py
-	python huTools/unicode.py
 	python huTools/luids.py
 	python huTools/checksumming.py
 	python huTools/calendar/workdays.py
 	python huTools/calendar/formats.py
+	python huTools/unicode.py
 
 install: build
 	sudo python setup.py install

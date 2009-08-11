@@ -3,8 +3,10 @@
 """Module for robust typecasts."""
 
 from types import ListType, TupleType
-import warnings
+import doctest
 import re
+import sys
+import warnings
 
 
 def only_digits(data):
@@ -86,5 +88,5 @@ def float_or_0(data, default=0.0):
 
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+    failure_count, test_count = doctest.testmod()
+    sys.exit(failure_count)

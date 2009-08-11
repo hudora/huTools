@@ -4,6 +4,8 @@
 Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
 """
 
+import doctest
+import sys
 from types import StringType
 
 __revision__ = "$Revision$"
@@ -32,22 +34,24 @@ _recodings = {'ae': set(['ä', u'ä', '&auml;', '\u00E4', u'\u00E4', '\u0308a', 
 def deUmlaut(data):
     """Converts a text to ASCII acting smart about Umlauts.
     
-    >>> deUmlaut('1 Über Hügel saß René äöüÄÖÜß ø')
-    '1 Ueber Huegel sass Rene aeoeueAeOeUess ?'
-    
-    >>> deUmlaut(u'2 Über Hügel saß René äöüÄÖÜß ø')
-    '2 Ueber Huegel sass Rene aeoeueAeOeUess ?'
+    >>> deUmlaut('1 Über Hügel saß René äöüÄÖÜß')
+    '1 Ueber Huegel sass Rene aeoeueAeOeUess'
     """
     
     for to_char, from_chars in _recodings.items():
         for from_char in from_chars:
-            data = data.replace(from_char, to_char)
+            try:
+                data = data.replace(from_char, to_char)
+            except UnicodeDecodeError:
+                data = data
     try:
         return data.encode('ascii', 'replace')
     except UnicodeEncodeError, msg:
         raise ValueError('%s: %r' % (msg, data))
+    except UnicodeDecodeError, msg:
+        raise ValueError('%s: %r' % (msg, data))
     
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+    failure_count, test_count = doctest.testmod()
+    sys.exit(failure_count)

@@ -11,10 +11,18 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 """
 
 import decimal
+import doctest
 import huTools.calendar.formats
 import huTools.luids
 import re
 import simplejson as json
+import sys
+
+if sys.version_info[:2] <= (2, 5):
+    # ugly monkeypatch to make doctests work. For the reasons see
+    # See http://mail.python.org/pipermail/python-dev/2008-July/081420.html
+    # It can go away once all our boxes run python > 2.5
+    decimal.Decimal.__repr__ = lambda s: "Decimal('%s')" % str(s)
 
 
 def extend_audittrail(audit_info='', audit_trail=''):
@@ -56,18 +64,21 @@ def empty_message(creator, audit_info='', audit_trail='', guid=''):
     return ret
     
 
+_marker = '!2498313c6da44c02509d99642bada2d4!' # to detect decimal
+
+
 def _encode_decimal(obj):
     """Helper for encoding decimal objects. Needs later fixup by regular expressions.
     
     >>> _encode_decimal(decimal.Decimal('5.00'))
-    'Decimal("5.00")'
+    '!2498313c6da44c02509d99642bada2d4!#5.00#!2498313c6da44c02509d99642bada2d4!'
     """
     if isinstance(obj, decimal.Decimal):
-        return repr(obj)
+        return "%s#%s#%s" % (_marker, repr(obj).strip('Decimal()"\''), _marker)
     raise TypeError("%r is not JSON serializable" % (obj, ))
     
 
-_decimal_re = re.compile(r'"Decimal\(.+"(\d+)\.(\d+).+"\)"')
+_decimal_re = re.compile(r'"!2498313c6da44c02509d99642bada2d4!#(\d+)\.(\d+)#!2498313c6da44c02509d99642bada2d4!"')
 
 
 def encode(message):
@@ -92,7 +103,7 @@ def decode(data):
     Besides the types familar from Python's json module it can unserialize Decimal() objects.
     
     >>> decode('{"created_by":"test","guid":123,"num":5.00}')
-    {'guid': 123, 'num': Decimal("5.00"), 'created_by': 'test'}
+    {'guid': 123, 'num': Decimal('5.00'), 'created_by': 'test'}
     """
     return json.loads(data, parse_float=decimal.Decimal)
     
@@ -106,5 +117,5 @@ def setup_queue(chan, name, durable=False, auto_delete=False, exclusive=False):
     
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    failure_count, test_count = doctest.testmod()
+    sys.exit(failure_count)

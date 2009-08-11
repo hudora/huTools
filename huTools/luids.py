@@ -125,8 +125,6 @@ def guid128(salt='*'):
     return str(base64.b32encode(hashlib.md5(data).digest()).rstrip('='))
     
 
-# Testcases
-
 class _uuidsTests(unittest.TestCase):
     """Simple Testcases for uuid generation."""
     

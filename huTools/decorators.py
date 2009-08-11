@@ -25,6 +25,7 @@ def _getattr_(obj, name, default_thunk):
 
 # from http://www.phyast.pitt.edu/~micheles/python/documentation.html
 
+
 @decorator
 def memoize(func, *args):
     """This decorator caches the results of the function it decorates.
@@ -43,6 +44,7 @@ def memoize(func, *args):
 
 
 # from somewhere on the internet
+
 
 def cache_function(length):
     """
@@ -77,6 +79,7 @@ def cache_function(length):
     
 
 # from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/425445
+
 
 def func_once(func):
     "A decorator that runs a function only once."

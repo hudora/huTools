@@ -5,13 +5,13 @@ async.py - functions for asyncrounous code
 
 Created by Maximillian Dornseif on 2009-02-15.
 Copyright (c) 2009 HUDORA. All rights reserved.
+parts based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
 """
 
 import copy
 import sys
 import threading
 
-# from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
 
 class Future:
     """This calls a function in a separate thread and returns a function waiting for that thread to finish.

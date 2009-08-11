@@ -7,6 +7,9 @@ Created by Maximillian Dornseif on 2007-05-01.
 Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
 """
 
+import doctest
+import sys
+
 __revision__ = "$Revision$"
 
 COUNTRY_CHOICES = [('DE', 'Deutschland')] \
@@ -73,5 +76,5 @@ def in_european_union(isoland):
 
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    failure_count, test_count = doctest.testmod()
+    sys.exit(failure_count)

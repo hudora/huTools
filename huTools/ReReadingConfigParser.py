@@ -72,6 +72,7 @@ class ReReadingConfigParser(ConfigParser):
     
     # ReReadingConfigParser is read only, so overwrite configuration
     # changing commands
+    
     def add_section(self, section):
         raise NotImplementedError
     
@@ -107,8 +108,7 @@ def test():
 
     assert cparser.get('TESTSECTION', 'value') == '2'
     os.unlink('ReReadingConfigParser.TESTFILE')
-
-    print 'ok'
     
+
 if __name__ == '__main__':
     test()
