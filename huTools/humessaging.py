@@ -16,6 +16,7 @@ import huTools.calendar.formats
 import huTools.luids
 import re
 import simplejson as json
+import warnings
 import sys
 
 if sys.version_info[:2] <= (2, 5):
@@ -35,6 +36,9 @@ def extend_audittrail(audit_info='', audit_trail=''):
     >>> extend_audittrail('b;b', 'a a')
     'a a;b b'
     """
+    
+    warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
+    
     return ';'.join([x for x in audit_trail.split(';') + [audit_info.replace(';', ' ')] if x])
     
 
@@ -50,6 +54,9 @@ def empty_message(creator, audit_info='', audit_trail='', guid=''):
                  processing step. E.g. "lieferschenrueckmeldung-4234543". Should only contain
                  printable ASCII characters.
     """
+    
+    warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
+    
     ret = {'created_at': huTools.calendar.formats.rfc3339_date(),
            'created_by': creator,
            'audit_trail': audit_trail,
@@ -89,6 +96,9 @@ def encode(message):
     >>> encode({'guid': 123, 'created_by': 'test', 'num': decimal.Decimal('5.00')})
     '{"created_by":"test","guid":123,"num":5.00}'
     """
+    
+    warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
+    
     assert 'created_by' in message
     assert 'guid' in message
     ret = json.dumps(message, default=_encode_decimal, sort_keys=True, separators=(',', ':'))
@@ -105,11 +115,16 @@ def decode(data):
     >>> decode('{"created_by":"test","guid":123,"num":5.00}')
     {'guid': 123, 'num': Decimal('5.00'), 'created_by': 'test'}
     """
+    
+    warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
+    
     return json.loads(data, parse_float=decimal.Decimal)
     
 
 def setup_queue(chan, name, durable=False, auto_delete=False, exclusive=False):
     """Sets up AMQP Queue 'name' and the assorted exchange, routing key and stuff dictated by AMQP"""
+    
+    warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
     
     chan.exchange_declare(exchange=name, type="direct", durable=durable, auto_delete=auto_delete)
     chan.queue_declare(queue=name, durable=durable, exclusive=exclusive, auto_delete=auto_delete)
