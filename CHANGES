@@ -1,3 +1,4 @@
+0.39p1: added daemon.daemonize
 0.39: added humessaging, uniciode.deUmlaut, cleanup
 0.38p4: luids.guid128() for generating a 26 character GUIDs
 0.38p3: calendar.formats functions now default to the current time 
