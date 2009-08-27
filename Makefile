@@ -1,11 +1,35 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
 PATH := ./testenv/bin:$(PATH)
 
-default: dependencies check test statistics
+default: dependencies check test
+
+hudson: dependencies test statistics coverage
+	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
+	/usr/local/hudorakit/bin/hd_pylint huTools
+	# we can't use tee because it eats the error code from hd_pylint
+	/usr/local/hudorakit/bin/hd_pylint -f parseable huTools > .pylint.out
+	printf 'YVALUE=' > .pylint.score
+	grep "our code has been rated at" < .pylint.out|cut -d '/' -f 1|cut -d ' ' -f 7 >> .pylint.score
 
 check:
-	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	/usr/local/hudorakit/bin/hd_pylint -f parseable huTools | tee pylint.out
+	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
+	-/usr/local/hudorakit/bin/hd_pylint -f parseable huTools | tee pylint.out
+
+coverage: dependencies
+	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
+	printf '/usr/local/lib/.*\n/opt/.*\ntestenv/.*\n' >> .figleaf-exclude.txt
+	printf '.*manage.py\n.*settings.py\n.*setup.py\n.*urls.py\n' >> .figleaf-exclude.txt
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/humessaging.py
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/luids.py
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/checksumming.py
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/calendar/workdays.py
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/calendar/formats.py
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/unicode.py
+	python /usr/local/hudorakit/bin/hd_figleaf2html -d ./coverage -x .figleaf-exclude.txt
+	echo "Coverage: " `grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-13|cut -d'<' -f1`
+	test `grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-13|cut -d'.' -f1` -gt 70
+	printf 'YVALUE=' > .coverage.score
+	grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-12 >> .coverage.score
 
 build:
 	python setup.py build
