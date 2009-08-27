@@ -8,7 +8,6 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 """
 
 
-from threading import *
 import ConfigParser
 import copy
 import getopt
