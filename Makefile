@@ -15,6 +15,15 @@ check:
 	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
 	-/usr/local/hudorakit/bin/hd_pylint huTools
 
+test:
+	PYTHONPATH=. python huTools/humessaging.py
+	PYTHONPATH=. python huTools/luids.py
+	PYTHONPATH=. python huTools/checksumming.py
+	PYTHONPATH=. python huTools/calendar/workdays.py
+	PYTHONPATH=. python huTools/calendar/formats.py
+	PYTHONPATH=. python huTools/obfuscation.py
+	PYTHONPATH=. python huTools/unicode.py
+
 coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
 	printf '/usr/local/lib/.*\n/opt/.*\ntestenv/.*\n' >> .figleaf-exclude.txt
@@ -28,6 +37,7 @@ coverage: dependencies
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/decorators.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/fs.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/luids.py
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/obfuscation.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/printing.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/robusttypecasts.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/unicode.py
@@ -70,14 +80,6 @@ doc:
 	mkdir -p html/calendar
 	sh -c '(cd html; pydoc -w ../huTools/*.py)'
 	sh -c '(cd html/calendar; pydoc -w ../../huTools/calendar/*.py)'
-
-test:
-	PYTHONPATH=. python huTools/humessaging.py
-	PYTHONPATH=. python huTools/luids.py
-	PYTHONPATH=. python huTools/checksumming.py
-	PYTHONPATH=. python huTools/calendar/workdays.py
-	PYTHONPATH=. python huTools/calendar/formats.py
-	PYTHONPATH=. python huTools/unicode.py
 
 install: build
 	sudo python setup.py install
