@@ -14,7 +14,7 @@ __revision__ = "$Revision$"
 
 COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    + sorted([
-                   ('AT', 'Österreich'),
+                   ('AT', u'Österreich'),
                    ('CH', 'Schweiz'),
                    ('BE', 'Belgien'),
                    ('FR', 'Frankreich'),
@@ -46,7 +46,8 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('IL', 'Israel'),
                    ('FI', 'Finnland'),
                    ('RS', 'Republik Serbien'),
-                   ('ZA', 'Südafrika'),
+                   ('ZA', u'Südafrika'),
+                   ('RO', u'Rumänien'),
                   ])
 
 
@@ -74,7 +75,6 @@ def in_european_union(isoland):
     """
 
     return isoland.upper() in EUROPEAN_UNION
-
 
 if __name__ == "__main__":
     failure_count, test_count = doctest.testmod()
