@@ -53,7 +53,7 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                   ])
 
 
-# Stand: Mai 2009
+# Stand: Mai 2009 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.
 EUROPEAN_UNION = ['BE', 'IT', 'RO', 'BG', 'LV', 'SE',
                   'DK', 'LT', 'SK', 'DE', 'LU', 'SI',
                   'EE', 'MT', 'ES', 'FI', 'NL', 'CZ',

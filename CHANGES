@@ -1,3 +1,4 @@
+0.39p3: Version Number bumped for fix in [6688] (RO)
 0.39p2: added obfuscation.RC4
 0.39p1: added daemon.daemonize
 0.39: added humessaging, uniciode.deUmlaut, cleanup
