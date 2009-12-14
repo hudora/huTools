@@ -17,7 +17,7 @@ huTools is a small collection of helpful tools we use.
 
 h2. Downloads
 
-Get it at  http://github.com/hudora/dist/huTools/ or at the "Python Cheeseshop":http://pypi.python.org/pypi/huTools/.
+Get it at "GitHub":http://github.com/hudora/huTools/ or at the "Python Cheeseshop":http://pypi.python.org/pypi/huTools/.
 
 h2. Changes
 
