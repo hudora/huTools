@@ -1,1 +1,0 @@
-See __init__.py and https://cybernetics.hudora.biz/projects/wiki/huTools for some documentation.
