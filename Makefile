@@ -64,16 +64,9 @@ upload: doc
 	rsync -r --delete html root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
 
 publish:
-	# remove development tag
-	perl -npe 's/^tag_build = .dev/# tag_build = .dev/' -i setup.cfg
-	svn commit -m "release of echo `grep version setup.py`"
 	python setup.py build sdist bdist_egg upload
 	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
 	rsync -r --delete html root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
-	# add development tag
-	perl -npe 's/^\# tag_build = .dev/tag_build = .dev/' -i setup.cfg
-	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
-	echo "now bump version number in setup.py and commit"
 
 doc:
 	rm -Rf html
