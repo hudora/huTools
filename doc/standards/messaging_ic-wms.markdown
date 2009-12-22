@@ -60,7 +60,6 @@ Korrekturbuchungen gelösst werden.
      "batchnr": "3104247"}
 
 
-
 ## Kommiauftrag
 
 Die Nachricht wird - möglicherweise viele Tage - vor dem gewünschten Anliefertermin von Incentory Control
