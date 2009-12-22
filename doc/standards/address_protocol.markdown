@@ -1,53 +1,49 @@
-Very Simple Address Protocol
-============================
+# Very Simple Address Protocol
 
-This is the standard way we encode addresses at Hudora_. The *Address Protocol* can be implemented in XML,
-JSON_, as object attributes in your programming language of choice or whatever.
+This is the standard way we encode addresses at [Hudora][1]. The *Address Protocol* can be implemented in XML,
+[JSON][2], as object attributes in your programming language of choice or whatever.
 The field names are in german. Consider them a "terminus technicus". This helps to avoid name clashes with
 other formats.
 
-.. _Hudora: http://www.hudora.de/
-.. _JSON: http://www.json.org/
+[1]: http://www.hudora.de/
+[2]: http://www.json.org/
 
 The *Address Protocol* ist designed to be easy to encode in a wide range of formats.
 
-Required Fields
----------------
+## Required Fields
 
  * **name1** - primary name identifying the recipient 
  * **name2** - additional information identifying the recipient or additional adressing information. May be empty.
  * **strasse** - addressing information, usually the street address. might be empty. 
- * **land** - country (`ISO 3166`, 2-letter country code)
- * **plz** - zip code, might be empty (e.g. in Ireland_. Note that even `in the US the ZIP code is sufficient for adressing`_, the name of the State is redundant)
+ * **land** - country ([ISO 3166][3], 2-letter country code)
+ * **plz** - zip code, might be empty (e.g. [in Ireland][4]. Note that [even in the US the ZIP code seems sufficient for adressing][5], the name of the State is redundant)
  * **ort** - city name
 
-.. _`ISO 3166`: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-.. _Ireland: http://en.wikipedia.org/wiki/Postal_code#Ireland
-.. _`in the US the ZIP code is sufficient for adressing`: http://en.wikipedia.org/wiki/ZIP_Code#By_geography
+[3]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+[4]: http://en.wikipedia.org/wiki/Postal_code#Ireland
+[5]: http://en.wikipedia.org/wiki/ZIP_Code#By_geography
 
-Optional fields
----------------
+## Optional fields
 
  * **name3** - additional information identifying the recipient or additional adressing information. May be dropped during processing. *Put noting important in here*!
- * **tel** - phone number relevant to the address/delivery (formated like `DIN 5008`_ or `E.123`_)
- * **fax** - fax number relevant to the address/delivery (formated like DIN 5008 or E.123)
- * **mobil** - additional phone number relevant to the address/delivery (formated like DIN 5008 or E.123)
+ * **tel** - phone number relevant to the address/delivery (formated like [DIN 5008][6] or [E.123][7])
+ * **fax** - fax number relevant to the address/delivery (formated like [DIN 5008][6] or [E.123][7])
+ * **mobil** - additional phone number relevant to the address/delivery (formated like [DIN 5008][6] or [E.123][7])
  * **mail** - E-Mail address relevant to the address/delivery
- * **iln** - GLN_, the worldwide uniqe number of that company/address `allocated by GS1`_
+ * **iln** - [GLN][8], the worldwide uniqe number of that company/address [allocated by GS1][9]
 
-.. _`DIN 5008`: http://de.wikipedia.org/wiki/Rufnummer#Schreibweise_in_Deutschland_und_.C3.96sterreich
-.. _`E.123`: http://en.wikipedia.org/wiki/E.123
-.. _GLN: http://en.wikipedia.org/wiki/ILN
-.. _`allocated by GS1`: http://www.gs1.org/glnrules/storyboard/
+[6]: http://de.wikipedia.org/wiki/Rufnummer#Schreibweise_in_Deutschland_und_.C3.96sterreich
+[7]: http://en.wikipedia.org/wiki/E.123
+[8]: http://en.wikipedia.org/wiki/ILN
+[9]: http://www.gs1.org/glnrules/storyboard/
 
-Additional Explanation
-----------------------
+## Additional Explanation
 
 Field length is not defined. We have seen that field lengths longer than 32 characters have a high propability
 of beeing truncated. Based on E.164 Phone, Fax and Mobile Numbers should
-not be longer than 19 characters (15 digits  and one '+' one '-' and two spaces). PLZ should `never be longer than 10 characters`_.
+not be longer than 19 characters (15 digits  and one '+' one '-' and two spaces). PLZ should [never be longer than 10 characters][10].
 
-.. _`never be longer than 10 characters`: http://de.wikipedia.org/wiki/Postleitzahl#Postleitzahlen_in_der_Datenverarbeitung
+[10]: http://de.wikipedia.org/wiki/Postleitzahl#Postleitzahlen_in_der_Datenverarbeitung
 
 All information should be related to the (delivery) address. If we for example talking about an order, the
 Phone Number should not be the person who ordered (e.g. the office) but the person who can give information about
@@ -59,13 +55,13 @@ The E-Mail address might be used to send delivery status messages.
 
 
 
-Examples
---------
+## Examples
 
-XML
-~~~
+### XML
 
-This example encodes the address protocol as [http://en.wikipedia.org/wiki/Plain_Old_XML Plain Old XML (POX)]::
+This example encodes the address protocol as [Plain Old XML (POX)][11]:
+
+[11]:http://en.wikipedia.org/wiki/Plain_Old_XML
 
     <address> 
       <name1>HUDORA GmbH</name1>
@@ -82,13 +78,13 @@ This example encodes the address protocol as [http://en.wikipedia.org/wiki/Plain
       <iln>4005998000007</iln>
     </address>
 
-HTML
-~~~~
+### HTML
 
-This example combines the adress protocol and [http://microformats.org/wiki/hcard hCard] microformat
+This example combines the adress protocol and [hCard][12] microformat
 into Plain Old Semantic HTML (POSH). This can be created from the XML-Example above by using an
-XSLT stylesheet::
+XSLT stylesheet:
 
+[12]: http://microformats.org/wiki/hcard
 
     <div id="hcard-example" class="vcard deHudoraAddress">
       <div>
@@ -117,10 +113,7 @@ XSLT stylesheet::
     </div>
 
 
-JSON
-~~~~
-
-Address encoded in JSON Syntax::
+### JSON
 
     {"iln": "4005998000007",
      "name1": "HUDORA GmbH",
@@ -137,10 +130,7 @@ Address encoded in JSON Syntax::
 
 
 
-Python
-~~~~~~
-
-Address encoded in Python Syntax::
+### Python
 
     address = {
       'name1':   'HUDORA GmbH',
@@ -158,20 +148,17 @@ Address encoded in Python Syntax::
     }
 
 
-Alternatives
-~~~~~~~~~~~~
+## Alternatives
 
- * vCard_ and hCard_.
- * EDIFACT NAD_, LOC_ or ADR Segments.
+ * [vCard][13] and [hCard][12].
+ * EDIFACT [NAD][14], [LOC][15] or [ADR][16] Segments.
 
-.. _vCard: http://www.imc.org/pdi/vcardoverview.html
-.. _hCard: http://microformats.org/wiki/hcard
-.. _NAD: http://www.glimbh.eu/edifact/m_1002/m_A/trsd/trsdnad.htm
-.. _LOC: http://www.edifactory.de/seginfo.php?s=D07A&g=LOC
-.. _ADR: http://www.edifactory.de/seginfo.php?s=D07A&g=ADR
+[13]: http://www.imc.org/pdi/vcardoverview.html
+[14]: http://www.glimbh.eu/edifact/m_1002/m_A/trsd/trsdnad.htm
+[15]: http://www.edifactory.de/seginfo.php?s=D07A&g=LOC
+[16]: http://www.edifactory.de/seginfo.php?s=D07A&g=ADR
 
 
-See Also
-~~~~~~~~
+## See Also
 
 VerySimpleOrderProtocol and LieferungProtocol.
