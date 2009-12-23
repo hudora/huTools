@@ -33,7 +33,7 @@ Im folgenden eine detaillierte Beschreibung der einzelnen Nachrichtentypen.
 
 Diese Nachricht wird unmittelbar an das WMS gesendet, wenn die Ware das Lagerphysisch erreicht haben
 sollte. Pro Artikel wird eine Nachricht gesendet. GUIDs sollten auf jeden Fall doppelte Zubuchungen
-vermeiden. Warenzugänge werden durch dsa WMS nicht bestätigt. Abweichungen soll/istmenge müssen über
+vermeiden. Warenzugänge werden durch das WMS nicht bestätigt. Abweichungen soll/istmenge müssen über
 Korrekturbuchungen gelösst werden.
 
 ### Pflichtfelder
@@ -211,7 +211,7 @@ Datenstruktur an das WMS gesendet werden.
 
 ### Lieferschein als PDF
 
-Lieferscheine werden nach Rückmeldung als PDF zur Verfügung gestellt. Dabeisind die Dateien nach der
+Lieferscheine werden nach Rückmeldung als PDF zur Verfügung gestellt. Dabei sind die Dateien nach der
 *kommiauftragsnr* benannt. Für obiges Beispiel z.B. "2103839.pdf". Die Erzeugung von Lieferscheinen dauert
 1-2 Minuten.
 
@@ -267,14 +267,14 @@ nur komplette Aufträge storniert werden.
 Eine *Stornierungsbestaetigung* wird vom WMS als Antwort auf jede *Stornierung* hin an Inventory Control
 gesendet. Die Nachrichst sollte sehr Zeitnah zum Emfang der *Stornierung* Nachricht gesendet werden.
 
-In Notfällen kann das WMS auch selbst eine Stornierungsbestaetigung ohne vorherige Stornierungsnachricht
+In Notfällen kann das WMS auch selbst eine Stornierungsbestätigung ohne vorherige Stornierungsnachricht
 auslösen. Das ist beispielsweise der Fall, wenn eine Unterdeckung vorliegt.
 
 
 ### Pflichtfelder
 
 * **kommiauftragsnr** - Nummer des Auftrags, dessen Priorität geändert werden soll.
-* **status** - Ob die stornierung erfolgt ist. Kann ausschliesslich die Werte "storniert" oder
+* **status** - Ob die Stornierung erfolgt ist. Kann ausschliesslich die Werte "storniert" oder
   "unveraendert" annehmen. Wenn der Kommiauftrag aus dem WMS entfernt wurde und nicht zum Versand kam,
   wird "storniert" zurückgesendet. Wenn ein Storno nicht möglich ist, weil z.B. die Ware schon versendet
   wurden, wird der Status "unveraendert" zurückgemeldet.
@@ -291,7 +291,7 @@ auslösen. Das ist beispielsweise der Fall, wenn eine Unterdeckung vorliegt.
 # Unspezifizierte Nachrichten
 
 Beständsveränderungen ausserhalb von Warenzugängen, z.B. durch Korrekturbuchungen, sind nicht Teil dieser
-Spezifikation. Auchein Bestandsabgleich ist nicht Teil dieser Spezifikation.
+Spezifikation. Auch ein Bestandsabgleich ist nicht Teil dieser Spezifikation.
 
 
 
