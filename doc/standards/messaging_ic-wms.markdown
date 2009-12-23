@@ -11,8 +11,8 @@ dsa bestandsführende System ist.
 >>>>>>> 50aafea4e838f8370f38efc6b33fc8c2a354162d
 
 Pro Lager gibt es ein (logisches) WMS. Lager snd mit einem eindeutigen Bezeichner identifiziert, der aber für
-zie Kommunikation zwischen Inventory Control und einem WMS unbedeitend ist. Inventory Control und WMS
-komunizieren in beide Richtungen asyncron mit Nachrichten und in Richtung Inventory Control -> WMS ->
+die Kommunikation zwischen Inventory Control und einem WMS unbedeutend ist. Inventory Control und WMS
+kommunizieren in beide Richtungen asyncron mit Nachrichten und in Richtung Inventory Control -> WMS ->
 Inventory contol via REST.
 
 # Nachrichtentypen
