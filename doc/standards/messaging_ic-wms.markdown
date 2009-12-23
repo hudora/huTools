@@ -7,8 +7,8 @@ und einem Lagerverwaltungssystem (LVS, WMS) definiert. Es wird davon ausgegangen
 das bestandsführende System ist.
 
 Pro Lager gibt es ein (logisches) WMS. Lager snd mit einem eindeutigen Bezeichner identifiziert, der aber für
-zie Kommunikation zwischen Inventory Control und einem WMS unbedeitend ist. Inventory Control und WMS
-komunizieren in beide Richtungen asyncron mit Nachrichten und in Richtung Inventory Control -> WMS ->
+die Kommunikation zwischen Inventory Control und einem WMS unbedeutend ist. Inventory Control und WMS
+kommunizieren in beide Richtungen asyncron mit Nachrichten und in Richtung Inventory Control -> WMS ->
 Inventory contol via REST.
 
 # Nachrichtentypen
