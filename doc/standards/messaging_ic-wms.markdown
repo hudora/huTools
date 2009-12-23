@@ -4,11 +4,7 @@ DRAFT - ENTWURF - DRAFT - ENTWURF - DRAFT - ENTWURF
 
 Im folgenden wird das Kommunikationsprotokoll zwischen einer Warenwirtschaft ("inventory control", IC, ERP)
 und einem Lagerverwaltungssystem (LVS, WMS) definiert. Es wird davon ausgegangen, dass Inventory Control
-<<<<<<< HEAD
 das bestandsführende System ist.
-=======
-dsa bestandsführende System ist.
->>>>>>> 50aafea4e838f8370f38efc6b33fc8c2a354162d
 
 Pro Lager gibt es ein (logisches) WMS. Lager snd mit einem eindeutigen Bezeichner identifiziert, der aber für
 zie Kommunikation zwischen Inventory Control und einem WMS unbedeitend ist. Inventory Control und WMS
@@ -25,6 +21,7 @@ Hier ein Überblick über die Nachrichtentypen, die ausgetauscht werden:
 * **Lieferscheine** von Inventory Control an WMS (asyncron)
 * **Prioritaet** update von Inventory Control an WMS (asyncron)
 * **Stornierung** von Inventory Control an WMS und **Stornierungsbestaetigung** in Gegenrichtung (asyncron)
+
 
 # Nachrichten
 
@@ -78,6 +75,7 @@ an das WMS gesendet.
   der Vergangenheit liegt, soll sofort ausgeliefert werden.
 * **prioritaet** - Dringlichkeit des Auftrags als Wert zwischen 1 bis 10. Niedrige Werte
   bedeuten dringendere Aufträge.
+
 
 ### Zusatzfelder (Kopf)
 
@@ -204,7 +202,6 @@ einmal rückgemeldet werden.
    }
 
 
-<<<<<<< HEAD
 
 ## Lieferschein
 
@@ -318,7 +315,6 @@ TBD
 ## Rückmeldung
 
 TBD
-
 
 ## Stornierung
 
