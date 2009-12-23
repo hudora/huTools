@@ -79,9 +79,14 @@ unterscheiden. Von der Nutzung von FTP wird daher dringend zugunsten der Zuverl�
 abgeraten. SQS ist die deutlich professionellere und kostengünstigere Lösung.
 
 Sollte der Partner doch auf der Nutzung von FTP bestehen. Bekommt er die Zugangsdaten für den Hudora-FTP
-Server übermittelt. Furu jede Nachrichtenart muss der Partner ein eigenes Verzeichnis nutzen. Nachrichten
-an Hudora werden vom PArtner in das entsprechende Verzeichnis hochgeladen und durch Hudora gelöscht.
+Server übermittelt. Für jede Nachrichtenart muss der Partner ein eigenes Verzeichnis nutzen. Nachrichten
+an Hudora werden vom Partner in das entsprechende Verzeichnis hochgeladen und durch Hudora gelöscht.
 
-Nachrichten an den PArtner werden in das Entsprechende Verzeichnis von Hudora eingestellt un müssen durch
+Nachrichten an den Partner werden in das Entsprechende Verzeichnis von Hudora eingestellt un müssen durch
 den Partner nach Verarbeitung gelöscht werden.
 
+Da der FTP-Server von Hudora nur eine verfügbarkeit von 98 % hat, muss der Partner auf jeden Fall einen
+automatischen Retry - möglichst mit [exponential backoff][11] - implementieren. Dies gilt sowohl für
+die Sende-, als auch für die Empfangsrichtung.
+
+[11]: http://en.wikipedia.org/wiki/Exponential_backoff
