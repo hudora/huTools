@@ -1,12 +1,16 @@
 # Artikelstammdatenformat
 
+Dies ist das grundlegende Format für Artikelstammdaten, dass bei [Hudora][1] verwendet wird.
+
+[1]: http://www.hudora.de/
+
 ## Pflichtfelder
 
 * **`artnr`** - Eindeuteige Artikelnummer des Artikels. Kann Alphanummerische Zeichen, "/" und "-" beinhalten.
 * **`name`** - Beschreibender Name des Artikels. Nicht eindeutig.
 * **`ean`** - [EAN/GTIN][1] des Artikels. Nicht eindeutig.
 
-[1]: http://de.wikipedia.org/wiki/European_Article_Number
+[2]: http://de.wikipedia.org/wiki/European_Article_Number
 
 
 ## Zusatzfelder
@@ -45,7 +49,7 @@
 * **`pallet_volume`** - Volumen der Kartons auf einer PAlette in Litern
 * **`logistik_info`** - Weitere logistische Informationen. Freitext
 * **`statistische_waren_nr`** - Nummer für die Verzollung
-* **`warenklassifikation`** - 
+* **`warenklassifikation`** - Warenklassifikation nach GS1 Standard
 * **`handbook`** - Bedienungsanleitung für den Artikel (URL)
 * **`sprengzeichnung`** - Sprengzeichnung des Artikels (URL)
 * **`products_in_20ft_container`** - Anzahl der Artikel in einem 20-Fuss Container
