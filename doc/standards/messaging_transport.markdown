@@ -1,6 +1,6 @@
 # Nachrichtenaustausch zwischen Unternehmen
 
-Wir gehen davon aus, dass die automatisierte Kommunikation zwischen Unternehmen, folgende Massgaben zu
+Wir gehen davon aus, dass die automatisierte Kommunikation zwischen Unternehmen folgende Massgaben zu
 erfüllen hat:
 
 * **Nachrichten basierte Kommunikation / Batchverarbeitung** - es ist keine unmittelbare Antwort auf die
@@ -10,7 +10,7 @@ erfüllen hat:
   es muss eine Fehlermeldung erfolgen. Nachrichten dürfen nie "verloren gehen". Nachrichten dürfen nie
   doppelt verarbeitet werden.
 * **Sicher** - Nachrichten dürfen nicht durch Unbefugte erzeugt oder verarbeitet werden können.
-* **Performat** - Nachrichten sollten in unter 15 Minuten das System durchlaufen haben
+* **Performant** - Nachrichten sollten in unter 15 Minuten das System durchlaufen haben
 * **Stabil** - Das gesammte Nachrichtenverarbeitungssystem sollte eine Verfügbarkeit von über 99 %
   zu den Betriebsstundnen haben.
 * **Unicode clean** - Das Nachrichtenverarbeitungssystem sollte Nicht-ASCII zeichen, wie das Wort
