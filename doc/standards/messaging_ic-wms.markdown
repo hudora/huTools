@@ -338,24 +338,35 @@ sähen sie in etwa folgendermaßen aus.
 	<plz>42499</plz>
 	<ort>Hücksenwagen</ort>
 	<positionen>
-	  <menge>12</menge>
-	  <artnr>14640/XL</artnr>
-	  <posnr>1</posnr>
-	  <menge>4</menge>
-	  <artnr>14640/03</artnr>
-	  <posnr>2</posnr>
-	  <menge>2</menge>
-	  <artnr>10105</artnr>
-	  <posnr>3</posnr>
+	  <daten1>
+	    <menge>12</menge>
+	    <artnr>14640/XL</artnr>
+	    <posnr>1</posnr>
+	  </daten1>
+	  <daten2>
+	    <menge>4</menge>
+	    <artnr>14640/03</artnr>
+	    <posnr>2</posnr>
+	  </daten2>
+	  <daten3>
+	    <menge>2</menge>
+	    <artnr>10105</artnr>
+	    <posnr>3</posnr>
+	  </daten3>
 	</positionen>
 	<versandeinweisungen>
-	  <guid>2103839-XalE</guid>
-	  <bezeichner>avisierung48h</bezeichner>
-	  <anweisung>48h vor Anlieferung unter 0900-LOGISTIK
-	  avisieren</anweisung>
-	  <guid>2103839-GuTi</guid>
-	  <bezeichner>abpackern140</bezeichner>
-	  <anweisung>Paletten höchstens auf 140 cm Packen</anweisung>
+	  <daten1>
+	    <guid>2103839-XalE</guid>
+	    <bezeichner>avisierung48h</bezeichner>
+	    <anweisung>48h vor Anlieferung unter 0900-LOGISTIK
+	      avisieren</anweisung>
+	  </daten1>
+	  <daten2>
+	    <guid>2103839-GuTi</guid>
+	    <bezeichner>abpackern140</bezeichner>
+	    <anweisung>Paletten höchstens auf 140 cm
+	      Packen</anweisung>
+	  </daten2>
 	</versandeinweisungen>
       </datensatz>
     </kommiauftrag>
@@ -368,22 +379,30 @@ sähen sie in etwa folgendermaßen aus.
       <datensatz>
 	<kommiauftragsnr>2103839</kommiauftragsnr>
 	<positionen>
-	  <menge>4</menge>
-	  <artnr>14640/XL</artnr>
-	  <posnr>1</posnr>
-	  <nve>23455326543222553</nve>
-	  <menge>8</menge>
-	  <artnr>14640/XL</artnr>
-	  <posnr>1</posnr>
-	  <nve>43255634634653546</nve>
-	  <menge>4</menge>
-	  <artnr>14640/03</artnr>
-	  <posnr>2</posnr>
-	  <nve>43255634634653546</nve>
-	  <menge>2</menge>
-	  <artnr>10105</artnr>
-	  <posnr>3</posnr>
-	  <nve>23455326543222553</nve>
+	  <daten1>
+	    <menge>4</menge>
+	    <artnr>14640/XL</artnr>
+	    <posnr>1</posnr>
+	    <nve>23455326543222553</nve>
+	  </daten1>
+	  <daten2>
+	    <menge>8</menge>
+	    <artnr>14640/XL</artnr>
+	    <posnr>1</posnr>
+	    <nve>43255634634653546</nve>
+	  </daten2>
+	  <daten3>
+	    <menge>4</menge>
+	    <artnr>14640/03</artnr>
+	    <posnr>2</posnr>
+	    <nve>43255634634653546</nve>
+	  </daten3>
+	  <daten4>
+	    <menge>2</menge>
+	    <artnr>10105</artnr>
+	    <posnr>3</posnr>
+	    <nve>23455326543222553</nve>
+	  </daten4>
 	</positionen>
 	<nves>
 	  <23455326543222553>
