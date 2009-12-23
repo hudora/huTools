@@ -76,7 +76,7 @@ Dies ist das grundlegende Format für Artikelstammdaten, dass bei [Hudora][1] ve
       <ve1_weight/>
       <ve1_size_l/>
       <ve1_size_b/>
-      <ve1_size_h/>
+      <ve1_s ize_h/>
       <ve1_volume/>
       <no_export_package>False</no_export_package>
       <export_package_ean>4005998000854</export_package_ean>
@@ -109,3 +109,57 @@ Dies ist das grundlegende Format für Artikelstammdaten, dass bei [Hudora][1] ve
       <image></images>
      </article>
     </articles>
+
+
+## JSON
+
+## Artikels
+
+### Beispiel
+
+    {"artnr": 01104,
+     "name": "joey's Skate Set, Gr&#xF6;&#xDF;e 30-33 mit Rucksack und Protektoren",
+     "name_en": "joey's Skate Set, size 30-33, backpack+protectors",
+     "einheit": "stueck",
+     "ean": 4005998011041,
+     "package_weight": 2440,
+     "package_size_l": 200,
+     "package_size_b": 270,
+     "package_size_h": 300,
+     "package_volume": "16.2",
+     "products_per_ve1": "",
+     "ve1_weight": "",
+     "ve1_size_l": "",
+     "ve1_size_b": "",
+     "ve1_size_h": "",
+     "ve1_volume": "",
+     "no_export_package": "False",
+     "export_package_ean": 4005998000854,
+     "export_package_weight": 11760,
+     "export_package_size_l": 527,
+     "export_package_size_b": 267,
+     "export_package_size_h": 432,
+     "export_package_volume": "60.786288",
+     "products_per_export_package": 4,
+     "export_packages_per_layer": "",
+     "export_packages_per_pallet": "24",
+     "pallet_height": "",
+     "palettenfaktor": 96,
+     "pallet_weight": 282240,
+     "to_big_for_pallet": "False",
+     "pallet_ean": 4005998041468,
+     "pallet_scheme": "",
+     "pallet_photo": "",
+     "pallet_volume": "1458.870912",
+     "logistik_info": "",
+     "statistische_waren_nr": 95067030,
+     "warenklassifikation": 4495,
+     "handbook": "",
+     "catalog_page": "",
+     "sprengzeichnung": "",
+     "products_in_20ft_container": 1960,
+     "products_in_40ft_container": 4000,
+     "products_in_40fthq_container": 4400,
+     "image":
+     "http://www.hudora.de/media/,/-/product/image/188c2b81cefa798fd5e6702700604d0a.jpg/svga.jpeg",
+     "image": ""}
