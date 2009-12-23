@@ -4,7 +4,7 @@ DRAFT - ENTWURF - DRAFT - ENTWURF - DRAFT - ENTWURF
 
 Im folgenden wird das Kommunikationsprotokoll zwischen einer Warenwirtschaft ("inventory control", IC, ERP)
 und einem Lagerverwaltungssystem (LVS, WMS) definiert. Es wird davon ausgegangen, dass Inventory Control
-dsa bestandsführende System ist.
+das bestandsführende System ist.
 
 Pro Lager gibt es ein (logisches) WMS. Lager snd mit einem eindeutigen Bezeichner identifiziert, der aber für
 zie Kommunikation zwischen Inventory Control und einem WMS unbedeitend ist. Inventory Control und WMS
@@ -19,8 +19,9 @@ Hier ein Überblick über die Nachrichtentypen, die ausgetauscht werden:
 * **Kommiauftrag** von Inventory Control an WMS (asyncron)
 * **Rücklmeldung** eines Auftrags von WMS an Inventory Control (asyncron)
 * **Lieferscheine** von Inventory Control an WMS (asyncron)
-* **Priorität** update von Inventory Control an WMS (asyncron)
-* **Stornierung** von Inventory Control an WMS (syncron)
+* **Prioritaet** update von Inventory Control an WMS (asyncron)
+* **Stornierung** von Inventory Control an WMS und **Stornierungsbestaetigung** in Gegenrichtung (asyncron)
+
 
 # Nachrichten
 
@@ -70,9 +71,10 @@ an das WMS gesendet.
 
 * **kommiauftragsnr** - Eindeutiger ID des Kommisionierauftrags. Kann doppelt vorkommen, das WMS
   darf dann nur genau *eine* der Nachrichten verarbeiten.
-* **anliefertermin** - Termin, an dem die Ware spätestens beim Kunden sein soll. WEnn der Termin in
+* **anliefertermin** - Termin, an dem die Ware spätestens beim Kunden sein soll. Wenn der Termin in
   der Vergangenheit liegt, soll sofort ausgeliefert werden.
-
+* **prioritaet** - Dringlichkeit des Auftrags als Wert zwischen 1 bis 10. Niedrige Werte
+  bedeuten dringendere Aufträge.
 
 ### Zusatzfelder (Kopf)
 
@@ -128,6 +130,7 @@ mehreren Feldern.
 
     {"kommiauftragsnr":2103839,
      "anliefertermin":"2009-11-25",
+     "prioritaet": 7,
      "info_kunde":"Besuch H. Gerlach",
      "auftragsnr":1025575,
      "kundenname":"Ute Zweihaus 400424990",
@@ -158,8 +161,7 @@ mehreren Feldern.
 
 
 
-Rückmeldung
------------
+## Rückmeldung
 
 Diese Nachricht wird vom WMS an Inventory Control gesendet, *sobald ein Kommiauftrag versendet werden soll*.
 Sie ist Voraussetzung für die Liefercheingenerierung. Ein Kommiauftrag kann nur genau
@@ -199,9 +201,10 @@ einmal rückgemeldet werden.
    }
 
 
+
 ## Lieferschein
 
-Der Leiferschein ist das Finale Versanddokument und lösst die Abbuchung der Ware aus dem Lager und die
+Der Lieferschein ist das Finale Versanddokument und lösst die Abbuchung der Ware aus dem Lager und die
 Rechnungsstellung aus. Er wird auf die Rückmeldung hin erzuegt. Der Lieferschein kann als PDF und/oder als
 Datenstruktur an das WMS gesendet werden.
 
@@ -210,6 +213,87 @@ Datenstruktur an das WMS gesendet werden.
 Lieferscheine werden nach Rückmeldung als PDF zur Verfügung gestellt. Dabeisind die Dateien nach der
 *kommiauftragsnr* benannt. Für obiges Beispiel z.B. "2103839.pdf". Die Erzeugung von Lieferscheinen dauert
 1-2 Minuten.
+
+
+## Prioritaet
+
+Mit der Prioritaet kann die Priorität von noch-nicht zurückgemeldeten Kommiaufträgen geändert werden.
+Die Priorität kann einen Wert zwischen 1 und 9 sein. Niedrigere Werte bei der Priorität bedeuten, dass
+der Kommiauftrag dringender ist. Prioritäten haben lediglich Hinweischarakter. Es gibt keine Rückmeldung,
+ob die Prioritätsänderung erfolgreich war. 
+
+### Pflichtfelder
+
+* **kommiauftragsnr** - Nummer des Auftrags, dessen Priorität geändert werden soll.
+* **prioritaet** - neue Priorität
+
+### Beispiel
+
+    {"kommiauftragsnr":2103839,
+     "prioritaet": 3}
+  
+
+## Stornierung
+
+Mit einer Storno Nachricht teilt Inventory Control dem WMS den Wunsch mit, dsas ein Kommiauftrag nicht
+ausgeführt werden soll. Es liegt beim WMS zu entscheiden, ob ein Storno ausgeführt werden kann. Zu jeder
+*Stornierung* muss das WMS eine *Stornierungsbestaetigung* zurück an Inventory Control senden. diese sollte 
+spätestens 30 Minuten nach Absenden der *Stornierung* Nachricht bei Inventory Control eintreffen.
+
+Einzelne Positionen in einem Kommiauftrag können nicht storniert oder verändert werden. Es können immer
+nur komplette Aufträge storniert werden.
+
+
+### Pflichtfelder
+
+* **kommiauftragsnr** - Nummer des Auftrags, dessen Priorität geändert werden soll.
+
+### Zusatzfelder
+
+* **verantwortlicher** - Freitext, der die Person, die die Stornierung veranlaßt hat, identifiziert.
+* **text** - Weitere Erklärung zur Stornierung.
+
+### Beispiel
+
+    {"kommiauftragsnr":2103839,
+     "verantwortlicher": "Hans Mustermann",
+     "text": "Kunde hatte sich vertan"}
+
+
+
+## Stornierungsbestaetigung
+
+Eine *Stornierungsbestaetigung* wird vom WMS als Antwort auf jede *Stornierung* hin an Inventory Control
+gesendet. Die Nachrichst sollte sehr Zeitnah zum Emfang der *Stornierung* Nachricht gesendet werden.
+
+In Notfällen kann das WMS auch selbst eine Stornierungsbestaetigung ohne vorherige Stornierungsnachricht
+auslösen. Das ist beispielsweise der Fall, wenn eine Unterdeckung vorliegt.
+
+
+### Pflichtfelder
+
+* **kommiauftragsnr** - Nummer des Auftrags, dessen Priorität geändert werden soll.
+* **status** - Ob die stornierung erfolgt ist. Kann ausschliesslich die Werte "storniert" oder
+  "unveraendert" annehmen. Wenn der Kommiauftrag aus dem WMS entfernt wurde und nicht zum Versand kam,
+  wird "storniert" zurückgesendet. Wenn ein Storno nicht möglich ist, weil z.B. die Ware schon versendet
+  wurden, wird der Status "unveraendert" zurückgemeldet.
+
+
+### Beispiel
+
+    {"kommiauftragsnr":2103839,
+     "status": "storniert"}
+
+
+
+
+# Unspezifizierte Nachrichten
+
+Beständsveränderungen ausserhalb von Warenzugängen, z.B. durch Korrekturbuchungen, sind nicht Teil dieser
+Spezifikation. Auchein Bestandsabgleich ist nicht Teil dieser Spezifikation.
+
+
+
 
 # Datenformate
 
@@ -228,5 +312,13 @@ TBD
 TBD
 
 ## Rückmeldung
+
+TBD
+
+## Stornierung
+
+TBD
+
+## Stornierungsbestaetigung
 
 TBD
