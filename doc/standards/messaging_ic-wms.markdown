@@ -309,21 +309,130 @@ sähen sie in etwa folgendermaßen aus.
 
 ## Warenzugang
 
-TBD
+### Beispiel 
+    
+    <warenzugang>
+      <datensatz>
+	<guid>3104247-7</guid>
+	<menge>7</menge>
+	<artnr>14695</artnr>
+	<batchnr>3104247</batchnr>
+      </datensatz>
+    </warenzugang>
 
 ## Kommiauftrag
 
-TBD
+### Beispiel
+
+    <kommiauftrag>
+      <datensatz>
+	<kommiauftragsnr>2103839</kommiauftragsnr>
+	<anliefertermin>2009-11-25</anliefertermin>
+	<prioritaet>7</prioritaet>
+	<info_kunde>Besuch H. Gerlach</info_kunde>
+	<auftragsnr>1025575</auftragsnr>
+	<kundenname>Ute Zweihaus 400424990</kundenname>
+	<kundennr>21548</kundennr>
+	<name1>Uwe Zweihaus</name1>
+	<name2>400424990</name2>
+	<name3/>
+	<strasse>Bahnhofstr. 2</strasse>
+	<land>DE</land>
+	<plz>42499</plz>
+	<ort>Hücksenwagen</ort>
+	<positionen>
+	  <menge>12</menge>
+	  <artnr>14640/XL</artnr>
+	  <posnr>1</posnr>
+	  <menge>4</menge>
+	  <artnr>14640/03</artnr>
+	  <posnr>2</posnr>
+	  <menge>2</menge>
+	  <artnr>10105</artnr>
+	  <posnr>3</posnr>
+	</positionen>
+	<versandeinweisungen>
+	  <guid>2103839-XalE</guid>
+	  <bezeichner>avisierung48h</bezeichner>
+	  <anweisung>48h vor Anlieferung unter 0900-LOGISTIK
+	  avisieren</anweisung>
+	  <guid>2103839-GuTi</guid>
+	  <bezeichner>abpackern140</bezeichner>
+	  <anweisung>Paletten höchstens auf 140 cm Packen</anweisung>
+	</versandeinweisungen>
+      </datensatz>
+    </kommiauftrag>
 
 ## Rückmeldung
 
-TBD
+### Beispiel
+
+    <rueckmeldung>
+      <datensatz>
+	<kommiauftragsnr>2103839</kommiauftragsnr>
+	<positionen>
+	  <menge>4</menge>
+	  <artnr>14640/XL</artnr>
+	  <posnr>1</posnr>
+	  <nve>23455326543222553</nve>
+	  <menge>8</menge>
+	  <artnr>14640/XL</artnr>
+	  <posnr>1</posnr>
+	  <nve>43255634634653546</nve>
+	  <menge>4</menge>
+	  <artnr>14640/03</artnr>
+	  <posnr>2</posnr>
+	  <nve>43255634634653546</nve>
+	  <menge>2</menge>
+	  <artnr>10105</artnr>
+	  <posnr>3</posnr>
+	  <nve>23455326543222553</nve>
+	</positionen>
+	<nves>
+	  <23455326543222553>
+	    <gewicht>28256</gewicht>
+	    <art>paket</art>
+	  </23455326543222553>
+	  <43255634634653546>
+	    <gewicht>28256</gewicht>
+	    <art>paket</art>
+	  </43255634634653546>
+	</nves>
+      </datensatz>
+    </rueckmeldung>
+
+## Priorität 
+
+### Beispiel
+
+    <lieferschein>
+      <datensatz>
+	<kommiauftragsnr>2103839</kommiauftragsnr>
+	<prioritaet>3</prioritaet>
+      </datensatz>
+    </lieferschein>
+
 
 
 ## Stornierung
 
-TBD
+### Beispiel
+
+    <stornierung>
+      <datensatz>
+	<kommiauftragsnr>2103839</kommiauftragsnr>
+	<verantwortlicher>Hans Mustermann</verantwortlicher>
+	<text>Kunde hatte sich vertan</text>
+      </datensatz>
+    </stornierung>
 
 ## Stornierungsbestaetigung
 
-TBD
+### Beispiel
+
+    <stornierungsbestaetigung>
+      <datensatz>
+	<kommiauftragsnr>2103839</kommiauftragsnr>
+	<status>storniert</status>
+      </datensatz>
+    </stornierungsbestaetigung>
