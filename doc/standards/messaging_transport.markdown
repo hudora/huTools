@@ -19,6 +19,7 @@ erfüllen hat:
 * **Preiswert** - Implementierung und Betrieb sollten möglichst wenig Kosten verursachen.
 
 
+
 ## Implementierung mit SQS
 
 Diese Anforderuungen werden zur Zeit mit Abstand am besten durch den
@@ -46,7 +47,7 @@ Nachrichten eingestellt oder abgerufen werden können.
 [7]: http://docs.amazonwebservices.com/AWSSimpleQueueService/2009-02-01/APIReference/index.html?Query_QueryAddPermission.html
 [8]: http://docs.amazonwebservices.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/index.html?ImportantIdentifiers.html
 
-# Beispiel
+### Beispiel
 
 Für das Beispiel nutzne wir Python Code und die Bibliothek [boto][10], die den Zugriff auf SQS erleichtert.
 
@@ -57,9 +58,30 @@ Dieses Beispiel liest Nachrichten und verarbbeitet sie mit der WMS Funktion `pro
     >>> import boto.sqs.connection, boto.sqs.queue
     >>> conn = boto.sqs.connection.SQSConnection()
     >>> q = boto.sqs.queue.Queue(connection=conn, url='http://queue.amazonaws.com/123456789012/hd.warenzugang.100')
-    >>> rs = q.get_messages()
+    >>> rs = q.get_messages(visibility_timeout=60)
     >>> if rs:
     ...    for msg in rs:
     ...        body = m.get_body()
+    ...        # Nachricht im WMS verarbeiten (sollte nciht länger als 60 Sekunden dauern)
     ...        process_body(body)
+    ...        # Verarbeitung erfolgreich, Nachricht entfernen
+    ...        q.delete_message(m)
     
+
+## Implementierung mit FTP
+
+Sollte ein PArtner nicht in der Lage sein, NAchrichten mit SQS zu senden und zu empfangen, kann als
+Notlösung uach unser FTP-Server verwendet werden. FTP ist deutlich weniger zuverlässig und hat deutlich
+höheren Wartungs- und Betriebsaufwand.
+
+Insbeondere sit es nicht ohne weiteres möglich, halb geschriebene Nachrichten von komplettne Nachrichten zu
+unterscheiden. Von der Nutzung von FTP wird daher dringend zugunsten der Zuverlässigkeit und Wartbarkeit
+abgeraten. SQS ist die deutlich professionellere und kostengünstigere Lösung.
+
+Sollte der Partner doch auf der Nutzung von FTP bestehen. Bekommt er die Zugangsdaten für den Hudora-FTP
+Server übermittelt. Furu jede Nachrichtenart muss der Partner ein eigenes Verzeichnis nutzen. Nachrichten
+an Hudora werden vom PArtner in das entsprechende Verzeichnis hochgeladen und durch Hudora gelöscht.
+
+Nachrichten an den PArtner werden in das Entsprechende Verzeichnis von Hudora eingestellt un müssen durch
+den Partner nach Verarbeitung gelöscht werden.
+
