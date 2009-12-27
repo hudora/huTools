@@ -145,19 +145,19 @@ mehreren Feldern.
      "ort":"Hücksenwagen",
      "positionen": [{"menge": 12,
                      "artnr": "14640/XL",
-                     "posnr", 1},
+                     "posnr": 1},
                     {"menge": 4,
                      "artnr": "14640/03",
-                     "posnr", 2},
+                     "posnr": 2},
                     {"menge": 2,
                      "artnr": "10105",
-                     "posnr", 3}],
+                     "posnr": 3}],
      "versandeinweisungen": [{"guid": "2103839-XalE",
                               "bezeichner": "avisierung48h",
-                              "anweisung", "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
+                              "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
                              {"guid": "2103839-GuTi",
                               "bezeichner": "abpackern140",
-                              "anweisung", "Paletten höchstens auf 140 cm Packen"}]
+                              "anweisung": "Paletten höchstens auf 140 cm Packen"}]
     }
 
 
@@ -168,44 +168,53 @@ Diese Nachricht wird vom WMS an Inventory Control gesendet, *sobald ein Kommiauf
 Sie ist Voraussetzung für die Liefercheingenerierung. Ein Kommiauftrag kann nur genau
 einmal rückgemeldet werden.
 
+### pflichtfelder
+
 * **kommiauftragsnr** - Unique ID des Kommiauftrags, der bei der Kommiauftrag Nachricht übertragen wurde.
 * **positionen** - Liste der zurückzumeldenen Positionen. Muss IMMER alle Positionen beinhalten, die 
   im  Kommiauftrag mitgesendet wurden. Jede Position wird als Dictionary abgebildet. Positionen können
   mehrfach vormommen.
-  Pflichtfelder in jedem Dictionary sind zur Zeit `posnr`, `menge` und `artnr`. Zusatzfeld ist NVE.
-* **nves** - Dictionary der Versandeinheiten. Enthält pro Versandeiheit ein Dictionary mit gewicht in Gramm
+  Pflichtfelder in jedem Dictionary sind zur Zeit `posnr`, `menge` und `artnr`.
+  Zusatzfelder ist `nve` und `referenzen` (siehe Warenzugang), insbesondere `referenzen.charge`.
+
+#### Zusatzfelder
+
+* **nves** - Liste der Versandeinheiten. Enthält pro Versandeiheit ein Dictionary mit Gewicht in Gramm
   und der Art der Versandeinheit. 
+
+
 
 ### Beispiel
 
     {"kommiauftragsnr":2103839,
      "positionen": [{"menge": 4,
                      "artnr": "14640/XL",
-                     "posnr", 1,
-                     "nve": '23455326543222553'},
+                     "posnr": 1,
+                     "nve": "23455326543222553"},
                     {"menge": 8,
                      "artnr": "14640/XL",
-                     "posnr", 1,
-                     "nve": '43255634634653546'},
+                     "posnr": 1,
+                     "nve": "43255634634653546"},
                     {"menge": 4,
                      "artnr": "14640/03",
-                     "posnr", 2},
-                     "nve": '43255634634653546'},
+                     "posnr": 2,
+                     "nve": "43255634634653546"},
                     {"menge": 2,
                      "artnr": "10105",
-                     "posnr", 3},
-                     "nve": '23455326543222553'}],
-     "nves": {"23455326543222553": {"gewicht": 28256,
-                                    "art": paket},
-              "43255634634653546": {"gewicht": 28256,
-                                    "art": paket}}
-   }
+                     "posnr": 3,
+                     "nve": "23455326543222553"}],
+     "nves": [{"nve": "23455326543222553",
+               "gewicht": 28256,
+               "art": "paket"},
+              {"nve": "43255634634653546",
+               "gewicht": 28256,
+                "art": "paket"}]}
 
 
 
 ## Lieferschein
 
-Der Lieferschein ist das Finale Versanddokument und lösst die Abbuchung der Ware aus dem Lager und die
+Der Lieferschein ist das finale Versanddokument und lösst die Abbuchung der Ware aus dem Lager und die
 Rechnungsstellung aus. Er wird auf die Rückmeldung hin erzuegt. Der Lieferschein kann als PDF und/oder als
 Datenstruktur an das WMS gesendet werden.
 
@@ -256,7 +265,8 @@ nur komplette Aufträge storniert werden.
 
 ### Beispiel
 
-    {"kommiauftragsnr":2103839,
+    {"guid": "VXTSKZ6UF",
+     "kommiauftragsnr":2103839,
      "verantwortlicher": "Hans Mustermann",
      "text": "Kunde hatte sich vertan"}
 
@@ -265,7 +275,7 @@ nur komplette Aufträge storniert werden.
 ## Stornierungsbestaetigung
 
 Eine *Stornierungsbestaetigung* wird vom WMS als Antwort auf jede *Stornierung* hin an Inventory Control
-gesendet. Die Nachrichst sollte sehr Zeitnah zum Emfang der *Stornierung* Nachricht gesendet werden.
+gesendet. Die Nachrichst sollte sehr Zeitnah zum Empfang der *Stornierung* Nachricht gesendet werden.
 
 In Notfällen kann das WMS auch selbst eine Stornierungsbestätigung ohne vorherige Stornierungsnachricht
 auslösen. Das ist beispielsweise der Fall, wenn eine Unterdeckung vorliegt.
@@ -306,148 +316,127 @@ sähen sie in etwa folgendermaßen aus.
 
 ## Warenzugang
 
-### Beispiel 
-    
     <warenzugang>
-      <datensatz>
-	<guid>3104247-7</guid>
-	<menge>7</menge>
-	<artnr>14695</artnr>
-	<batchnr>3104247</batchnr>
-      </datensatz>
+        <guid>3104247-7</guid>
+        <menge>7</menge>
+        <artnr>14695</artnr>
+        <batchnr>3104247</batchnr>
     </warenzugang>
+
 
 ## Kommiauftrag
 
-### Beispiel
-
     <kommiauftrag>
-      <datensatz>
-	<kommiauftragsnr>2103839</kommiauftragsnr>
-	<anliefertermin>2009-11-25</anliefertermin>
-	<prioritaet>7</prioritaet>
-	<info_kunde>Besuch H. Gerlach</info_kunde>
-	<auftragsnr>1025575</auftragsnr>
-	<kundenname>Ute Zweihaus 400424990</kundenname>
-	<kundennr>21548</kundennr>
-	<name1>Uwe Zweihaus</name1>
-	<name2>400424990</name2>
-	<name3/>
-	<strasse>Bahnhofstr. 2</strasse>
-	<land>DE</land>
-	<plz>42499</plz>
-	<ort>Hücksenwagen</ort>
-	<positionen>
-	  <daten1>
-	    <menge>12</menge>
-	    <artnr>14640/XL</artnr>
-	    <posnr>1</posnr>
-	  </daten1>
-	  <daten2>
-	    <menge>4</menge>
-	    <artnr>14640/03</artnr>
-	    <posnr>2</posnr>
-	  </daten2>
-	  <daten3>
-	    <menge>2</menge>
-	    <artnr>10105</artnr>
-	    <posnr>3</posnr>
-	  </daten3>
-	</positionen>
-	<versandeinweisungen>
-	  <daten1>
-	    <guid>2103839-XalE</guid>
-	    <bezeichner>avisierung48h</bezeichner>
-	    <anweisung>48h vor Anlieferung unter 0900-LOGISTIK
-	      avisieren</anweisung>
-	  </daten1>
-	  <daten2>
-	    <guid>2103839-GuTi</guid>
-	    <bezeichner>abpackern140</bezeichner>
-	    <anweisung>Paletten höchstens auf 140 cm
-	      Packen</anweisung>
-	  </daten2>
-	</versandeinweisungen>
-      </datensatz>
+        <anliefertermin>2009-11-25</anliefertermin>
+        <auftragsnr>1025575</auftragsnr>
+        <positionen>
+            <position>
+                <posnr>1</posnr>
+                <menge>12</menge>
+                <artnr>14640/XL</artnr>
+            </position>
+            <position>
+                <posnr>2</posnr>
+                <menge>4</menge>
+                <artnr>14640/03</artnr>
+            </position>
+            <position>
+                <posnr>3</posnr>
+                <menge>2</menge>
+                <artnr>10105</artnr>
+            </position>
+        </positionen>
+        <kundenname>Ute Zweihaus 400424990</kundenname>
+        <ort>H&#xC3;&#xBC;cksenwagen</ort>
+        <plz>42499</plz>
+        <versandeinweisungen>
+            <versandeinweisung>
+                <bezeichner>avisierung48h</bezeichner>
+                <anweisung>48h vor Anlieferung unter 0900-LOGISTIK avisieren</anweisung>
+                <guid>2103839-XalE</guid>
+            </versandeinweisung>
+            <versandeinweisung>
+                <bezeichner>abpackern140</bezeichner>
+                <anweisung>Paletten h&#xC3;&#xB6;chstens auf 140 cm Packen</anweisung>
+                <guid>2103839-GuTi</guid>
+            </versandeinweisung>
+        </versandeinweisungen>
+        <prioritaet>7</prioritaet>
+        <land>DE</land>
+        <name2>400424990</name2>
+        <name3/>
+        <name1>Uwe Zweihaus</name1>
+        <strasse>Bahnhofstr. 2</strasse>
+        <kundennr>21548</kundennr>
+        <info_kunde>Besuch H. Gerlach</info_kunde>
+        <kommiauftragsnr>2103839</kommiauftragsnr>
     </kommiauftrag>
+
 
 ## Rückmeldung
 
-### Beispiel
-
     <rueckmeldung>
-      <datensatz>
-	<kommiauftragsnr>2103839</kommiauftragsnr>
-	<positionen>
-	  <daten1>
-	    <menge>4</menge>
-	    <artnr>14640/XL</artnr>
-	    <posnr>1</posnr>
-	    <nve>23455326543222553</nve>
-	  </daten1>
-	  <daten2>
-	    <menge>8</menge>
-	    <artnr>14640/XL</artnr>
-	    <posnr>1</posnr>
-	    <nve>43255634634653546</nve>
-	  </daten2>
-	  <daten3>
-	    <menge>4</menge>
-	    <artnr>14640/03</artnr>
-	    <posnr>2</posnr>
-	    <nve>43255634634653546</nve>
-	  </daten3>
-	  <daten4>
-	    <menge>2</menge>
-	    <artnr>10105</artnr>
-	    <posnr>3</posnr>
-	    <nve>23455326543222553</nve>
-	  </daten4>
-	</positionen>
-	<nves>
-	  <23455326543222553>
-	    <gewicht>28256</gewicht>
-	    <art>paket</art>
-	  </23455326543222553>
-	  <43255634634653546>
-	    <gewicht>28256</gewicht>
-	    <art>paket</art>
-	  </43255634634653546>
-	</nves>
-      </datensatz>
+        <nves>
+            <nves>
+                <art>paket</art>
+                <nve>23455326543222553</nve>
+                <gewicht>28256</gewicht>
+            </nves>
+            <nves>
+                <art>paket</art>
+                <nve>43255634634653546</nve>
+                <gewicht>28256</gewicht>
+            </nves>
+        </nves>
+        <positionen>
+            <position>
+                <nve>23455326543222553</nve>
+                <posnr>1</posnr>
+                <menge>4</menge>
+                <artnr>14640/XL</artnr>
+            </position>
+            <position>
+                <nve>43255634634653546</nve>
+                <posnr>1</posnr>
+                <menge>8</menge>
+                <artnr>14640/XL</artnr>
+            </position>
+            <position>
+                <nve>43255634634653546</nve>
+                <posnr>2</posnr>
+                <menge>4</menge>
+                <artnr>14640/03</artnr>
+            </position>
+            <position>
+                <nve>23455326543222553</nve>
+                <posnr>3</posnr>
+                <menge>2</menge>
+                <artnr>10105</artnr>
+            </position>
+        </positionen>
+        <kommiauftragsnr>2103839</kommiauftragsnr>
     </rueckmeldung>
 
-## Priorität 
 
-### Beispiel
+## Priorität
 
-    <lieferschein>
-      <datensatz>
-	<kommiauftragsnr>2103839</kommiauftragsnr>
-	<prioritaet>3</prioritaet>
-      </datensatz>
-    </lieferschein>
+    <prioritaet>
+        <kommiauftragsnr>2103839</kommiauftragsnr>
+        <prioritaet>3</prioritaet>
+    </prioritaet>
 
 
 ## Stornierung
 
-### Beispiel
-
     <stornierung>
-      <datensatz>
-	<kommiauftragsnr>2103839</kommiauftragsnr>
-	<verantwortlicher>Hans Mustermann</verantwortlicher>
-	<text>Kunde hatte sich vertan</text>
-      </datensatz>
+        <kommiauftragsnr>2103839</kommiauftragsnr>
+        <verantwortlicher>Hans Mustermann</verantwortlicher>
+        <text>Kunde hatte sich vertan</text>
     </stornierung>
 
 ## Stornierungsbestaetigung
 
-### Beispiel
-
     <stornierungsbestaetigung>
-      <datensatz>
-	<kommiauftragsnr>2103839</kommiauftragsnr>
-	<status>storniert</status>
-      </datensatz>
+        <kommiauftragsnr>2103839</kommiauftragsnr>
+        <status>storniert</status>
     </stornierungsbestaetigung>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<kommiauftrag>
+  <anliefertermin>2009-11-25</anliefertermin>
+  <auftragsnr>1025575</auftragsnr>
+  <positionen>
+    <position>
+      <posnr>1</posnr>
+      <menge>12</menge>
+      <artnr>14640/XL</artnr>
+    </position>
+    <position>
+      <posnr>2</posnr>
+      <menge>4</menge>
+      <artnr>14640/03</artnr>
+    </position>
+    <position>
+      <posnr>3</posnr>
+      <menge>2</menge>
+      <artnr>10105</artnr>
+    </position>
+  </positionen>
+  <kundenname>Ute Zweihaus 400424990</kundenname>
+  <ort>H&#xFC;cksenwagen</ort>
+  <plz>42499</plz>
+  <versandeinweisungen>
+    <versandeinweisung>
+      <bezeichner>avisierung48h</bezeichner>
+      <anweisung>48h vor Anlieferung unter 0900-LOGISTIK avisieren</anweisung>
+      <guid>2103839-XalE</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>abpackern140</bezeichner>
+      <anweisung>Paletten &#xF6;chstens auf 140 cm Packen</anweisung>
+      <guid>2103839-GuTi</guid>
+    </versandeinweisung>
+  </versandeinweisungen>
+  <prioritaet>7</prioritaet>
+  <land>DE</land>
+  <name2>400424990</name2>
+  <name3/>
+  <name1>Uwe Zweihaus</name1>
+  <strasse>Bahnhofstr. 2</strasse>
+  <kundennr>21548</kundennr>
+  <info_kunde>Besuch H. Gerlach</info_kunde>
+  <kommiauftragsnr>2103839</kommiauftragsnr>
+</kommiauftrag>

@@ -1,7 +1,7 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
 PATH := ./testenv/bin:$(PATH)
 
-default: dependencies check test
+default: dependencies check test examples
 
 hudson: dependencies test statistics coverage
 	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
@@ -47,7 +47,7 @@ coverage: dependencies
 	printf 'YVALUE=' > .coverage.score
 	grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-12 >> .coverage.score
 
-build:
+build: examples
 	python setup.py build
 
 dependencies:
@@ -78,9 +78,17 @@ doc:
 install: build
 	sudo python setup.py install
 
+
+doc/standards/examples/%.xml: doc/standards/examples/%.json
+	python huTools/protocols.py $<  | xmllint --encode utf-8 --format - > $@
+
+examples: doc/standards/examples/warenzugang.xml doc/standards/examples/kommiauftrag.xml doc/standards/examples/rueckmeldung.xml doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/wms2logos_kommiauftrag.xslt
+	xsltproc doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/warenzugang.xml > doc/standards/examples/wms2logos_warenzugng.xml
+	xsltproc doc/standards/examples/wms2logos_kommiauftrag.xslt doc/standards/examples/kommiauftrag.xml > doc/standards/examples/wms2logos_kommiauftrag.xml
+
+
 clean:
 	rm -Rf testenv build dist html test.db pylint.out sloccount.sc pip-log.txt
-	
 	find . -name '*.pyc' -or -name '*.pyo' -delete
 
 .PHONY: build clean install upload check
