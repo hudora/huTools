@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<Auftragsliste>
+  <Auftrag>
+    <Auftragskopf>
+      <EinlagererNr>UNKLAR</EinlagererNr>
+      <FremdlieferscheinNr>2103839</FremdlieferscheinNr>
+      <KundenauftragsNr>1025575</KundenauftragsNr>
+    </Auftragskopf>
+    <Auftragsinformationen>
+      <Liefertermin>20091125</Liefertermin>
+      <Textcode1>8</Textcode1>
+      <Auftragstext>Besuch H. Gerlach</Auftragstext>
+      <Textcode2>2</Textcode2>
+      <Kommissioniertext>Hier könnten die Versandvorschriften landen</Kommissioniertext>
+      <EmpfaengerILN/>
+      <Auftragsprioritaet>105003</Auftragsprioritaet>
+    </Auftragsinformationen>
+    <Empfaengeranschrift>
+      <EmpfaengerkundenNr>21548</EmpfaengerkundenNr>
+      <EmpfaengerName1>Uwe Zweihaus</EmpfaengerName1>
+      <EmpfaengerName2>400424990</EmpfaengerName2>
+      <ELaenderkennzeichen>DE</ELaenderkennzeichen>
+      <EPLZ>42499</EPLZ>
+      <EOrt>Hücksenwagen</EOrt>
+      <EStrasse>Bahnhofstr. 2</EStrasse>
+      <ETelefonNr/>
+      <EEmail/>
+    </Empfaengeranschrift>
+    <Auftragspositionen>
+      <Position>
+        <MengeEH1>12</MengeEH1>
+        <ArtikelNr>14640/XL</ArtikelNr>
+        <FremdPos1>1</FremdPos1>
+        <Warenbezeichnung/>
+        <EAN/>
+      </Position>
+      <Position>
+        <MengeEH1>4</MengeEH1>
+        <ArtikelNr>14640/03</ArtikelNr>
+        <FremdPos1>2</FremdPos1>
+        <Warenbezeichnung/>
+        <EAN/>
+      </Position>
+      <Position>
+        <MengeEH1>2</MengeEH1>
+        <ArtikelNr>10105</ArtikelNr>
+        <FremdPos1>3</FremdPos1>
+        <Warenbezeichnung/>
+        <EAN/>
+      </Position>
+    </Auftragspositionen>
+  </Auftrag>
+</Auftragsliste>
