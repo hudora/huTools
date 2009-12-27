@@ -83,7 +83,7 @@ doc/standards/examples/%.xml: doc/standards/examples/%.json
 	python huTools/protocols.py $<  | xmllint --encode utf-8 --format - > $@
 
 examples: doc/standards/examples/warenzugang.xml doc/standards/examples/kommiauftrag.xml doc/standards/examples/rueckmeldung.xml doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/wms2logos_kommiauftrag.xslt
-	xsltproc doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/warenzugang.xml > doc/standards/examples/wms2logos_warenzugng.xml
+	xsltproc doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/warenzugang.xml > doc/standards/examples/wms2logos_warenzugang.xml
 	xsltproc doc/standards/examples/wms2logos_kommiauftrag.xslt doc/standards/examples/kommiauftrag.xml > doc/standards/examples/wms2logos_kommiauftrag.xml
 
 

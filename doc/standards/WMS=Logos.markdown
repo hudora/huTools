@@ -33,6 +33,15 @@ Programmanpassungen nötig sind. Ich habe für den Warenzugang und für
 Kommiaufträge je ein Beispiel XSLT-Stylesheet erstellt. Der Zeitaufwand für
 beide Stylesheets war knapp dreiviertel Stunde.
 
+Die Beispiele [wms2logos_warenzugang.xslt][wms2logos_warenzugang.xslt]
+und [wms2logos_kommiauftrag.xslt][wms2logos_kommiauftrag.xslt]
+finden sich unter http://github.com/hudora/huTools/tree/master/doc/standards/examples/
+- dort finden sich auch die mit den XSLT-Stylesheets generierten Dateien
+`wms2logos_warenzugang.xml` und `wms2logos_kommiauftrag.xml`, die sich
+direkt in die Fullfillmentschnittstelle von Logos importieren lassen sollten.
+
+[wms2logos_warenzugang.xslt]: http://github.com/hudora/huTools/blob/master/doc/standards/examples/wms2logos_warenzugang.xslt
+[wms2logos_kommiauftrag.xslt]: http://github.com/hudora/huTools/blob/master/doc/standards/examples/wms2logos_kommiauftrag.xslt
 
 ## Problembereiche
 

@@ -1,5 +1,3 @@
-DRAFT - ENTWURF - DRAFT - ENTWURF - DRAFT - ENTWURF
-
 # Kommunikation inventory control <-> WMS
 
 Im folgenden wird das Kommunikationsprotokoll zwischen einer Warenwirtschaft ("inventory control", IC, ERP)
@@ -60,6 +58,10 @@ Korrekturbuchungen gelösst werden.
      "artnr":"14695",
      "batchnr": "3104247"}
 
+Eine Beispielnachricht in XML findet sich unter
+[http://github.com/hudora/huTools/blob/master/doc/standards/examples/warenzugang.xml][warenzugang.xml].
+
+[warenzugang.xml]: http://github.com/hudora/huTools/blob/master/doc/standards/examples/warenzugang.xml
 
 ## Kommiauftrag
 
@@ -160,6 +162,10 @@ mehreren Feldern.
                               "anweisung": "Paletten höchstens auf 140 cm Packen"}]
     }
 
+Eine Beispielnachricht in XML findet sich unter
+[http://github.com/hudora/huTools/blob/master/doc/standards/examples/kommiauftrag.xml][kommiauftrag.xml].
+
+[kommiauftrag.xml]: http://github.com/hudora/huTools/blob/master/doc/standards/examples/kommiauftrag.xml
 
 
 ## Rückmeldung
@@ -181,7 +187,6 @@ einmal rückgemeldet werden.
 
 * **nves** - Liste der Versandeinheiten. Enthält pro Versandeiheit ein Dictionary mit Gewicht in Gramm
   und der Art der Versandeinheit. 
-
 
 
 ### Beispiel
@@ -210,7 +215,10 @@ einmal rückgemeldet werden.
                "gewicht": 28256,
                 "art": "paket"}]}
 
+Eine Beispielnachricht in XML findet sich unter
+[http://github.com/hudora/huTools/blob/master/doc/standards/examples/rueckmeldung.xml][rueckmeldung.xml].
 
+[rueckmeldung.xml]: http://github.com/hudora/huTools/blob/master/doc/standards/examples/rueckmeldung.xml
 
 ## Lieferschein
 
@@ -309,114 +317,15 @@ Spezifikation. Auch ein Bestandsabgleich ist nicht Teil dieser Spezifikation.
 # Datenformate
 
 Warenzugang, Kommiauftrag und Rückmeldung lassen sich sowohl als [JSON][JSON], als auch als XML darstellen.
-Oben wurde bereits die (bevorzugte) JSON Darstellung gezeigt. Werdend ie Nachrichten in XML dargestellt,
-sähen sie in etwa folgendermaßen aus.
+Oben wurde bereits die (bevorzugte) JSON Darstellung gezeigt. 
+
+Beispielnachrichten in XML und JSON finden sich unter
+[http://github.com/hudora/huTools/tree/master/doc/standards/examples/][githubexamples].
+
+[githubexamples]: http://github.com/hudora/huTools/tree/master/doc/standards/examples/
+
 
 [JSON]: http://www.json.org/
-
-## Warenzugang
-
-    <warenzugang>
-        <guid>3104247-7</guid>
-        <menge>7</menge>
-        <artnr>14695</artnr>
-        <batchnr>3104247</batchnr>
-    </warenzugang>
-
-
-## Kommiauftrag
-
-    <kommiauftrag>
-        <anliefertermin>2009-11-25</anliefertermin>
-        <auftragsnr>1025575</auftragsnr>
-        <positionen>
-            <position>
-                <posnr>1</posnr>
-                <menge>12</menge>
-                <artnr>14640/XL</artnr>
-            </position>
-            <position>
-                <posnr>2</posnr>
-                <menge>4</menge>
-                <artnr>14640/03</artnr>
-            </position>
-            <position>
-                <posnr>3</posnr>
-                <menge>2</menge>
-                <artnr>10105</artnr>
-            </position>
-        </positionen>
-        <kundenname>Ute Zweihaus 400424990</kundenname>
-        <ort>H&#xC3;&#xBC;cksenwagen</ort>
-        <plz>42499</plz>
-        <versandeinweisungen>
-            <versandeinweisung>
-                <bezeichner>avisierung48h</bezeichner>
-                <anweisung>48h vor Anlieferung unter 0900-LOGISTIK avisieren</anweisung>
-                <guid>2103839-XalE</guid>
-            </versandeinweisung>
-            <versandeinweisung>
-                <bezeichner>abpackern140</bezeichner>
-                <anweisung>Paletten h&#xC3;&#xB6;chstens auf 140 cm Packen</anweisung>
-                <guid>2103839-GuTi</guid>
-            </versandeinweisung>
-        </versandeinweisungen>
-        <prioritaet>7</prioritaet>
-        <land>DE</land>
-        <name2>400424990</name2>
-        <name3/>
-        <name1>Uwe Zweihaus</name1>
-        <strasse>Bahnhofstr. 2</strasse>
-        <kundennr>21548</kundennr>
-        <info_kunde>Besuch H. Gerlach</info_kunde>
-        <kommiauftragsnr>2103839</kommiauftragsnr>
-    </kommiauftrag>
-
-
-## Rückmeldung
-
-    <rueckmeldung>
-        <nves>
-            <nves>
-                <art>paket</art>
-                <nve>23455326543222553</nve>
-                <gewicht>28256</gewicht>
-            </nves>
-            <nves>
-                <art>paket</art>
-                <nve>43255634634653546</nve>
-                <gewicht>28256</gewicht>
-            </nves>
-        </nves>
-        <positionen>
-            <position>
-                <nve>23455326543222553</nve>
-                <posnr>1</posnr>
-                <menge>4</menge>
-                <artnr>14640/XL</artnr>
-            </position>
-            <position>
-                <nve>43255634634653546</nve>
-                <posnr>1</posnr>
-                <menge>8</menge>
-                <artnr>14640/XL</artnr>
-            </position>
-            <position>
-                <nve>43255634634653546</nve>
-                <posnr>2</posnr>
-                <menge>4</menge>
-                <artnr>14640/03</artnr>
-            </position>
-            <position>
-                <nve>23455326543222553</nve>
-                <posnr>3</posnr>
-                <menge>2</menge>
-                <artnr>10105</artnr>
-            </position>
-        </positionen>
-        <kommiauftragsnr>2103839</kommiauftragsnr>
-    </rueckmeldung>
-
 
 ## Priorität
 
