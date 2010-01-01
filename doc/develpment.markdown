@@ -45,6 +45,9 @@ Here we store Information in regard to Software Development at Hudora.
 
 ## Style
 
+ * Wrap code at line 110. If you use Textmate type
+   `defaults write com.macromates.textmate OakWrapColumns '( 40, 72, 78, 109 )'` to make wraping
+   more comfortable.
  * Follow [PEP 8][pep8].
    Use [pep8.py][pep8py] `--ignore=E501,W291 --repeat` to verify compliance.
  * Follow [PEP 257][pep257] for docstrings
