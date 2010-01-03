@@ -81,8 +81,11 @@ Here we store Information in regard to Software Development at Hudora.
 
 ## Conventions
 
-http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown
-http://github.com/hudora/huTools/blob/master/doc/standards/messaging_ic-wms.markdown
+Use our naming conventions for [Adresses][adressprot] and
+[Warehouse related stuff][icwmsprot] (more to come).
+
+[adressprot]: http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown
+[icwmsprot]: http://github.com/hudora/huTools/blob/master/doc/standards/messaging_ic-wms.markdown
 
 
 ## Django Specifica
@@ -92,6 +95,13 @@ http://github.com/hudora/huTools/blob/master/doc/standards/messaging_ic-wms.mark
 * you should provide a `settings_live.py` file. `settings.py` should be configured for testing
 * including the directory `generic_templates` containing source:projects/html/trunk/templates
   ({{{svn co https://cybernetics.hudora.biz/intern/svn/code/projects/html/trunk/templates generic_templates}}})
+* Use [googleappsauth][googleappsauth] to authenticate local users ([example][googleappsauthexample])
+* Use [hoptoad][hoptoad] to report errors ([example][hoptoadexample])
+
+[googleappsauth]: http://github.com/hudora/django-googleappsauth#readme
+[googleappsauthexample]: https://cybernetics.hudora.biz/intern/wordpress/2010/01/django-googleappsauth/
+[hoptoad]: https://hudora.hoptoadapp.com/
+[hoptoadexample]: https://cybernetics.hudora.biz/intern/wordpress/2010/01/hoptoad/
 
 
 ## Misc
