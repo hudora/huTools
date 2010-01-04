@@ -3,17 +3,17 @@ h1. huTools
 huTools is a small collection of helpful tools we use.
 
 * calendar - date based calculations and format conversions
- * calendar.formats - output and parsing of different date formats
- * calendar.workdays - date based calculations and format conversions
-* checksummming - calculate various checksums
-* decorators - various helpfull decorators
-* luids - locally unique user-ids
-* robusttypecasts - type conversionts that seldom fail
-* printing - access printers
-* ReReadingConfigParser -  ConfigParser which detects changes in config files
-* unicode - real-world unicode handling
-* world - country codes
-* huLint - Code Quality Checking
+ * "calendar.formats":http://github.com/hudora/huTools/html/calendar/formats.html - output and parsing of different date formats
+ * "calendar.workdays":http://github.com/hudora/huTools/html/calendar/workdays.html  - date based calculations and format conversions
+* "checksummming":http://github.com/hudora/huTools/html/checksumming.html - calculate various checksums
+* "decorators":http://github.com/hudora/huTools/html/decorators.html - various helpfull decorators
+* "luids":http://github.com/hudora/huTools/html/luids.html - locally unique user-ids
+* "robusttypecasts":http://github.com/hudora/huTools/html/robusttypecasts.html - type conversionts that seldom fail
+* "printing":http://github.com/hudora/huTools/html/printing.html - access printers
+* "ReReadingConfigParser":http://github.com/hudora/huTools/html/ReReadingConfigParser.html -  ConfigParser which detects changes in config files
+* "unicode":http://github.com/hudora/huTools/html/unicode.html - real-world unicode handling
+* "world":http://github.com/hudora/huTools/html/world.html - country codes
+* "huLint":http://github.com/hudora/huTools/html/huLint.html - Code Quality Checking
 
 h2. Downloads
 

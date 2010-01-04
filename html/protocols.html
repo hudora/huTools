@@ -1,0 +1,72 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module protocols</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>protocols</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="http://github.com/hudora/huTools/html/protocols.py">/github.com/hudora/huTools/html/protocols.py</a></font></td></tr></table>
+    <p><tt>protocols.py&nbsp;-&nbsp;handle&nbsp;data&nbsp;confoming&nbsp;the&nbsp;the&nbsp;Hudora&nbsp;standard&nbsp;protocols.<br>
+See&nbsp;<a href="http://github.com/hudora/huTools/tree/master/doc/standards">http://github.com/hudora/huTools/tree/master/doc/standards</a>&nbsp;for&nbsp;details.<br>
+&nbsp;<br>
+Created&nbsp;by&nbsp;Maximillian&nbsp;Dornseif&nbsp;on&nbsp;2009-12-27.<br>
+Copyright&nbsp;(c)&nbsp;2009&nbsp;HUDORA.&nbsp;All&nbsp;rights&nbsp;reserved.<br>
+&nbsp;<br>
+Code&nbsp;is&nbsp;based&nbsp;on&nbsp;<a href="http://code.activestate.com/recipes/573463/">http://code.activestate.com/recipes/573463/</a></tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="xml.etree.ElementTree.html">xml.etree.ElementTree</a><br>
+</td><td width="25%" valign=top><a href="simplejson.html">simplejson</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-dicttoxml"><strong>dicttoxml</strong></a>(datadict, roottag<font color="#909090">='data'</font>)</dt><dd><tt>Converts&nbsp;a&nbsp;dict&nbsp;representing&nbsp;one&nbsp;of&nbsp;the&nbsp;protocoles&nbsp;described&nbsp;in<br>
+<a href="http://github.com/hudora/huTools/tree/master/doc/standards">http://github.com/hudora/huTools/tree/master/doc/standards</a>&nbsp;to&nbsp;XML.<br>
+&nbsp;<br>
+Returns&nbsp;an&nbsp;UTF-8&nbsp;encoded&nbsp;String.<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;data&nbsp;=&nbsp;{"kommiauftragsnr":2103839,&nbsp;"anliefertermin":"2009-11-25",&nbsp;"prioritaet":&nbsp;7,<br>
+...&nbsp;"ort":"Hücksenwagen",<br>
+...&nbsp;"positionen":&nbsp;[{"menge":&nbsp;12,&nbsp;"artnr":&nbsp;"14640/XL",&nbsp;"posnr":&nbsp;1},],<br>
+...&nbsp;"versandeinweisungen":&nbsp;[{"guid":&nbsp;"2103839-XalE",&nbsp;"bezeichner":&nbsp;"avisierung48h",<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"anweisung":&nbsp;"48h&nbsp;vor&nbsp;Anlieferung&nbsp;unter&nbsp;0900-LOGISTIK&nbsp;avisieren"},<br>
+...]}<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;print&nbsp;toxml(data,&nbsp;'kommiauftrag')<br>
+'''&lt;kommiauftrag&gt;<br>
+&lt;anliefertermin&gt;2009-11-25&lt;/anliefertermin&gt;<br>
+&lt;positionen&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;position&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;posnr&gt;1&lt;/posnr&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;menge&gt;12&lt;/menge&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artnr&gt;14640/XL&lt;/artnr&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/position&gt;<br>
+&lt;/positionen&gt;<br>
+&lt;ort&gt;H&amp;#xC3;&amp;#xBC;cksenwagen&lt;/ort&gt;<br>
+&lt;versandeinweisungen&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;versandeinweisung&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;bezeichner&gt;avisierung48h&lt;/bezeichner&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;anweisung&gt;48h&nbsp;vor&nbsp;Anlieferung&nbsp;unter&nbsp;0900-LOGISTIK&nbsp;avisieren&lt;/anweisung&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;guid&gt;2103839-XalE&lt;/guid&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/versandeinweisung&gt;<br>
+&lt;/versandeinweisungen&gt;<br>
+&lt;prioritaet&gt;7&lt;/prioritaet&gt;<br>
+&lt;kommiauftragsnr&gt;2103839&lt;/kommiauftragsnr&gt;<br>
+&lt;/kommiauftrag&gt;'''</tt></dd></dl>
+ <dl><dt><a name="-test"><strong>test</strong></a>()</dt></dl>
+</td></tr></table>
+</body></html>

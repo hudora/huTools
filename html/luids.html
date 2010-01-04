@@ -1,0 +1,97 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module luids</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>luids</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="http://github.com/hudora/huTools/html/luids.py">/github.com/hudora/huTools/html/luids.py</a></font></td></tr></table>
+    <p><tt>luids.py<br>
+&nbsp;<br>
+Tools&nbsp;for&nbsp;generating&nbsp;various&nbsp;local&nbsp;unique&nbsp;IDs.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;tries&nbsp;to&nbsp;generate&nbsp;IDs&nbsp;which&nbsp;are&nbsp;guaranteed&nbsp;to&nbsp;be&nbsp;unique&nbsp;on&nbsp;a&nbsp;machine.&nbsp;Compared&nbsp;with&nbsp;the&nbsp;fine&nbsp;uuid<br>
+module&nbsp;in&nbsp;python&nbsp;2.5&nbsp;we&nbsp;try&nbsp;to&nbsp;be&nbsp;unique&nbsp;only&nbsp;on&nbsp;a&nbsp;single&nbsp;host&nbsp;and&nbsp;not&nbsp;globally.&nbsp;In&nbsp;turn&nbsp;we&nbsp;provide&nbsp;stronger<br>
+guarantees&nbsp;that&nbsp;no&nbsp;ID&nbsp;will&nbsp;be&nbsp;ever&nbsp;duplicate&nbsp;on&nbsp;a&nbsp;machine.&nbsp;Therfor&nbsp;our&nbsp;IDs&nbsp;are&nbsp;perfect&nbsp;for&nbsp;generating&nbsp;unique<br>
+filenames&nbsp;in&nbsp;a&nbsp;directory&nbsp;used&nbsp;by&nbsp;severall&nbsp;processes/threads.<br>
+&nbsp;<br>
+See&nbsp;<a href="http://docs.python.org/lib/module-uuid.html">http://docs.python.org/lib/module-uuid.html</a>&nbsp;and&nbsp;<a href="http://zesty.ca/python/uuid.py">http://zesty.ca/python/uuid.py</a>&nbsp;for&nbsp;the&nbsp;Python&nbsp;standard<br>
+uuid&nbsp;module.<br>
+&nbsp;<br>
+Created&nbsp;by&nbsp;Maximillian&nbsp;Dornseif&nbsp;on&nbsp;2006-11-08.&nbsp;BSD&nbsp;Licensed.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="thread.html">thread</a><br>
+<a href="base64.html">base64</a><br>
+</td><td width="25%" valign=top><a href="hashlib.html">hashlib</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="socket.html">socket</a><br>
+<a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="unittest.html">unittest</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-guid128"><strong>guid128</strong></a>(salt<font color="#909090">='*'</font>)</dt><dd><tt>Generates&nbsp;an&nbsp;26&nbsp;character&nbsp;ID&nbsp;which&nbsp;should&nbsp;be&nbsp;globally&nbsp;unique.<br>
+&gt;&gt;&gt;&nbsp;<a href="#-guid128">guid128</a>()<br>
+'MTB2ONDSL3YWJN3CA6XIG7O4HM'</tt></dd></dl>
+ <dl><dt><a name="-luid"><strong>luid</strong></a>()</dt><dd><tt>Generate&nbsp;an&nbsp;ID&nbsp;which&nbsp;should&nbsp;be&nbsp;globally&nbsp;unique.<br>
+&nbsp;<br>
+This&nbsp;only&nbsp;works&nbsp;if&nbsp;gethostname()&nbsp;returns&nbsp;an&nbsp;unique&nbsp;name.&nbsp;This&nbsp;usually&nbsp;is&nbsp;true&nbsp;to&nbsp;a&nbsp;certain&nbsp;degree&nbsp;if&nbsp;you&nbsp;<br>
+use&nbsp;your&nbsp;machine&nbsp;in&nbsp;an&nbsp;NIS/NFS&nbsp;configuration.&nbsp;So&nbsp;this&nbsp;function&nbsp;is&nbsp;mainly&nbsp;usefull&nbsp;to&nbsp;generate&nbsp;unique<br>
+filenames&nbsp;for&nbsp;NFS-shared&nbsp;filesystems.<br>
+&nbsp;<br>
+So&nbsp;this&nbsp;is&nbsp;very&nbsp;well&nbsp;suited&nbsp;for&nbsp;generationg&nbsp;IDs&nbsp;in&nbsp;a&nbsp;setup&nbsp;where&nbsp;you&nbsp;controll&nbsp;all&nbsp;the&nbsp;machines&nbsp;and&nbsp;thus<br>
+hostnames.</tt></dd></dl>
+ <dl><dt><a name="-unique_machine32"><strong>unique_machine32</strong></a>()</dt><dd><tt>Generate&nbsp;an&nbsp;ID&nbsp;which&nbsp;has&nbsp;a&nbsp;low&nbsp;probability&nbsp;of&nbsp;repeating&nbsp;on&nbsp;this&nbsp;machine.<br>
+&nbsp;<br>
+What&nbsp;goes&nbsp;where:<br>
+&nbsp;<br>
+&nbsp;&nbsp;PP&nbsp;^<br>
+TTtt&nbsp;^<br>
+c<br>
+&nbsp;<br>
+So&nbsp;the&nbsp;first&nbsp;byte&nbsp;is&nbsp;an&nbsp;combination&nbsp;of&nbsp;a&nbsp;counter&nbsp;(c)&nbsp;and&nbsp;the&nbsp;first&nbsp;byte&nbsp;of&nbsp;the&nbsp;least&nbsp;significant&nbsp;<br>
+(and&nbsp;thus&nbsp;fastest&nbsp;changing)&nbsp;word&nbsp;(TT)&nbsp;of&nbsp;the&nbsp;current&nbsp;timestamp.&nbsp;This&nbsp;is&nbsp;followed&nbsp;by&nbsp;the&nbsp;next&nbsp;byte&nbsp;of&nbsp;the&nbsp;<br>
+least&nbsp;significant&nbsp;word&nbsp;of&nbsp;the&nbsp;current&nbsp;timestamp&nbsp;(TT).&nbsp;The&nbsp;next&nbsp;two&nbsp;bytes&nbsp;are&nbsp;the&nbsp;PID&nbsp;(PP)&nbsp;and&nbsp;the&nbsp;most&nbsp;<br>
+significant&nbsp;word&nbsp;of&nbsp;the&nbsp;current&nbsp;timestamp&nbsp;(tt)&nbsp;XORed.<br>
+&nbsp;<br>
+Assuming&nbsp;16bit&nbsp;PIDs&nbsp;this&nbsp;should&nbsp;result&nbsp;in&nbsp;unique&nbsp;IDs&nbsp;on&nbsp;a&nbsp;machine&nbsp;even&nbsp;with&nbsp;multi-threading.&nbsp;But&nbsp;there&nbsp;<br>
+are&nbsp;degenerated&nbsp;scenarios&nbsp;(more&nbsp;than&nbsp;2**16&nbsp;concurrent/fast&nbsp;spawning&nbsp;processes,&nbsp;while&nbsp;there&nbsp;are&nbsp;more&nbsp;than&nbsp;<br>
+2**8&nbsp;threads&nbsp;bussy&nbsp;generating&nbsp;unique&nbsp;IDs)&nbsp;where&nbsp;the&nbsp;IDs&nbsp;might&nbsp;not&nbsp;be&nbsp;unique.<br>
+To&nbsp;avoid&nbsp;these&nbsp;use&nbsp;unique_machine64.</tt></dd></dl>
+ <dl><dt><a name="-unique_machine64"><strong>unique_machine64</strong></a>()</dt><dd><tt>Generate&nbsp;an&nbsp;ID&nbsp;which&nbsp;should&nbsp;never&nbsp;repeat&nbsp;on&nbsp;this&nbsp;machine.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;suggested&nbsp;as&nbsp;the&nbsp;base&nbsp;for&nbsp;generating&nbsp;filenames&nbsp;and&nbsp;the&nbsp;like.&nbsp;Processes/Threads&nbsp;<br>
+running&nbsp;on&nbsp;the&nbsp;same&nbsp;machine&nbsp;should&nbsp;never&nbsp;be&nbsp;able&nbsp;to&nbsp;generate&nbsp;the&nbsp;same&nbsp;ID&nbsp;and&nbsp;no&nbsp;ID&nbsp;should&nbsp;be&nbsp;created&nbsp;<br>
+twice.<br>
+&nbsp;<br>
+What&nbsp;goes&nbsp;where:<br>
+TTTT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>
+&nbsp;&nbsp;&nbsp;&nbsp;PP&nbsp;&nbsp;&nbsp;^<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cccc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+The&nbsp;first&nbsp;two&nbsp;words&nbsp;are&nbsp;the&nbsp;current&nbsp;timestamp.&nbsp;The&nbsp;next&nbsp;word&nbsp;is&nbsp;the&nbsp;current&nbsp;&nbsp;PID&nbsp;xored&nbsp;with&nbsp;the&nbsp;most<br>
+significant&nbsp;word&nbsp;of&nbsp;a&nbsp;counter.&nbsp;The&nbsp;last&nbsp;byte&nbsp;is&nbsp;the&nbsp;most&nbsp;significant&nbsp;word&nbsp;of&nbsp;a&nbsp;counter.&nbsp;<br>
+The&nbsp;counter&nbsp;is&nbsp;being&nbsp;increased&nbsp;by&nbsp;1&nbsp;in&nbsp;every&nbsp;call.&nbsp;This&nbsp;should&nbsp;make&nbsp;this&nbsp;function&nbsp;thread&nbsp;<br>
+save&nbsp;unless&nbsp;you&nbsp;call&nbsp;it&nbsp;more&nbsp;than&nbsp;2**16&nbsp;times&nbsp;per&nbsp;second.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__revision__</strong> = '$Revision$'</td></tr></table>
+</body></html>
