@@ -3,8 +3,8 @@ h1. huTools
 huTools is a small collection of helpful tools we use.
 
 * calendar - date based calculations and format conversions
- * "calendar.formats":http://github.com/hudora/huTools/html/calendar/formats.html - output and parsing of different date formats
- * "calendar.workdays":http://github.com/hudora/huTools/html/calendar/workdays.html  - date based calculations and format conversions
+ * "calendar.formats":html/calendar/formats.html - output and parsing of different date formats
+ * "calendar.workdays":html/calendar/workdays.html  - date based calculations and format conversions
 * "checksummming":http://github.com/hudora/huTools/html/checksumming.html - calculate various checksums
 * "decorators":http://github.com/hudora/huTools/html/decorators.html - various helpfull decorators
 * "luids":http://github.com/hudora/huTools/html/luids.html - locally unique user-ids
