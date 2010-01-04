@@ -57,7 +57,7 @@ dependencies:
 statistics:
 	sloccount --wide --details huTools | tee sloccount.sc
 
-upload: doc
+upload: docs
 	python setup.py build sdist bdist_egg
 	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/nonpublic/eggs/
 	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
@@ -68,7 +68,7 @@ publish:
 	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
 	rsync -r --delete html root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
 
-doc:
+docs:
 	rm -Rf html
 	mkdir -p html
 	mkdir -p html/calendar
