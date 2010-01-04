@@ -5,15 +5,15 @@ huTools is a small collection of helpful tools we use.
 * calendar - date based calculations and format conversions
  * "calendar.formats":html/calendar/formats.html - output and parsing of different date formats
  * "calendar.workdays":html/calendar/workdays.html  - date based calculations and format conversions
-* "checksummming":http://github.com/hudora/huTools/html/checksumming.html - calculate various checksums
-* "decorators":http://github.com/hudora/huTools/html/decorators.html - various helpfull decorators
-* "luids":http://github.com/hudora/huTools/html/luids.html - locally unique user-ids
-* "robusttypecasts":http://github.com/hudora/huTools/html/robusttypecasts.html - type conversionts that seldom fail
-* "printing":http://github.com/hudora/huTools/html/printing.html - access printers
-* "ReReadingConfigParser":http://github.com/hudora/huTools/html/ReReadingConfigParser.html -  ConfigParser which detects changes in config files
-* "unicode":http://github.com/hudora/huTools/html/unicode.html - real-world unicode handling
-* "world":http://github.com/hudora/huTools/html/world.html - country codes
-* "huLint":http://github.com/hudora/huTools/html/huLint.html - Code Quality Checking
+* "checksummming":html/checksumming.html - calculate various checksums
+* "decorators":html/decorators.html - various helpfull decorators
+* "luids":html/luids.html - locally unique user-ids
+* "robusttypecasts":html/robusttypecasts.html - type conversionts that seldom fail
+* "printing":html/printing.html - access printers
+* "ReReadingConfigParser":html/ReReadingConfigParser.html -  ConfigParser which detects changes in config files
+* "unicode":html/unicode.html - real-world unicode handling
+* "world":html/world.html - country codes
+* "huLint":html/huLint.html - Code Quality Checking
 
 h2. Downloads
 
