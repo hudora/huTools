@@ -1,6 +1,6 @@
 # Very Simple Status Protocol
 
-Das 'Very Simple Status Protocol' ist ein Weg Statusmeldungen zu Aufträgen von HUDORA zu erhalten. Es wird in der Regel in Verbindung mit dem [VerySimpleOrderProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/verysimpleorderprotocol.html) für Dreiecksgeschäfte eingesetzt.
+Das 'Very Simple Status Protocol' ist ein Weg Statusmeldungen zu Aufträgen von HUDORA zu erhalten. Es wird in der Regel in Verbindung mit dem [VerySimpleOrderProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/verysimpleorderprotocol.markdown) für Dreiecksgeschäfte eingesetzt.
 
 Das *Very Simple Status Protocol* wurde entwickelt, um in möglichst vielen Umgebungan abbildbar zu sein. Das bevorzugte Format ist jedoch XML.
 
