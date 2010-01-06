@@ -59,9 +59,6 @@ statistics:
 
 upload: doc
 	python setup.py build sdist bdist_egg
-	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/nonpublic/eggs/
-	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
-	rsync -r --delete html root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
 
 publish:
 	python setup.py build sdist bdist_egg upload
