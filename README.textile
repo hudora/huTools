@@ -3,27 +3,35 @@ h1. huTools
 huTools is a small collection of helpful tools we use.
 
 * calendar - date based calculations and format conversions
- * "calendar.formats":http://github.com/hudora/huTools/blob/master/html/calendar/formats.html - output and parsing of different date formats
- * "calendar.workdays":http://github.com/hudora/huTools/blob/master/html/calendar/workdays.html  - date based calculations and format conversions
-* "checksummming":http://github.com/hudora/huTools/blob/master/html/checksumming.html - calculate various checksums
-* "decorators":http://github.com/hudora/huTools/blob/master/html/decorators.html - various helpfull decorators
+ * "calendar.formats":http://github.com/hudora/huTools/blob/master/html/calendar/formats.html - output and 
+ parsing of different date formats
+ * "calendar.workdays":http://github.com/hudora/huTools/blob/master/html/calendar/workdays.html  - date based
+  calculations and format conversions
+* "checksummming":http://github.com/hudora/huTools/blob/master/html/checksumming.html - calculate various 
+checksums
+* "decorators":http://github.com/hudora/huTools/blob/master/html/decorators.html - various helpfull 
+decorators
 * "luids":http://github.com/hudora/huTools/blob/master/html/luids.html - locally unique user-ids
-* "robusttypecasts":http://github.com/hudora/huTools/blob/master/html/robusttypecasts.html - type conversionts that seldom fail
+* "robusttypecasts":http://github.com/hudora/huTools/blob/master/html/robusttypecasts.html - type 
+conversionts that seldom fail
 * "printing":http://github.com/hudora/huTools/blob/master/html/printing.html - access printers
-* "ReReadingConfigParser":http://github.com/hudora/huTools/blob/master/html/ReReadingConfigParser.html -  ConfigParser which detects changes in config files
+* "ReReadingConfigParser":http://github.com/hudora/huTools/blob/master/html/ReReadingConfigParser.html -  
+ConfigParser which detects changes in config files
 * "unicode":http://github.com/hudora/huTools/blob/master/html/unicode.html - real-world unicode handling
 * "world":http://github.com/hudora/huTools/blob/master/html/world.html - country codes
 * "huLint":http://github.com/hudora/huTools/blob/master/html/huLint.html - Code Quality Checking
 
 h2. Downloads
 
-Get it at "GitHub":http://github.com/hudora/huTools/ or at the "Python Cheeseshop":http://pypi.python.org/pypi/huTools/.
+Get it at "GitHub":http://github.com/hudora/huTools/ or at the 
+"Python Cheeseshop":http://pypi.python.org/pypi/huTools/.
 
 h2. Changes
 
 * 0.37 - caching decorators and more countries
 * 0.36 - renamed io0 to int_or_0 and added io0 as a wrapper with a deprecation warning
 * 0.35 - robusttypecasts module added
-* 0.34 - checksumming.verify_ean() calendar.add_workdays_german(), decorators.memoize, decorators.method_once() and decorators.func_once() added,
+* 0.34 - checksumming.verify_ean() calendar.add_workdays_german(), decorators.memoize, 
+decorators.method_once() and decorators.func_once() added,
 * 0.32 - fs module added, huLint functionality for code rating
 * 0.31 - Fixed Installation, distribution file layout changed.
