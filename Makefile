@@ -86,6 +86,6 @@ examples: doc/standards/examples/warenzugang.xml doc/standards/examples/kommiauf
 
 clean:
 	rm -Rf testenv build dist html test.db pylint.out sloccount.sc pip-log.txt
-	find . -name '*.pyc' -or -name '*.pyo' -delete
+	find . -name '*.pyc' -delete
 
 .PHONY: build clean install upload check
