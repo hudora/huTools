@@ -1,11 +1,16 @@
+0.40:   added NetStringIO
 0.39p3: Version Number bumped for fix in [6688] (RO)
 0.39p2: added obfuscation.RC4
 0.39p1: added daemon.daemonize
-0.39: added humessaging, uniciode.deUmlaut, cleanup
+0.39:   added humessaging, uniciode.deUmlaut, cleanup
 0.38p4: luids.guid128() for generating a 26 character GUIDs
 0.38p3: calendar.formats functions now default to the current time 
-0.38p2: ???
 0.38p1: fixed caching, removed mobotix.py
-0.38: add mobotix.py (jdiemer)
+0.38:   add mobotix.py (jdiemer)
 0.37p1: added Israel
-0.37: Added async.Future and decorators.cache_function
+0.37:   Added async.Future and decorators.cache_function
+0.36:   renamed io0 to int_or_0 and added io0 as a wrapper with a deprecation warning
+0.35:   robusttypecasts module added
+0.34:   checksumming.verify_ean() calendar.add_workdays_german(), decorators.memoize,  decorators.method_once() and decorators.func_once() added,
+0.32:   fs module added, huLint functionality for code rating
+0.31:   Fixed Installation, distribution file layout changed

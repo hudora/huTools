@@ -16,11 +16,12 @@ check:
 	-/usr/local/hudorakit/bin/hd_pylint huTools
 
 test:
+	PYTHONPATH=. python huTools/NetStringIO.py
+	PYTHONPATH=. python huTools/calendar/formats.py
+	PYTHONPATH=. python huTools/calendar/workdays.py
+	PYTHONPATH=. python huTools/checksumming.py
 	PYTHONPATH=. python huTools/humessaging.py
 	PYTHONPATH=. python huTools/luids.py
-	PYTHONPATH=. python huTools/checksumming.py
-	PYTHONPATH=. python huTools/calendar/workdays.py
-	PYTHONPATH=. python huTools/calendar/formats.py
 	PYTHONPATH=. python huTools/obfuscation.py
 	PYTHONPATH=. python huTools/unicode.py
 
@@ -28,6 +29,7 @@ coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
 	printf '/usr/local/lib/.*\n/opt/.*\ntestenv/.*\n' >> .figleaf-exclude.txt
 	printf '.*manage.py\n.*settings.py\n.*setup.py\n.*urls.py\n' >> .figleaf-exclude.txt
+	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/NetStringIO.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/ReReadingConfigParser.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/async.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/calendar/formats.py
@@ -57,15 +59,13 @@ dependencies:
 statistics:
 	sloccount --wide --details huTools | tee sloccount.sc
 
-upload: docs
+upload: doc
 	python setup.py build sdist bdist_egg
 
 publish:
 	python setup.py build sdist bdist_egg upload
-	rsync dist/* root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
-	rsync -r --delete html root@cybernetics.hudora.biz:/usr/local/www/apache22/data/dist/huTools/
 
-docs:
+doc:
 	rm -Rf html
 	mkdir -p html
 	mkdir -p html/calendar
@@ -74,7 +74,6 @@ docs:
 
 install: build
 	sudo python setup.py install
-
 
 doc/standards/examples/%.xml: doc/standards/examples/%.json
 	python huTools/protocols.py $<  | xmllint --encode utf-8 --format - > $@
@@ -88,4 +87,4 @@ clean:
 	rm -Rf testenv build dist html test.db pylint.out sloccount.sc pip-log.txt
 	find . -name '*.pyc' -delete
 
-.PHONY: build clean install upload check
+.PHONY: build clean install upload check doc
