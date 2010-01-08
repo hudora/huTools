@@ -49,7 +49,7 @@ class NetStringIO:
     string argument. You even can specify another delimiter than '\n'
     """
 
-    def __init__(self, file, delim = '\n'):
+    def __init__(self, fileo, delim = '\n'):
         __doc__ = """Create a Netstring object warping a file-like object.
         
         n = NetStringIO.NetStringIO(file [, delimiter])
@@ -65,7 +65,7 @@ class NetStringIO:
         protocols: no delimiter between netstrings.
         """
 
-        self.file = file
+        self.file = fileo
         self.delim = delim
 
         
