@@ -62,11 +62,11 @@ _listnames = {'positionen': 'position',
              'versandeinweisungen': 'versandeinweisung'}
 
 def _ConvertDictToXmlRecurse(parent, dictitem):
-    assert type(dictitem) is not type([])
+    assert not isinstance(dictitem, type([]))
 
     if isinstance(dictitem, dict):
         for (tag, child) in dictitem.iteritems():
-            if type(child) is type([]):
+            if isinstance(child, type([])):
                 # iterate through the array and convert
                 listelem = ElementTree.Element(tag)
                 parent.append(listelem)

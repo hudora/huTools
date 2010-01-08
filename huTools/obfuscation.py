@@ -26,15 +26,15 @@ class RC4:
         """initialize the state table."""
         random.seed()
         (self.x, self.y) = (0, 0)
-        self.state_array = [i for i in xrange(0, 256)]
-        for i in xrange(0, 256):
+        self.state_array = [i for i in range(0, 256)]
+        for i in range(0, 256):
             self.x = ((ord(key[i % len(key)]) & 0xff) + self.state_array[i] + self.x) & 0xff
             self.state_array[i], self.state_array[self.x] = self.state_array[self.x], self.state_array[i]
         self.x = 0
 
     def engine_crypt(self, input):
         self.out = []
-        for i in xrange(0, len(input)):
+        for i in range(0, len(input)):
             self.x = (self.x + 1) & 0xff
             self.y = (self.state_array[self.x] + self.y) & 0xff
             self.state_array[self.x], self.state_array[self.y] = self.state_array[self.y], self.state_array[self.x]

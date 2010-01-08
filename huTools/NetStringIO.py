@@ -149,15 +149,15 @@ def test():
     inf = StringIO.StringIO()
     outf = StringIO.StringIO()
 
-    print "Writing a Netstring ... " ,
+    print "Writing a Netstring ... ",
     f = NetStringIO(outf)
     f.write(testtext)
-    print outf.getvalue() ,
+    print outf.getvalue(),
 
     inf = StringIO.StringIO(outf.getvalue())
     f.close()
 
-    print "Reading this Netstring ... " ,
+    print "Reading this Netstring ... ",
     
     fz = NetStringIO(inf)
     ret = fz.read()
