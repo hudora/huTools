@@ -60,10 +60,7 @@ statistics:
 	sloccount --wide --details huTools | tee sloccount.sc
 
 upload: doc
-	python setup.py build sdist bdist_egg
-
-publish:
-	python setup.py build sdist bdist_egg upload
+	python setup.py build sdist upload
 
 doc:
 	rm -Rf html

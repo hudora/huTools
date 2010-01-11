@@ -1,3 +1,7 @@
+Versandart: 6 ZEICHEN
+Druckproblem!
+
+
 # Mapping Hudora - Gigatron Logos
 
 Dieses Dokument erläutert das Feldmapping zwischen den [Hudora
@@ -142,12 +146,16 @@ dem `Auftragsliste/Auftrag/` Pfad in der Logos XMl Schnittstelle.
 * Auftragspositionen/Position/Warenbezeichnung **text**
 * Auftragspositionen/Position/EAN **ean**
 
+In den Auftragstext kommen versandrelevante informationen wie avisieren
+In den Kommissioniertext kommen PAck-Relevante Infomationen, wie Abpacken
+
+
 [rfc3339]: http://www.faqs.org/rfcs/rfc3339.html
 [iso3166]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
 Nicht befüllt:
 
-* Auftragskopf/EinlagererNr **(Klärungs-/Konvertierungsbedarf)**
+* Auftragskopf/EinlagererNr **(Klärungs-/Konvertierungsbedarf)** Fest auf 10056
 
 
 # Rückmeldung / Rückmeldung Warenausgang 
