@@ -6,7 +6,7 @@
 <Auftragsliste>
     <Auftrag>
         <Auftragskopf>
-            <EinlagererNr>UNKLAR</EinlagererNr>
+            <EinlagererNr>10056</EinlagererNr>
             <FremdlieferscheinNr><xsl:value-of select="descendant::kommiauftragsnr" /></FremdlieferscheinNr>
             <KundenauftragsNr><xsl:value-of select="descendant::auftragsnr" /></KundenauftragsNr>
         </Auftragskopf>
