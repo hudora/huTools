@@ -49,6 +49,7 @@
             </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="105010 - prioritaet" /></Auftragsprioritaet>
+            <xsl:copy-of select="versandart"/>
         </Auftragsinformationen>
         <Empfaengeranschrift>
             <EmpfaengerkundenNr><xsl:value-of select="descendant::kundennr" /></EmpfaengerkundenNr>
