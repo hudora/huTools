@@ -13,7 +13,23 @@
         <Auftragsinformationen>
             <Liefertermin><xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" /></Liefertermin>
             <Textcode1>8</Textcode1>
-            <Auftragstext><xsl:value-of select="descendant::info_kunde" /></Auftragstext>
+            <Auftragstext>
+                <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
+                <xsl:for-each select="descendant::versandeinweisung">
+                    <xsl:if test="contains('packliste
+                                            separater_lieferschein
+                                            abholer
+                                            hebebuehne',
+                                            bezeichner)">
+                        <xsl:text>
+                        </xsl:text>
+                        <xsl:value-of select="bezeichner" />
+                        <xsl:text>: </xsl:text>
+                        <xsl:value-of select="anweisung" />
+                        <!--FIXME: Hier noch ein Trennzeichen o.ä.? -->
+                    </xsl:if>
+                </xsl:for-each>
+            </Auftragstext>
             <Textcode2>2</Textcode2>
             <Kommissioniertext>
                 <xsl:for-each select="descendant::versandeinweisung">

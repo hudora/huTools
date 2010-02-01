@@ -34,19 +34,24 @@
       <guid>2103839-ZalE</guid>
     </versandeinweisung>
     <versandeinweisung>
+      <bezeichner>abholer</bezeichner>
+      <anweisung>Abholung durch Spedition Dornseif</anweisung>
+      <guid>NTS2RST5CAPNBAM6JWUZGRXYUI</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>avisieren_unter</bezeichner>
+      <anweisung>+49123456</anweisung>
+      <guid>WUQFNCBRM3KRGP6ETKZJ5ZM3PM</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>hebebuehne</bezeichner>
+      <anweisung>True</anweisung>
+      <guid>ZLRVP6UQALB53E7KDK7B2UFMII</guid>
+    </versandeinweisung>
+    <versandeinweisung>
       <bezeichner>packhoehe</bezeichner>
-      <anweisung>1500</anweisung>
-      <guid>2103839-YalE</guid>
-    </versandeinweisung>
-    <versandeinweisung>
-      <bezeichner>avisierung48h</bezeichner>
-      <anweisung>48h vor Anlieferung unter 0900-LOGISTIK avisieren</anweisung>
-      <guid>2103839-XalE</guid>
-    </versandeinweisung>
-    <versandeinweisung>
-      <bezeichner>abpackern140</bezeichner>
-      <anweisung>Paletten &#xF6;chstens auf 140 cm Packen</anweisung>
-      <guid>2103839-GuTi</guid>
+      <anweisung>1100</anweisung>
+      <guid>O6TUSPPUUIBL3HYOENTPUBNJCU</guid>
     </versandeinweisung>
   </versandeinweisungen>
   <prioritaet>7</prioritaet>
