@@ -24,6 +24,21 @@
   <plz>42499</plz>
   <versandeinweisungen>
     <versandeinweisung>
+      <bezeichner>etiketten_speicherort</bezeichner>
+      <anweisung>c:\desktop\Programm Data\schrecklicher windows pfad</anweisung>
+      <guid>2103839-kalE</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>sortenrein</bezeichner>
+      <anweisung>True</anweisung>
+      <guid>2103839-ZalE</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>packhoehe</bezeichner>
+      <anweisung>1500</anweisung>
+      <guid>2103839-YalE</guid>
+    </versandeinweisung>
+    <versandeinweisung>
       <bezeichner>avisierung48h</bezeichner>
       <anweisung>48h vor Anlieferung unter 0900-LOGISTIK avisieren</anweisung>
       <guid>2103839-XalE</guid>

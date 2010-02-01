@@ -15,7 +15,22 @@
             <Textcode1>8</Textcode1>
             <Auftragstext><xsl:value-of select="descendant::info_kunde" /></Auftragstext>
             <Textcode2>2</Textcode2>
-            <Kommissioniertext>Hier könnten die Versandvorschriften landen</Kommissioniertext>
+            <Kommissioniertext>
+                <xsl:for-each select="descendant::versandeinweisung">
+                    <xsl:if test="contains('packhoehe
+                                            sortenrein
+                                            etiketten
+                                            etiketten_speicherort',
+                                            bezeichner)">
+                        <xsl:text>
+                        </xsl:text> 
+                        <xsl:value-of select="bezeichner" />
+                        <xsl:text>: </xsl:text>
+                        <xsl:value-of select="anweisung" />
+                        <!--FIXME: Hier noch ein Trennzeichen o.ä.? -->
+                    </xsl:if>
+                </xsl:for-each>
+            </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="105010 - prioritaet" /></Auftragsprioritaet>
         </Auftragsinformationen>
