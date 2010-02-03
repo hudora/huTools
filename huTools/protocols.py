@@ -23,7 +23,7 @@ def dicttoxml(datadict, roottag='data'):
     Returns an UTF-8 encoded String.
     
     >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
-    ... "ort":"Hücksenwagen",
+    ... "ort": u"Hücksenwagen",
     ... "positionen": [{"menge": 12, "artnr": "14640/XL", "posnr": 1},],
     ... "versandeinweisungen": [{"guid": "2103839-XalE", "bezeichner": "avisierung48h",
     ...                          "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
@@ -93,6 +93,7 @@ def test():
     # kommiauftrag
     data = {"kommiauftragsnr":2103839,
      "anliefertermin":"2009-11-25",
+     "fixtermin": True,
      "prioritaet": 7,
      "info_kunde":"Besuch H. Gerlach",
      "auftragsnr":1025575,
@@ -104,7 +105,7 @@ def test():
      u"strasse":u"Bahnhofstr. 2",
      "land":"DE",
      "plz":"42499",
-     "ort":"Hücksenwagen",
+     "ort": u"Hücksenwagen",
      "positionen": [{"menge": 12,
                      "artnr": "14640/XL",
                      "posnr": 1},
@@ -119,7 +120,7 @@ def test():
                               "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
                              {"guid": "2103839-GuTi",
                               "bezeichner": "abpackern140",
-                              "anweisung": "Paletten höchstens auf 140 cm Packen"}]
+                              "anweisung": u"Paletten höchstens auf 140 cm Packen"}]
     }
     print dicttoxml(data, roottag='kommiauftrag')
     
