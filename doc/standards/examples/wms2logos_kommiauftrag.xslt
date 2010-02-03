@@ -2,7 +2,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="html"/>
 <xsl:output method="xml" indent="yes" version="1.0"/>
 
-<xsl:template match="kommiauftrag">
+
+<xsl:template match="/kommiauftrag">
 <Auftragsliste>
     <Auftrag>
         <Auftragskopf>
@@ -49,7 +50,9 @@
             </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="105010 - prioritaet" /></Auftragsprioritaet>
-            <xsl:copy-of select="versandart"/>
+            <Versandart>
+                <xsl:call-template name="VATMPL" />
+            </Versandart>
         </Auftragsinformationen>
         <Empfaengeranschrift>
             <EmpfaengerkundenNr><xsl:value-of select="descendant::kundennr" /></EmpfaengerkundenNr>
@@ -76,4 +79,23 @@
     </Auftrag>
 </Auftragsliste>
 </xsl:template>
+
+<!-- Template für die Versandart 
+FIXME: 
+    - Unterscheidung Mäuler national und Mäuler International
+    - Selbstabholer
+    - was ist mit DHLfreight-EXW
+    - was ist mit DPD-EXW
+-->
+<xsl:template name="VATMPL">
+    <xsl:choose>
+        <xsl:when test="/kommiauftrag/versandart = 'Mäuler'"> MAEIND </xsl:when> <!-- FIXME: stimmt das? -->
+        <xsl:when test="/kommiauftrag/versandart = 'DPD'"> DPDSTA </xsl:when>
+        <xsl:when test="/kommiauftrag/versandart = 'DPD-EXW'"> DPDUNF </xsl:when> <!-- FIXME: stimmt das? -->
+        <xsl:otherwise>
+            <xsl:value-of select="/kommiauftrag/versandart" />
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
 </xsl:stylesheet>
