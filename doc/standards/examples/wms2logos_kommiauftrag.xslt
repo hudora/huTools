@@ -12,7 +12,7 @@
             <KundenauftragsNr><xsl:value-of select="descendant::auftragsnr" /></KundenauftragsNr>
         </Auftragskopf>
         <Auftragsinformationen>
-            <Liefertermin><xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" /></Liefertermin>
+            <Liefertermin><xsl:call-template name="TERMIN_TMPL" /></Liefertermin>
             <Textcode1>8</Textcode1>
             <Auftragstext>
                 <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
@@ -96,6 +96,18 @@ FIXME:
             <xsl:value-of select="/kommiauftrag/versandart" />
         </xsl:otherwise>
     </xsl:choose>
+</xsl:template>
+
+<xsl:template name="TERMIN_TMPL">
+    <Liefertermin>
+        <xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" />
+        <Terminart>
+            <xsl:choose>
+                <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
+                <xsl:otherwise>BIS</xsl:otherwise>
+            </xsl:choose>
+        </Terminart>
+    </Liefertermin>
 </xsl:template>
 
 </xsl:stylesheet>

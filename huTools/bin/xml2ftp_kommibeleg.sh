@@ -13,7 +13,6 @@ WORKDIR="$BASEDIR/work"
 ARCHIVDIR="$BASEDIR/archiv"
 
 mkdir -p $UPLOADDIR
-mkdir -p $WORKDIR
 mkdir -p $ARCHIVDIR
 
 # Valide xml Dateien in entsprechendes Format konvertieren und ins Upload Verzeichnis stellen
