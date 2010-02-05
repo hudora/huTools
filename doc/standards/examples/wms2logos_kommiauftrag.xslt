@@ -12,7 +12,11 @@
             <KundenauftragsNr><xsl:value-of select="descendant::auftragsnr" /></KundenauftragsNr>
         </Auftragskopf>
         <Auftragsinformationen>
-            <Liefertermin><xsl:call-template name="TERMIN_TMPL" /></Liefertermin>
+            <Liefertermin>
+                <xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" />
+            </Liefertermin>
+            <!-- Terminart -->
+            <xsl:apply-templates select="fixtermin" />
             <Textcode1>8</Textcode1>
             <Auftragstext>
                 <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
@@ -22,12 +26,10 @@
                                             abholer
                                             hebebuehne',
                                             bezeichner)">
-                        <xsl:text>
-                        </xsl:text>
+                        <xsl:text> </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
-                        <!--FIXME: Hier noch ein Trennzeichen o.ä.? -->
                     </xsl:if>
                 </xsl:for-each>
             </Auftragstext>
@@ -39,20 +41,21 @@
                                             etiketten
                                             etiketten_speicherort',
                                             bezeichner)">
-                        <xsl:text>
-                        </xsl:text> 
+                        <xsl:text> </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
-                        <!--FIXME: Hier noch ein Trennzeichen o.ä.? -->
                     </xsl:if>
                 </xsl:for-each>
             </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="105010 - prioritaet" /></Auftragsprioritaet>
             <Versandart>
-                <xsl:call-template name="VATMPL" />
+                <xsl:apply-templates select="versandart" />
             </Versandart>
+            <Frankatur>
+                <!-- TODO -->
+            </Frankatur>
         </Auftragsinformationen>
         <Empfaengeranschrift>
             <EmpfaengerkundenNr><xsl:value-of select="descendant::kundennr" /></EmpfaengerkundenNr>
@@ -98,16 +101,13 @@ FIXME:
     </xsl:choose>
 </xsl:template>
 
-<xsl:template name="TERMIN_TMPL">
-    <Liefertermin>
-        <xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" />
-        <Terminart>
-            <xsl:choose>
-                <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
-                <xsl:otherwise>BIS</xsl:otherwise>
-            </xsl:choose>
-        </Terminart>
-    </Liefertermin>
+<xsl:template match="fixtermin">
+    <Terminart>
+        <xsl:choose>
+            <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
+            <xsl:otherwise>BIS</xsl:otherwise>
+        </xsl:choose>
+    </Terminart>
 </xsl:template>
 
 </xsl:stylesheet>
