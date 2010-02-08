@@ -54,7 +54,7 @@
                 <xsl:apply-templates select="versandart" />
             </Versandart>
             <Frankatur>
-                <!-- TODO -->
+                <xsl:call-template name="TMPL_UNFREI" />
             </Frankatur>
         </Auftragsinformationen>
         <Empfaengeranschrift>
@@ -87,18 +87,26 @@
 FIXME: 
     - Unterscheidung Mäuler national und Mäuler International
     - Selbstabholer
-    - was ist mit DHLfreight-EXW
     - was ist mit DPD-EXW
 -->
-<xsl:template name="VATMPL">
-    <xsl:choose>
-        <xsl:when test="/kommiauftrag/versandart = 'Mäuler'"> MAEIND </xsl:when> <!-- FIXME: stimmt das? -->
-        <xsl:when test="/kommiauftrag/versandart = 'DPD'"> DPDSTA </xsl:when>
-        <xsl:when test="/kommiauftrag/versandart = 'DPD-EXW'"> DPDUNF </xsl:when> <!-- FIXME: stimmt das? -->
-        <xsl:otherwise>
-            <xsl:value-of select="/kommiauftrag/versandart" />
-        </xsl:otherwise>
-    </xsl:choose>
+<xsl:template match="versandart">
+        <xsl:choose>
+            <xsl:when test="/kommiauftrag/versandart = 'Mäuler'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart = 'Maeuler'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart = 'DPD'">DPDSTA</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart = 'DPD-EXW'">DPDUNF</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart = 'DHLfreight-EXW'">DHL</xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="/kommiauftrag/versandart" />
+            </xsl:otherwise>
+        </xsl:choose>
+</xsl:template>
+
+<xsl:template name="TMPL_UNFREI">
+        <xsl:choose>
+            <xsl:when test="contains('DPD-EXW DHLfreight-EXW', /kommiauftrag/versandart)">UNFR</xsl:when>
+            <xsl:otherwise>FRHS</xsl:otherwise>
+        </xsl:choose>
 </xsl:template>
 
 <xsl:template match="fixtermin">
