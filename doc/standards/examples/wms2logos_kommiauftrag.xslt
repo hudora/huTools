@@ -91,11 +91,13 @@ FIXME:
 -->
 <xsl:template match="versandart">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/versandart = 'Mäuler'">MAEIND</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart = 'Maeuler'">MAEIND</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart = 'DPD'">DPDSTA</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart = 'DPD-EXW'">DPDUNF</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart = 'DHLfreight-EXW'">DHL</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DPD'">DPDSTA</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DPD-EXW'">DPDUNF</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DHLfreight-EXW'">DHL</xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="/kommiauftrag/versandart" />
             </xsl:otherwise>
