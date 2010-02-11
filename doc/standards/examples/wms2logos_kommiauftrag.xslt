@@ -49,7 +49,7 @@
                 </xsl:for-each>
             </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
-            <Auftragsprioritaet><xsl:value-of select="105010 - prioritaet" /></Auftragsprioritaet>
+            <Auftragsprioritaet><xsl:value-of select="prioritaet" /></Auftragsprioritaet>
             <Versandart>
                 <xsl:apply-templates select="versandart" />
             </Versandart>
