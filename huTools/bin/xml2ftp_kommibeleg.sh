@@ -21,7 +21,7 @@ do
     if xmllint "$file" > /dev/null 2>&1
     then
         outfile="$UPLOADDIR/$(basename $file)"
-        xsltproc -o $outfile $STYLESHEET $file
+        xsltproc -o $outfile.xml $STYLESHEET $file
         mv $file $ARCHIVDIR
     fi
 done
