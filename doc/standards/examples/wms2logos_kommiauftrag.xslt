@@ -16,7 +16,12 @@
                 <xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" />
             </Liefertermin>
             <!-- Terminart -->
-            <xsl:apply-templates select="fixtermin" />
+            <Terminart>
+                <xsl:choose>
+                    <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
+                    <xsl:otherwise>BIS</xsl:otherwise>
+                </xsl:choose>
+            </Terminart>
             <Textcode1>8</Textcode1>
             <Auftragstext>
                 <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
@@ -109,15 +114,6 @@ FIXME:
             <xsl:when test="contains('DPD-EXW DHLfreight-EXW', /kommiauftrag/versandart)">UNFR</xsl:when>
             <xsl:otherwise>FRHS</xsl:otherwise>
         </xsl:choose>
-</xsl:template>
-
-<xsl:template match="fixtermin">
-    <Terminart>
-        <xsl:choose>
-            <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
-            <xsl:otherwise>BIS</xsl:otherwise>
-        </xsl:choose>
-    </Terminart>
 </xsl:template>
 
 </xsl:stylesheet>
