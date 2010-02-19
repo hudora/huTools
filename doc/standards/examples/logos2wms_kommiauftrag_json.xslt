@@ -15,7 +15,7 @@
             <xsl:value-of select="descendant::MengeEH1" />
             <xsl:text>, </xsl:text>
 
-            <xsl:if test="descendant::posnr">
+            <xsl:if test="descendant::FremdPos1">
                 <xsl:text>"posnr": </xsl:text>
                 <xsl:value-of select="descendant::FremdPos1" />
                 <xsl:text>, </xsl:text>
