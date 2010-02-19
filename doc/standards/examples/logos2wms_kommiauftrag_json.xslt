@@ -3,7 +3,6 @@
 
     <xsl:output indent="no" omit-xml-declaration="yes" method="text" encoding="UTF-8" media-type="text/x-json"/>
         
-    <xsl:output method="xml" indent="yes" version="1.0"/>
     <xsl:template match="/Auftragsliste">
         <xsl:text>{"kommiauftragsnr": </xsl:text>
         <xsl:value-of select="descendant::FremdlieferscheinNr" /><xsl:text>,</xsl:text>
@@ -16,9 +15,11 @@
             <xsl:value-of select="descendant::MengeEH1" />
             <xsl:text>, </xsl:text>
 
-            <xsl:text>"posnr": </xsl:text>
-            <xsl:value-of select="descendant::FremdPos1" />
-            <xsl:text>, </xsl:text>
+            <xsl:if test="descendant::posnr">
+                <xsl:text>"posnr": </xsl:text>
+                <xsl:value-of select="descendant::FremdPos1" />
+                <xsl:text>, </xsl:text>
+            </xsl:if>
 
             <xsl:text>"artnr": </xsl:text>
             <xsl:text>"</xsl:text>
