@@ -18,7 +18,7 @@ Das *Very Simple Order Protocol* wurde entwickelt, um in möglichst vielen Umgeb
 * __kundenauftragsnr__ - Freitext, den der Kunde bei der Bestellung mit angegeben hat, 20 Zeichen.
 * __infotext_kunde___ - Freitext, der sich an den Warenempfänger richtet. Kann z.B. auf einem Lieferschein angedruckt werden. Der Umbruch des Textes kann durch das Backendsystem beliebig erfolgen, deshalb sollte der Text keine Zeilenumbrüche beinhalten.
 * __orderline/infotext_kunde___ - Freitext, der sich an den Warenempfänger richtet. Wird nicht bei allen Versandwegen angedruckt.
-* __wunschdatum/von__ und __wunschdatum/bis__ Timestamps im [RfC 3339](http://www.ietf.org/rfc/rfc3339) format. Dieses Feld kann nur nach gesonderter Vereinbarung befüllt werden. Die Verwendung des Feldes zieht zusätzliche Kosten nach sich.
+* *wunschdatum_von** und **wunschdatum_bis** Timestamps im [RfC 3339](http://www.ietf.org/rfc/rfc3339) format. Dieses Feld kann nur nach gesonderter Vereinbarung befüllt werden. Die Verwendung des Feldes zieht zusätzliche Kosten nach sich.
 * __dokumente__ - Eine Liste von PDFs, die ausgedruckt und mit der Ware versendet werden sollen. Details siehe untern. 
 
 ## Beispiele 
@@ -90,7 +90,7 @@ Wenn doch CSV verwendet wird, ist UTF-8 Kodierung zu verwenden. Das Trennzeichen
 
 ## Unterscheide zu Version 3
 
-Version 3a hat `wunschtermin` in `wunschdatum` umbenannt.
+Version 3a hat `<wunschtermin>` in `<wunschdatum_von>` und `<wunschdatum_bis>` umbenannt.
 
 ## Siehe auch 
 
