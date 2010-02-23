@@ -24,17 +24,16 @@
             </Terminart>
             <Textcode1>8</Textcode1>
             <Auftragstext>
-                <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
                 <xsl:for-each select="descendant::versandeinweisung">
                     <xsl:if test="contains('packliste
                                             separater_lieferschein
                                             abholer
                                             hebebuehne',
                                             bezeichner)">
-                        <xsl:text> </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
+                        <xsl:if test="following-sibling::*">$</xsl:if>
                     </xsl:if>
                 </xsl:for-each>
             </Auftragstext>
@@ -46,10 +45,10 @@
                                             etiketten
                                             etiketten_speicherort',
                                             bezeichner)">
-                        <xsl:text> </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
+                        <xsl:if test="following-sibling::*">$</xsl:if>
                     </xsl:if>
                 </xsl:for-each>
             </Kommissioniertext>
