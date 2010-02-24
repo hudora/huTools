@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 BASEDIR=${BASEDIR:-'/usr/local/SPEDITION/kommibelege'}
 
@@ -13,7 +13,6 @@ WORKDIR="$BASEDIR/work"
 ARCHIVDIR="$BASEDIR/archiv"
 
 mkdir -p $UPLOADDIR
-mkdir -p $WORKDIR
 mkdir -p $ARCHIVDIR
 
 # Valide xml Dateien in entsprechendes Format konvertieren und ins Upload Verzeichnis stellen
@@ -22,10 +21,10 @@ do
     if xmllint "$file" > /dev/null 2>&1
     then
         outfile="$UPLOADDIR/$(basename $file)"
-        xsltproc -o $outfile $STYLESHEET $file
+        xsltproc -o $outfile.xml $STYLESHEET $file
         mv $file $ARCHIVDIR
     fi
 done
 
 # alle vorhandenen Daten hochladen und aus dem Uploaddir entfernen
-lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> lftp.log
+lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> /usr/local/maeuler/kommibelege/lftp.log

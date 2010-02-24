@@ -114,7 +114,8 @@ Feldern.
 
 * **text** - Artikelbeschriebung
 * **EAN** - EAN/Barcode des Artikels (nicht der VE). *artnr* ist das verbindliche Auswahlkriterium.
-
+* **setguid** - Alle Positionen mit dem gleichen *setguid* gehören zu einem Set-Artikel. Muss bei
+  nicht-Setartikeln frei bleiben.
 
 ### Versandanweisungen
 

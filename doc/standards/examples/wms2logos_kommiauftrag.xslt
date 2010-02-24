@@ -12,22 +12,28 @@
             <KundenauftragsNr><xsl:value-of select="descendant::auftragsnr" /></KundenauftragsNr>
         </Auftragskopf>
         <Auftragsinformationen>
-            <Liefertermin><xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" /></Liefertermin>
+            <Liefertermin>
+                <xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" />
+            </Liefertermin>
+            <!-- Terminart -->
+            <Terminart>
+                <xsl:choose>
+                    <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
+                    <xsl:otherwise>BIS</xsl:otherwise>
+                </xsl:choose>
+            </Terminart>
             <Textcode1>8</Textcode1>
             <Auftragstext>
-                <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
                 <xsl:for-each select="descendant::versandeinweisung">
                     <xsl:if test="contains('packliste
                                             separater_lieferschein
                                             abholer
                                             hebebuehne',
                                             bezeichner)">
-                        <xsl:text>
-                        </xsl:text>
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
-                        <!--FIXME: Hier noch ein Trennzeichen o.ä.? -->
+                        <xsl:if test="following-sibling::*">$</xsl:if>
                     </xsl:if>
                 </xsl:for-each>
             </Auftragstext>
@@ -39,20 +45,21 @@
                                             etiketten
                                             etiketten_speicherort',
                                             bezeichner)">
-                        <xsl:text>
-                        </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
-                        <!--FIXME: Hier noch ein Trennzeichen o.ä.? -->
+                        <xsl:if test="following-sibling::*">$</xsl:if>
                     </xsl:if>
                 </xsl:for-each>
             </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
-            <Auftragsprioritaet><xsl:value-of select="105010 - prioritaet" /></Auftragsprioritaet>
+            <Auftragsprioritaet><xsl:value-of select="prioritaet" /></Auftragsprioritaet>
             <Versandart>
-                <xsl:call-template name="VATMPL" />
+                <xsl:apply-templates select="versandart" />
             </Versandart>
+            <Frankatur>
+                <xsl:call-template name="TMPL_UNFREI" />
+            </Frankatur>
         </Auftragsinformationen>
         <Empfaengeranschrift>
             <EmpfaengerkundenNr><xsl:value-of select="descendant::kundennr" /></EmpfaengerkundenNr>
@@ -84,18 +91,28 @@
 FIXME: 
     - Unterscheidung Mäuler national und Mäuler International
     - Selbstabholer
-    - was ist mit DHLfreight-EXW
     - was ist mit DPD-EXW
 -->
-<xsl:template name="VATMPL">
-    <xsl:choose>
-        <xsl:when test="/kommiauftrag/versandart = 'Mäuler'"> MAEIND </xsl:when> <!-- FIXME: stimmt das? -->
-        <xsl:when test="/kommiauftrag/versandart = 'DPD'"> DPDSTA </xsl:when>
-        <xsl:when test="/kommiauftrag/versandart = 'DPD-EXW'"> DPDUNF </xsl:when> <!-- FIXME: stimmt das? -->
-        <xsl:otherwise>
-            <xsl:value-of select="/kommiauftrag/versandart" />
-        </xsl:otherwise>
-    </xsl:choose>
+<xsl:template match="versandart">
+        <xsl:choose>
+            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DPD'">DPDSTA</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DPD-EXW'">DPDUNF</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DHLfreight-EXW'">DHL</xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="/kommiauftrag/versandart" />
+            </xsl:otherwise>
+        </xsl:choose>
+</xsl:template>
+
+<xsl:template name="TMPL_UNFREI">
+        <xsl:choose>
+            <xsl:when test="contains('DPD-EXW DHLfreight-EXW', /kommiauftrag/versandart)">UNFR</xsl:when>
+            <xsl:otherwise>FRHS</xsl:otherwise>
+        </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>
