@@ -75,7 +75,7 @@
         <Auftragspositionen>
             <xsl:for-each select="descendant::position">
             <Position>
-                <MengeEH1><xsl:value-of select="descendant::menge" /></MengeEH1>
+                <MengeEH1><xsl:value-of select="number(descendant::menge)" /></MengeEH1>
                 <ArtikelNr><xsl:value-of select="descendant::artnr" /></ArtikelNr>
                 <FremdPos1><xsl:value-of select="descendant::posnr" /></FremdPos1>
                 <Warenbezeichnung><xsl:value-of select="descendant::text" /></Warenbezeichnung>
