@@ -9,16 +9,16 @@ Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 
 import datetime
 
-def encode_text(input):
+def encode_text(data):
     """Encode for usage in XML Tree"""
     
-    if isinstance(input, str):
-        return attr.decode('utf-8', 'replace')
-    elif isinstance(input, datetime.datetime):
-        if not(input.hour or input.minute):
+    if isinstance(data, str):
+        return data.decode('utf-8', 'replace')
+    elif isinstance(data, datetime.datetime):
+        if not(data.hour or data.minute):
             fmt = '%Y-%m-%d'
         else:
             fmt = '%Y-%m-%d %H:%M'
-        return input.strftime(fmt)
+        return data.strftime(fmt)
     else:
         return unicode(input)
