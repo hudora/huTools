@@ -110,7 +110,8 @@ FIXME:
 
 <xsl:template name="TMPL_UNFREI">
         <xsl:choose>
-            <xsl:when test="contains('DPD-EXW DHLfreight-EXW', /kommiauftrag/versandart)">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DPD-EXW'">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DHLfreight-EXW'">UNFR</xsl:when>
             <xsl:otherwise>FRHS</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
