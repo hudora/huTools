@@ -14,6 +14,8 @@ huTools is a small collection of helpful tools we use.
 * "NetStringIO":http://github.com/hudora/huTools/blob/master/huTools/NetStringIO.py
 * "unicode":http://github.com/hudora/huTools/blob/master/huTools/unicode.py - real-world unicode handling
 * "world":http://github.com/hudora/huTools/blob/master/huTools/world.py - country codes
+* "couch":http://github.com/hudora/huTools/blob/master/huTools/couch.py - CouchDB helper functions
+* "xml":http://github.com/hudora/huTools/blob/master/huTools/xml.py - various XML helpers
 * "huLint":http://github.com/hudora/huTools/blob/master/huTools/huLint.py - Code Quality Checking
 
 h2. Downloads
