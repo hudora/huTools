@@ -16,20 +16,24 @@
                 <xsl:value-of select="translate(descendant::anliefertermin, '-:', '')" />
             </Liefertermin>
             <!-- Terminart -->
-            <xsl:apply-templates select="fixtermin" />
+            <Terminart>
+                <xsl:choose>
+                    <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
+                    <xsl:otherwise>BIS</xsl:otherwise>
+                </xsl:choose>
+            </Terminart>
             <Textcode1>8</Textcode1>
             <Auftragstext>
-                <xsl:value-of select="descendant::info_kunde" /> <!--FIXME: Ist das noch wichtig/gültig? -->
                 <xsl:for-each select="descendant::versandeinweisung">
                     <xsl:if test="contains('packliste
                                             separater_lieferschein
                                             abholer
                                             hebebuehne',
                                             bezeichner)">
-                        <xsl:text> </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
+                        <xsl:if test="following-sibling::*">$</xsl:if>
                     </xsl:if>
                 </xsl:for-each>
             </Auftragstext>
@@ -41,10 +45,10 @@
                                             etiketten
                                             etiketten_speicherort',
                                             bezeichner)">
-                        <xsl:text> </xsl:text> 
                         <xsl:value-of select="bezeichner" />
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select="anweisung" />
+                        <xsl:if test="following-sibling::*">$</xsl:if>
                     </xsl:if>
                 </xsl:for-each>
             </Kommissioniertext>
@@ -71,7 +75,7 @@
         <Auftragspositionen>
             <xsl:for-each select="descendant::position">
             <Position>
-                <MengeEH1><xsl:value-of select="descendant::menge" /></MengeEH1>
+                <MengeEH1><xsl:value-of select="number(descendant::menge)" /></MengeEH1>
                 <ArtikelNr><xsl:value-of select="descendant::artnr" /></ArtikelNr>
                 <FremdPos1><xsl:value-of select="descendant::posnr" /></FremdPos1>
                 <Warenbezeichnung><xsl:value-of select="descendant::text" /></Warenbezeichnung>
@@ -106,18 +110,10 @@ FIXME:
 
 <xsl:template name="TMPL_UNFREI">
         <xsl:choose>
-            <xsl:when test="contains('DPD-EXW DHLfreight-EXW', /kommiauftrag/versandart)">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DPD-EXW'">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandart='DHLfreight-EXW'">UNFR</xsl:when>
             <xsl:otherwise>FRHS</xsl:otherwise>
         </xsl:choose>
-</xsl:template>
-
-<xsl:template match="fixtermin">
-    <Terminart>
-        <xsl:choose>
-            <xsl:when test="/kommiauftrag/fixtermin = 'True'">FIX</xsl:when>
-            <xsl:otherwise>BIS</xsl:otherwise>
-        </xsl:choose>
-    </Terminart>
 </xsl:template>
 
 </xsl:stylesheet>
