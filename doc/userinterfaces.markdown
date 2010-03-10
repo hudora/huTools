@@ -92,6 +92,7 @@ So gesehen können wir wohl NUR rot und grün zur Unterscheidung vergessen.
 
 Die bisher verwendeten Icons sind:
 
+* <img src="http://www.hudora.de/media/chameleon/blue/search_right.gif" alt="suchen" /> Suchen
 * <img src="http://www.hudora.de/media/chameleon/blue/bookmark.gif" alt="Historie" /> Protokoll
 * <img src="http://www.hudora.de/media/chameleon/blue/edit.gif" alt="bearbeiten" /> bearbeiten
 * <img src="http://www.hudora.de/media/chameleon/blue/copy_paste.gif" alt="Kopieren" /> kopieren
