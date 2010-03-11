@@ -8,6 +8,8 @@ Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 """
 
 import datetime
+import xml.etree.ElementTree as ET
+
 
 def encode_text(data):
     """Encode for usage in XML Tree"""
@@ -20,5 +22,18 @@ def encode_text(data):
         else:
             fmt = '%Y-%m-%d %H:%M'
         return data.strftime(fmt)
+    elif data is None:
+        return u''
     else:
-        return unicode(input)
+        return unicode(data)
+
+
+def add_fields(root, source, fieldnames):
+    """
+    Add a number of fields to a XML Tree.
+    """
+    for fieldname in fieldnames:
+        elem = ET.SubElement(root, fieldname)
+        if hasattr(source, fieldname):
+            elem.text = encode_text(getattr(source, fieldname, ''))
+    return root
