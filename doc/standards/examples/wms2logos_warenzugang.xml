@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Auftragsliste>
+  <Auftrag>
+    <Auftragskopf>
+      <EinlagererNr>UNKLAR</EinlagererNr>
+      <FremdlieferscheinNr>3104247-7</FremdlieferscheinNr>
+      <KundenauftragsNr>3104247</KundenauftragsNr>
+    </Auftragskopf>
+    <Lieferantenanschrift>
+      <LieferantenkundenNr>UNKLAR</LieferantenkundenNr>
+      <LieferantenName1>Hudora</LieferantenName1>
+      <LLaenderkennzeichen>DE</LLaenderkennzeichen>
+      <LPLZ>42897</LPLZ>
+      <LOrt>Remscheid</LOrt>
+      <LStrasse>Jägerwald</LStrasse>
+    </Lieferantenanschrift>
+    <Auftragspositionen>
+      <Position>
+        <MengeEH1>7</MengeEH1>
+        <ArtikelNr>14695</ArtikelNr>
+        <Charge>noch leer</Charge>
+      </Position>
+    </Auftragspositionen>
+  </Auftrag>
+</Auftragsliste>

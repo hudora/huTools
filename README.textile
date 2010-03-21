@@ -3,27 +3,26 @@ h1. huTools
 huTools is a small collection of helpful tools we use.
 
 * calendar - date based calculations and format conversions
- * calendar.formats - output and parsing of different date formats
- * calendar.workdays - date based calculations and format conversions
-* checksummming - calculate various checksums
-* decorators - various helpfull decorators
-* luids - locally unique user-ids
-* robusttypecasts - type conversionts that seldom fail
-* printing - access printers
-* ReReadingConfigParser -  ConfigParser which detects changes in config files
-* unicode - real-world unicode handling
-* world - country codes
-* huLint - Code Quality Checking
+ * "calendar.formats":http://github.com/hudora/huTools/blob/master/huTools/calendar/formats.py - output and parsing of different date formats
+ * "calendar.workdays":http://github.com/hudora/huTools/blob/master/huTools/calendar/workdays.py  - date based calculations and format conversions
+* "checksummming":http://github.com/hudora/huTools/blob/master/huTools/checksumming.py - calculate various checksums
+* "decorators":http://github.com/hudora/huTools/blob/master/huTools/decorators.py - various helpful decorators
+* "luids":http://github.com/hudora/huTools/blob/master/huTools/luids.py - locally unique user-ids
+* "robusttypecasts":http://github.com/hudora/huTools/blob/master/huTools/robusttypecasts.py - type conversionts that seldom fail
+* "printing":http://github.com/hudora/huTools/blob/master/huTools/printing.py - access printers
+* "ReReadingConfigParser":http://github.com/hudora/huTools/blob/master/huTools/ReReadingConfigParser.py - ConfigParser which detects changes in config files
+* "NetStringIO":http://github.com/hudora/huTools/blob/master/huTools/NetStringIO.py
+* "unicode":http://github.com/hudora/huTools/blob/master/huTools/unicode.py - real-world unicode handling
+* "world":http://github.com/hudora/huTools/blob/master/huTools/world.py - country codes
+* "couch":http://github.com/hudora/huTools/blob/master/huTools/couch.py - CouchDB helper functions
+* "xml":http://github.com/hudora/huTools/blob/master/huTools/xml.py - various XML helpers
+* "huLint":http://github.com/hudora/huTools/blob/master/huTools/huLint.py - Code Quality Checking
 
 h2. Downloads
 
-Get it at "GitHub":http://github.com/hudora/huTools/ or at the "Python Cheeseshop":http://pypi.python.org/pypi/huTools/.
+Get it at "GitHub":http://github.com/hudora/huTools/ or at the
+"Python Cheeseshop":http://pypi.python.org/pypi/huTools/.
 
 h2. Changes
 
-* 0.37 - caching decorators and more countries
-* 0.36 - renamed io0 to int_or_0 and added io0 as a wrapper with a deprecation warning
-* 0.35 - robusttypecasts module added
-* 0.34 - checksumming.verify_ean() calendar.add_workdays_german(), decorators.memoize, decorators.method_once() and decorators.func_once() added,
-* 0.32 - fs module added, huLint functionality for code rating
-* 0.31 - Fixed Installation, distribution file layout changed.
+See "CHANGES":http://github.com/hudora/huTools/blob/master/CHANGES

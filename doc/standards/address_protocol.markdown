@@ -16,7 +16,8 @@ The *Address Protocol* ist designed to be easy to encode in a wide range of form
  * **name2** - additional information identifying the recipient or additional adressing information. May be empty.
  * **strasse** - addressing information, usually the street address. might be empty. 
  * **land** - country ([ISO 3166][3], 2-letter country code)
- * **plz** - zip code, might be empty (e.g. [in Ireland][4]. Note that [even in the US the ZIP code seems sufficient for adressing][5], the name of the State is redundant)
+ * **plz** - zip code, might be empty (e.g. [in Ireland][4]. Note that
+   [even in the US the ZIP code seems sufficient for adressing][5], the name of the State is redundant).
  * **ort** - city name
 
 [3]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
@@ -34,14 +35,15 @@ The *Address Protocol* ist designed to be easy to encode in a wide range of form
 
 [6]: http://de.wikipedia.org/wiki/Rufnummer#Schreibweise_in_Deutschland_und_.C3.96sterreich
 [7]: http://en.wikipedia.org/wiki/E.123
-[8]: http://en.wikipedia.org/wiki/ILN
+[8]: http://en.wikipedia.org/wiki/Global_Location_Number
 [9]: http://www.gs1.org/glnrules/storyboard/
 
 ## Additional Explanation
 
 Field length is not defined. We have seen that field lengths longer than 32 characters have a high propability
 of beeing truncated. Based on E.164 Phone, Fax and Mobile Numbers should
-not be longer than 19 characters (15 digits  and one '+' one '-' and two spaces). PLZ should [never be longer than 10 characters][10].
+not be longer than 19 characters (15 digits  and one '+' one '-' and two spaces). PLZ should
+[never be longer than 10 characters][10].
 
 [10]: http://de.wikipedia.org/wiki/Postleitzahl#Postleitzahlen_in_der_Datenverarbeitung
 

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<kommiauftrag>
+  <anliefertermin>2009-11-25</anliefertermin>
+  <auftragsnr>1025575</auftragsnr>
+  <positionen>
+    <position>
+      <posnr>1</posnr>
+      <menge>12</menge>
+      <artnr>14640/XL</artnr>
+    </position>
+    <position>
+      <posnr>2</posnr>
+      <menge>4</menge>
+      <artnr>14640/03</artnr>
+    </position>
+    <position>
+      <posnr>3</posnr>
+      <menge>2</menge>
+      <artnr>10105</artnr>
+    </position>
+  </positionen>
+  <kundenname>Ute Zweihaus 400424990</kundenname>
+  <ort>H&#xFC;cksenwagen</ort>
+  <plz>42499</plz>
+  <versandeinweisungen>
+    <versandeinweisung>
+      <bezeichner>etiketten_speicherort</bezeichner>
+      <anweisung>c:\desktop\Programm Data\schrecklicher windows pfad</anweisung>
+      <guid>2103839-kalE</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>sortenrein</bezeichner>
+      <anweisung>True</anweisung>
+      <guid>2103839-ZalE</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>abholer</bezeichner>
+      <anweisung>Abholung durch Spedition Dornseif</anweisung>
+      <guid>NTS2RST5CAPNBAM6JWUZGRXYUI</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>avisieren_unter</bezeichner>
+      <anweisung>+49123456</anweisung>
+      <guid>WUQFNCBRM3KRGP6ETKZJ5ZM3PM</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>hebebuehne</bezeichner>
+      <anweisung>True</anweisung>
+      <guid>ZLRVP6UQALB53E7KDK7B2UFMII</guid>
+    </versandeinweisung>
+    <versandeinweisung>
+      <bezeichner>packhoehe</bezeichner>
+      <anweisung>1100</anweisung>
+      <guid>O6TUSPPUUIBL3HYOENTPUBNJCU</guid>
+    </versandeinweisung>
+  </versandeinweisungen>
+  <prioritaet>7</prioritaet>
+  <land>DE</land>
+  <name2>400424990</name2>
+  <name3/>
+  <name1>Uwe Zweihaus</name1>
+  <strasse>Bahnhofstr. 2</strasse>
+  <kundennr>21548</kundennr>
+  <info_kunde>Besuch H. Gerlach</info_kunde>
+  <kommiauftragsnr>2103839</kommiauftragsnr>
+</kommiauftrag>
