@@ -1,0 +1,9 @@
+*~
+*.pyc
+*.bak
+.DS_Store
+build/
+dist/
+html/
+huTools.egg-info/
+testenv
