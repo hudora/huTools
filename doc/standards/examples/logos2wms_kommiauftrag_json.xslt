@@ -6,6 +6,13 @@
     <xsl:template match="/Auftragsliste">
         <xsl:text>{"kommiauftragsnr": </xsl:text>
         <xsl:value-of select="descendant::FremdlieferscheinNr" /><xsl:text>,</xsl:text>
+
+        <xsl:text>"spedition": </xsl:text>
+        <xsl:text>"</xsl:text>
+        <xsl:apply-templates select="//Versandart" />
+        <xsl:text>"</xsl:text>
+        <xsl:text>,</xsl:text>
+        
         <xsl:text>
             "positionen": [
         </xsl:text>
@@ -37,4 +44,19 @@
         </xsl:for-each>
         <xsl:text> ]}</xsl:text>
     </xsl:template>
+
+    <xsl:template match="//Versandart">
+        <xsl:choose>
+            <xsl:when test="//Versandart='MAEIND'">Maeuler</xsl:when>
+            <xsl:when test="//Versandart='MAEEXP'">Maeuler</xsl:when>
+            <xsl:when test="//Versandart='DPDSTA'">DPD</xsl:when>
+            <xsl:when test="//Versandart='DPDUNF'">DPD</xsl:when>
+            <xsl:when test="//Versandart='DHL'">DHL</xsl:when>
+            <xsl:otherwise>
+            <xsl:text> SCheissse
+            </xsl:text>
+                <xsl:value-of select="//Versandart" />
+            </xsl:otherwise>
+        </xsl:choose>
+</xsl:template>
 </xsl:stylesheet>
