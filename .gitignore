@@ -1,6 +1,6 @@
-*.bak
 *~
 *.pyc
+*.bak
 .DS_Store
 build/
 dist/

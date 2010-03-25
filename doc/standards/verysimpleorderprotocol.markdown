@@ -1,11 +1,12 @@
-# Very Simple Order Protocol Version 3
+# Very Simple Order Protocol Version 3a
 
 Das *Very Simple Order Protocol* ist ein Weg, Lieferaufträge an HUDORA zu senden. In der Regel ist es auf Dreiecksgeschäfte gerichtet, wo unsere Kunden nicht nur die Ware bei uns kaufen, sondern als zusätzliche Dienstleistung das Fullfillment Endverbrauchern gegenüber. Das Protokoll baut auf dem [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown) auf.
 
 Das *Very Simple Order Protocol* wurde entwickelt, um in möglichst vielen Umgebungan abbildbar zu sein. Das bevorzugte Format ist jedoch XML.
-Required Fields 
 
-* required fields of the [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown)
+## Required Fields 
+
+* Pflichtfelder des [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown)
 * __guid__ - Eindeutiger ID des Vorgangs, darf niemals doppelt verwendet werden - der inhalt des Feldes ist beliebig, Zeitstempel+Auftragsnummer funktionieren z.B. recht gut als GUID.
 * __orderline/guid__ - Eindeutiger ID der Position. GUID des Auftrags + Positionsnummer funktionieren ganz gut.
 * __orderline/menge__ - Menge des durch *ean* bezeichneten Artikels, die versendet werden soll.
@@ -17,7 +18,7 @@ Required Fields
 * __kundenauftragsnr__ - Freitext, den der Kunde bei der Bestellung mit angegeben hat, 20 Zeichen.
 * __infotext_kunde___ - Freitext, der sich an den Warenempfänger richtet. Kann z.B. auf einem Lieferschein angedruckt werden. Der Umbruch des Textes kann durch das Backendsystem beliebig erfolgen, deshalb sollte der Text keine Zeilenumbrüche beinhalten.
 * __orderline/infotext_kunde___ - Freitext, der sich an den Warenempfänger richtet. Wird nicht bei allen Versandwegen angedruckt.
-* __wunschtermin/von__ und __wunschtermin/bis__ Timestamps  im [RfC 3339](http://www.ietf.org/rfc/rfc3339) format. Dieses Feld kann nur nach gesonderter Vereinbarung befüllt werden. Die Verwendung des Feldes zieht zusätzliche Kosten nach sich.
+* *wunschdatum_von** und **wunschdatum_bis** Timestamps im [RfC 3339](http://www.ietf.org/rfc/rfc3339) format. Dieses Feld kann nur nach gesonderter Vereinbarung befüllt werden. Die Verwendung des Feldes zieht zusätzliche Kosten nach sich.
 * __dokumente__ - Eine Liste von PDFs, die ausgedruckt und mit der Ware versendet werden sollen. Details siehe untern. 
 
 ## Beispiele 
@@ -48,10 +49,10 @@ Dieses Beispiel codiert das Order Protocol als  [Plain Old XML (POX)](http://en.
         </orderline>
         <kundenauftragsnr>XQ03244231</kundenauftragsnr>
         <infotext_kunde>Lieferung im Auftrag der "Kawuschel Sportausrüstung AG"</infotext_kunde>
-        <wunschtermin>
+        <wunschdatum>
             <von>2009-08-21T00:00:00</von>
             <bis>2009-08-24T23:59:59</bis>
-        </wunschtermin>
+        </wunschdatum>
         <dokumente>
             <file name="rechnung.pdf" contenttype="application/pdf">R0lGODlhZABqA...</file>
             <file name="garantieschein.pdf" contenttype="application/pdf">GODlhZABqA...</file>
@@ -86,6 +87,10 @@ Wenn doch CSV verwendet wird, ist UTF-8 Kodierung zu verwenden. Das Trennzeichen
 * es muss ein oder mehrere `<orderline>` Elemente geben.
 * orderline hat guid und infotext_kunde felder hinzubekommen
 * `<wunschtermin>` 
+
+## Unterscheide zu Version 3
+
+Version 3a hat `<wunschtermin>` in `<wunschdatum_von>` und `<wunschdatum_bis>` umbenannt.
 
 ## Siehe auch 
 
