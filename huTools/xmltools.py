@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 
 def encode_text(data):
     """Encode for usage in XML Tree"""
-    
+
     if isinstance(data, str):
         return data.decode('utf-8', 'replace')
     elif isinstance(data, datetime.datetime):

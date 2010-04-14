@@ -16,10 +16,10 @@ __revision__ = "$Revision$"
 
 def print_file(filename, jobname=None, printer=None, copies=1):
     """Print a file."""
-    
+
     if not os.path.exists(filename):
         return
-    
+
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))
@@ -32,12 +32,12 @@ def print_data(data, jobname=None, printer=None, copies=1, printserver='printser
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))
-    
+
     #if printserver:
     #    args.append('-H %s' % printserver)
     if jobname:
         args.append('-J %s  ' % jobname.replace("'\";./ ", "_"))
-    
+
     pipe = subprocess.Popen(args, shell=False, stdin=subprocess.PIPE).stdin
     pipe.write(data)
     pipe.close()
