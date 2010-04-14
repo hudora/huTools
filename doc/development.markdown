@@ -4,7 +4,7 @@ Here we store Information in regard to Software Development at Hudora.
 
 ## Tools
 
-* We use [howsmycode.com][howsmycode] for code reviews. 
+* We use [howsmycode.com][howsmycode] for code reviews.
   ([Introduction][howsmycodeintro]) - you should create an account there
 * We use [github.com/hudora][github] for version control
   ([Introduction][githubintro])  - you should create an account there
@@ -39,6 +39,7 @@ Here we store Information in regard to Software Development at Hudora.
  * Check the [timeline/dashboard][timeline] regulary to see what's happening.
    Skimm the changesets and ask if you don't understand something.
  * always do `make test`, `make check` or equivalent before commit.
+ * add the URL of the ticket in the ticket system to the end of your commit message
 
 [refactor]: http://www.extremeprogramming.org/rules/refactor.html
 [commitmessage]: http://www.tpope.net/node/106
@@ -146,6 +147,7 @@ letters. See  https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise pref
 * [Fail-Fast][failfast], [crash early, crash often][crasearly]
 * you can assume that setuptools, virtualenv, pip and hudorakit are installed
 * requirements have to be mentioned in requirements.txt and setup.py
+* Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 
 [failfast]: http://en.wikipedia.org/wiki/Fail-fast
 [crashearly]: http://blogs.23.nu/c0re/offensive-programming-crash-early-crash-often/
