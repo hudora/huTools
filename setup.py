@@ -4,7 +4,7 @@ setup(name='huTools',
       maintainer='Maximillian Dornseif',
       maintainer_email='md@hudora.de',
       url='http://github.com/hudora/huTools/#readme',
-      version='0.43',
+      version='0.43p1',
       description='Various tiny tools and toys to make Python coding less work more fun.',
       long_description='''huTools is a collection of many totally non earth shattering modules:
       Various tiny tools and toys to make Python coding less work more fun. 
