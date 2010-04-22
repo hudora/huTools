@@ -42,9 +42,9 @@ else:
 def daemonize(pidfile=None, stdoutlogfile=None):
     """Detach a process from the controlling terminal and run it in the
     background as a daemon.
-    
+
     based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/278731
-    
+
     daemonize
       1.) The current working directory set to the "/" directory.
       2.) The current file creation mode mask set to 0.
@@ -56,7 +56,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
       2) Unix Programming Frequently Asked Questions:
             http://www.erlenstar.demon.co.uk/unix/faq_toc.html
     """
-    
+
     try:
         # Fork a child process so the parent can exit. This returns control to
         # the command-line or shell. It also guarantees that the child will not
@@ -66,13 +66,13 @@ def daemonize(pidfile=None, stdoutlogfile=None):
         pid = os.fork()
     except OSError, e:
         raise RuntimeError("%s [%d]" % (e.strerror, e.errno))
-    
+
     if (pid == 0): # The first child.
         # To become the session leader of this new session and the process group
         # leader of the new process group, we call os.setsid(). The process is
         # also guaranteed not to have a controlling terminal.
         os.setsid()
-        
+
         # Is ignoring SIGHUP necessary?
         #
         # It's often suggested that the SIGHUP signal should be ignored before
@@ -101,7 +101,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
         #
         # import signal # Set handlers for asynchronous events.
         # signal.signal(signal.SIGHUP, signal.SIG_IGN)
-        
+
         try:
             # Fork a second child and exit immediately to prevent zombies.  This
             # causes the second child process to be orphaned, making the init
@@ -114,7 +114,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
             pid = os.fork() # Fork a second child.
         except OSError, e:
             raise RuntimeError("%s [%d]" % (e.strerror, e.errno))
-        
+
         if (pid == 0): # The second child.
             # Since the current working directory may be a mounted filesystem, we
             # avoid the issue of not being able to unmount the filesystem at
@@ -125,7 +125,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
             os.umask(UMASK)
         else:
             # exit() or _exit()?  See below.
-            os._exit(0)	# Exit parent (the first child) of the second child.
+            os._exit(0) # Exit parent (the first child) of the second child.
     else:
         # exit() or _exit()?
         # _exit is like exit(), but it doesn't call any functions registered
@@ -135,7 +135,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
         # removed. It's therefore recommended that child branches of a fork()
         # and the parent branch(es) of a daemon use _exit().
         os._exit(0) # Exit parent of the first child.
-    
+
     # write PID file
     pid = str(os.getpid())
     sys.stderr.write("\n%s started with PID %s" % (sys.argv[0], pid))
@@ -144,7 +144,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
         pidfile = '/var/run/%s.pid' % (sys.argv[0].split('/')[-1])
     if pidfile:
         file(pidfile, 'w+').write("%s\n" % pid)
-    
+
     # Close all open file descriptors.  This prevents the child from keeping
     # open any file descriptors inherited from the parent.  There is a variety
     # of methods to accomplish this task.  Three are listed below.
@@ -171,32 +171,32 @@ def daemonize(pidfile=None, stdoutlogfile=None):
     # that can be opened by this process.  If there is not limit on the
     # resource, use the default value.
     #
-    import resource		# Resource usage information.
+    import resource             # Resource usage information.
     maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
     if (maxfd == resource.RLIM_INFINITY):
         maxfd = MAXFD
-    
+
     # Iterate through and close all file descriptors.
     for fd in range(0, maxfd):
         try:
             os.close(fd)
         except OSError: # ERROR, fd wasn't open to begin with (ignored)
             pass
-    
+
     # Redirect the standard I/O file descriptors to the specified file. Since
     # the daemon has no controlling terminal, most daemons redirect stdin,
     # stdout, and stderr to /dev/null. This is done to prevent side-effects
     # from reads and writes to the standard I/O file descriptors.
-    
+
     if not stdoutlogfile:
         stdoutlogfile = '/var/log/%s.log' % (sys.argv[0].split('/')[-1])
-       
+
     # This call to open is guaranteed to return the lowest file descriptor,
     # which will be 0 (stdin), since it was closed above.
     os.open(stdoutlogfile, os.O_RDWR|os.O_APPEND|os.O_CREAT) # standard input (0)
-    
+
     # Duplicate standard input to standard output and standard error.
     os.dup2(0, 1) # standard output (1)
     os.dup2(0, 2) # standard error (2)
-    
+
     return 0

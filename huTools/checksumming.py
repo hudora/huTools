@@ -11,7 +11,7 @@ This file can be used under an BSD License.
 
 # The original EAN code came from QBasic code I written from the EAN-Spec in 1986 or so.
 # The Python code was inspired by bookland.py and was extended to "longer than EAN"
-# by checking the javascript at 
+# by checking the javascript at
 # http://www.gs1.org/productssolutions/barcodes/support/check_digit_calculator.html
 
 __revision__ = "$Revision$"
@@ -24,24 +24,24 @@ import sys
 
 def ean_digit(arg):
     """Calculate UPCA/EAN13/NVE checksum for any given string consiting of an arbitary number of digits.
-    
+
     >>> ean_digit('400599871650')
     '2'
     >>> ean_digit('34005998000000027')
     '5'
     """
-    
+
     factor = 3
     summe = 0
     for index in range(len(arg)-1, -1, -1):
         summe += int(arg[index]) * factor
         factor = 4 - factor
     return str((10 - (summe % 10)) % 10)
-    
+
 
 def _ean_digit2(arg):
     """Alternate implementation of EAN check digit calculation used for sanity checks."""
-    
+
     if len(arg) % 2 == 1:
         weight = [3, 1] * ((len(arg) * 2) + 1)
     else:
@@ -54,11 +54,11 @@ def _ean_digit2(arg):
     if ret < 0 or ret >= magic:
         raise RuntimeError("EAN checkDigit: something wrong.")
     return str(ret)
-    
+
 
 def verify_ean(arg):
     """Check if a given strin ends withh a valid check digit.
-    
+
     >>> verify_ean('4005998000007')
     True
     >>> verify_ean('4005998000000')
@@ -66,7 +66,7 @@ def verify_ean(arg):
     >>> verify_ean('foobar')
     False
     """
-    
+
     arg = str(arg)
     if not arg.isdigit():
         return False
@@ -74,13 +74,13 @@ def verify_ean(arg):
     if ean_digit(arg[:-1]) != check:
         return False
     return True
-    
+
 
 def dpd_digit(arg):
     """Calculates the Checksum for DPD Packets.
-    
+
     See http://static.23.nu/md/Pictures/BIC3_DPDPaketscheinspez_Neu_D_v101.pdf page 22 for an explanation.
-    
+
     Exaple:
     >>> dpd_digit('400599871650')
     'E'
@@ -107,13 +107,13 @@ def dpd_digit(arg):
     if cdigit == mod:
         cdigit = 0
     return _chartable[cdigit]
-    
+
 
 def verhoeff_digit(arg):
     """
     Implemention of Verhoeff's Dihedral Check Digit based on code from Nick Galbreath
     """
-    
+
     # dihedral addition matrix A + B = a[A][B]
     _amatrix = ((0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
                 (1, 2, 3, 4, 0, 6, 7, 8, 9, 5),
@@ -125,7 +125,7 @@ def verhoeff_digit(arg):
                 (7, 6, 5, 9, 8, 2, 1, 0, 4, 3),
                 (8, 7, 6, 5, 9, 3, 2, 1, 0, 4),
                 (9, 8, 7, 6, 5, 4, 3, 2, 1, 0))
-          
+
     # dihedral inverse map, A + inverse[A] = 0
     _inverse = (0, 4, 3, 2, 1, 5, 6, 7, 8, 9)
     # permutation weighting matrix P[position][value]
@@ -137,7 +137,7 @@ def verhoeff_digit(arg):
                 (4, 2, 8, 6, 5, 7, 3, 9, 0, 1),
                 (2, 7, 9, 3, 8, 0, 6, 4, 1, 5),
                 (7, 0, 4, 6, 9, 1, 3, 2, 5, 8))
-    
+
     check = 0 # initialize check at 0
     digit = 0
     i = 0
@@ -150,11 +150,11 @@ def verhoeff_digit(arg):
 
 def build_verhoeff_id(prefix, number, length=4):
     """
-    Shortcut for building IDs with prefix and verhoeff check digit 
-    
+    Shortcut for building IDs with prefix and verhoeff check digit
+
     List of existing prefixes:
-        https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise 
-    
+        https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise
+
     >>> build_verhoeff_id("Foo", 1)
     'Foo00011'
     >>> build_verhoeff_id("Foo", 1, length=8)
@@ -163,10 +163,10 @@ def build_verhoeff_id(prefix, number, length=4):
     number_str = str(number).rjust(length, "0")
     checksum = verhoeff_digit(number_str)
     return prefix + number_str + checksum
-    
+
 
 class _VerhoeffTests(unittest.TestCase):
-    
+
     def test_checkdigit(self):
         self.assertEqual(verhoeff_digit('123456654321'), '9')
         # self.assertEqual(verhoeff_digit('5743839105748193475681981039847561718657489228374'), '3')
@@ -177,7 +177,7 @@ class _VerhoeffTests(unittest.TestCase):
         # self.assertEqual(verhoeff_digit('0000168'), '6')
         # self.assertEqual(verhoeff_digit('04052'), '6')
         # self.assertEqual(verhoeff_digit('1'), '9')
-        
+
         # results from http://www.augustana.ab.ca/~mohrj/algorithms/checkdigit.html and Algorithm::Verhoeff
         self.assertEqual(verhoeff_digit('1'), '5')
         self.assertEqual(verhoeff_digit('11'), '3')
@@ -201,11 +201,11 @@ class _VerhoeffTests(unittest.TestCase):
         self.assertEqual(verhoeff_digit('838'), '9')
         self.assertEqual(verhoeff_digit('505505'), '2')
         self.assertEqual(verhoeff_digit('050050'), '4')
-    
+
 
 class _EanTests(unittest.TestCase):
     """Simple Tests for EAN checkdigit calculation."""
-    
+
     def test_ean_digit1(self):
         """Test known EANs and their checksumms."""
         self.assertEqual(ean_digit(''), '0')
@@ -281,10 +281,10 @@ class _EanTests(unittest.TestCase):
         self.assertEqual(_ean_digit2('34005998000000026'), '8')
         self.assertEqual(_ean_digit2('34005998000000027'), '5')
         self.assertEqual(_ean_digit2('34005998000000028'), '2')
-    
+
 
 class _DPDTests(unittest.TestCase):
-    
+
     def test_checkdigit(self):
         self.assertEqual(dpd_digit(''), '1')
         self.assertEqual(dpd_digit('2'), 'X')
@@ -297,8 +297,8 @@ class _DPDTests(unittest.TestCase):
         self.assertEqual(dpd_digit('09445008454227'), 'I')
         self.assertEqual(dpd_digit('00711060163123456789013627699999999999999999999999999999'), 'O')
         self.assertEqual(dpd_digit('0071106016312345678901362769999999999999999999999999999999'), '5')
-        
-    
+
+
 if __name__ == '__main__':
     failure_count, test_count = doctest.testmod()
     unittest.main()

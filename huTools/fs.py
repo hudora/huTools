@@ -12,6 +12,6 @@ import os
 
 def makedirhier(dirnmame):
     """Created 'dirname' if needes and all intermediate directories."""
-    
+
     if not os.path.exists(dirnmame):
         os.makedirs(dirnmame)

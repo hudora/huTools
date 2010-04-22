@@ -16,9 +16,9 @@ import unittest
 
 class RC4:
     """RC4 en-/decription.
-    
+
     Based on code from Thomas Dixon at http://www.macshadows.com/forums/index.php?showtopic=5766
-    
+
     >>> RC4('sekrit').decrypt(RC4('sekrit').encrypt('foo'))
     'foo'
     """

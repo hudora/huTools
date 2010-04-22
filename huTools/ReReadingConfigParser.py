@@ -28,7 +28,7 @@ Bonn, Germany. The twisd AG kindly donated it as Freie Software.
 """
 
 __version__ = '$Id$'
-  
+
 __copyright__ = """(c) 2001 twisd AG, Bonn - http://www.twisd.de/
 further distribution is granted under the terms of LGPL or classical
 MIT Licence."""
@@ -45,12 +45,12 @@ class ReReadingConfigParser(ConfigParser):
     def ReReadIfChanged(self):
         mtime = os.stat(self.config_name)[stat.ST_MTIME]
         if mtime > self.config_mtime:
-            self.read(self.config_name) 
-            
+            self.read(self.config_name)
+
     def read(self, fpname):
         # try to find out last modified date of file
         self.config_mtime = os.stat(fpname)[stat.ST_MTIME]
-        self.config_name = fpname 
+        self.config_name = fpname
         return ConfigParser.read(self, fpname)
 
     def readfp(self, fdescriptor, filename=None):
@@ -65,16 +65,16 @@ class ReReadingConfigParser(ConfigParser):
     def options(self, section):
         self.ReReadIfChanged()
         return ConfigParser.options(self, section)
-    
+
     def get(self, section, option, raw=0, myvars=None):
         self.ReReadIfChanged()
         return ConfigParser.get(self, section, option, raw, myvars)
-    
+
     # ReReadingConfigParser is read only, so overwrite configuration
     # changing commands
     def add_section(self, section):
         raise NotImplementedError
-    
+
     def set(self, section, option, value):
         raise NotImplementedError
 
@@ -86,16 +86,16 @@ class ReReadingConfigParser(ConfigParser):
 
     def remove_section(self, section):
         raise NotImplementedError
- 
+
 
 def test():
     import time
-    
+
     cparser = ReReadingConfigParser()
     fdescriptor = open('ReReadingConfigParser.TESTFILE', 'w')
     fdescriptor.write('[TESTSECTION]\nvalue: 1\n')
     fdescriptor.close()
-    
+
     cparser.read('ReReadingConfigParser.TESTFILE')
     assert cparser.get('TESTSECTION', 'value') == '1'
 
@@ -107,7 +107,7 @@ def test():
 
     assert cparser.get('TESTSECTION', 'value') == '2'
     os.unlink('ReReadingConfigParser.TESTFILE')
-    
+
 
 if __name__ == '__main__':
     test()

@@ -18,7 +18,7 @@ def deUTF8(data):
     if isinstance(data, StringType):
         return data.decode('utf-8')
     return data
-    
+
 
 # native, HTML, default Unicode (Code page 850), Unicode combined Character, Windows-1250
 _recodings = {'ae': ['ä', u'ä', '&auml;', '\u00E4', u'\u00E4', '\u0308a', '\xc3\xa4'],
@@ -34,11 +34,11 @@ _recodings = {'ae': ['ä', u'ä', '&auml;', '\u00E4', u'\u00E4', '\u0308a', '\xc
 
 def deUmlaut(data):
     """Converts a text to ASCII acting smart about Umlauts.
-    
+
     >>> deUmlaut('1 Über Hügel saß René äöüÄÖÜß')
     '1 Ueber Huegel sass Rene aeoeueAeOeUess'
     """
-    
+
     for to_char, from_chars in _recodings.items():
         for from_char in from_chars:
             try:
@@ -51,7 +51,7 @@ def deUmlaut(data):
         raise ValueError('%s: %r' % (msg, data))
     except UnicodeDecodeError, msg:
         raise ValueError('%s: %r' % (msg, data))
-    
+
 
 if __name__ == '__main__':
     failure_count, test_count = doctest.testmod()
