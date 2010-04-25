@@ -100,15 +100,18 @@ Use our naming conventions for [Adresses][adressprot] and
 
 * Target [Django 1.1.1][django]
 * make extensive use of the [Django Admin][djangoadmin]
+* [hd_django_project_template][hd_django_project_template] codifies our current best practices to structure
+  a project.
 * use [`cs.global_django_settings.py`][global_django_settings].
 * including the directory `generic_templates` containing git@github.com:hudora/html.git
-  ({{{	git clone git@github.com:hudora/html.git html;ln -s html/templates generic_templates}}})
+  (`git clone git@github.com:hudora/html.git html;ln -s html/templates generic_templates`)
 * Use [googleappsauth][googleappsauth] to authenticate local users ([example][googleappsauthexample])
 * Use [hoptoad][hoptoad] to report errors ([example][hoptoadexample]).
 * Try to use [Silver Lining][silverlining].
 
 [django]: http://www.djangoproject.com/
 [djangoadmin]: http://docs.djangoproject.com/en/1.1/ref/contrib/admin/
+[hd_django_project_template]: http://github.com/hudora/hd_django_project_template
 [global_django_settings]: https://github.com/hudora/CentralServices/blob/master/cs/global_django_settings.py
 [googleappsauth]: http://github.com/hudora/django-googleappsauth#readme
 [googleappsauthexample]: https://cybernetics.hudora.biz/intern/wordpress/2010/01/django-googleappsauth/
