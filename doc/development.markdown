@@ -12,7 +12,8 @@ Here we store Information in regard to Software Development at Hudora.
   ([Introduction][tenderintro]) - you should create an account there
 * We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests
   ([Introduction][lighthousintro]) - you should create an account there
-* [Textmate][textmatetips] is the offical Editor at Hudora Cybernetics.
+* [Textmate][textmatetips] is the offical Editor at Hudora Cybernetics. Use the `PyBicicle Repair Man`
+  and `Python PEP8` Plugins.
 
 [howsmycode]: http://howsmycode.com/
 [howsmycodeintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/howsmycode-erste-schritte/
@@ -30,12 +31,10 @@ Here we store Information in regard to Software Development at Hudora.
  * [Refactor Mercilessly][refactor] - your own code and others.
  * If you touch a file you are responsible that it is in decent shape afterwards. Even if it was messy 
    *before* you touched it.
- * Before ending the day, always check in.
+ * Before ending the day, always check in and push to our central repository.
  * Your commit messages should be in english, use markdown and follow general
    [commit message best practices][commitmessage].
- * Work in branches. For every feature/ticket create a branch. If the feature is taking more than a day
-   to implement, create a fork. See [Ultimate Quality Development System][divmod] for an example how to work
-   that way.
+ * Work in branches. For every feature/ticket create a branch.
  * Check the [timeline/dashboard][timeline] regulary to see what's happening.
    Skimm the changesets and ask if you don't understand something.
  * always do `make test`, `make check` or equivalent before commit.
@@ -49,15 +48,14 @@ Here we store Information in regard to Software Development at Hudora.
 
 ## Style
 
- * Wrap code at line 110. If you use Textmate type
+ * Wrap code at column 109. If you use Textmate type
    `defaults write com.macromates.textmate OakWrapColumns '( 40, 72, 78, 109 )'` to make wraping
    more comfortable.
  * Follow [PEP 8][pep8].
    Use [pep8.py][pep8py] `--ignore=E501,W291 --repeat` to verify compliance.
  * Follow [PEP 257][pep257] for docstrings
  * No tabs. Not anywhere. Always indent with 4 spaces.
- * Wrap at Column 109
- * Use [pylint][pylint]. aim for a score of at least 8. The higher the better. If you score is below 8
+ * Use [pylint][pylint]. Aim for a score of at least 8. The higher the better. If you score is below 8
    be prepared to present a good reason for it.
  * Classes/Variables which reference Objects specific to our ERP/our Industry/german trade
    should be in german as technical terms. Generic Objects should be named in english: "Lieferscheinnummer",
@@ -66,14 +64,14 @@ Here we store Information in regard to Software Development at Hudora.
    guidelines on naming.
  * Variable Names should not be abbreviated. The only exceptions are "nummer" -> "nr" and
    "kommissionier" -> "kommi".
- * Code should be targeted at Python 2.5 on FreeBSD / Ubuntu Linux
+ * Code should be targeted at Python 2.6 on FreeBSD / Ubuntu Linux
  * Functions should be no longer than a screen.
  * Helper functions should appear above their parent functions.
- * Let [the Zen of Python][zen] guide you.
+ * `__underscore_methods__()` and inner classes should always be defined first within a class.
+ * Let [the Zen of Python][zen] guide you and avoid [Anti-Idioms][donts].
  * [Fail Fast][failfast] and [crash early][crashearly]!
  * Write doctests. Write unittests. Aim for a [test coverage][coverage]
    of at least 80%. The higher the better.
- * `__underscore_methods__()` and inner classes should always be defined first within a class.
  * avoid float values where possible. They [probably don't work as you think they work][floats]. Store
    Cent instead of Euro, Millimeters instead of Centimeters and so on.
 
@@ -82,6 +80,7 @@ Here we store Information in regard to Software Development at Hudora.
 [pep257]: http://www.python.org/dev/peps/pep-0257/
 [pylint]: http://www.python.org/pypi/pylint 
 [zen]: http://www.python.org/dev/peps/pep-0020/
+[donts]: http://docs.python.org/howto/doanddont.html
 [failfast]: http://en.wikipedia.org/wiki/Fail-fast 
 [crashearly]: https://cybernetics.hudora.biz/intern/wordpress/2008/11/offensive-programming-or-crash-early-crash-often/
 [coverage]: http://www.python.org/pypi/coverage
@@ -99,17 +98,18 @@ Use our naming conventions for [Adresses][adressprot] and
 
 ## Django Specifica
 
-* Target [Django 1.1][django]
+* Target [Django 1.1.1][django]
 * make extensive use of the [Django Admin][djangoadmin]
-* use `/cs/global_django_settings.py`
+* use [`cs.global_django_settings.py`][global_django_settings].
 * including the directory `generic_templates` containing git@github.com:hudora/html.git
-  ({{{git clone git@github.com:hudora/html.git generic_templates}}})
+  ({{{	git clone git@github.com:hudora/html.git html;ln -s html/templates generic_templates}}})
 * Use [googleappsauth][googleappsauth] to authenticate local users ([example][googleappsauthexample])
-* Use [hoptoad][hoptoad] to report errors ([example][hoptoadexample])
-* Try to use [Silver Lining][silverlining]
+* Use [hoptoad][hoptoad] to report errors ([example][hoptoadexample]).
+* Try to use [Silver Lining][silverlining].
 
 [django]: http://www.djangoproject.com/
 [djangoadmin]: http://docs.djangoproject.com/en/1.1/ref/contrib/admin/
+[global_django_settings]: https://github.com/hudora/CentralServices/blob/master/cs/global_django_settings.py
 [googleappsauth]: http://github.com/hudora/django-googleappsauth#readme
 [googleappsauthexample]: https://cybernetics.hudora.biz/intern/wordpress/2010/01/django-googleappsauth/
 [hoptoad]: https://hudora.hoptoadapp.com/
@@ -123,7 +123,7 @@ Django Models always should come with `created_at` and `updated_at` fields. They
 called `designator` as ther primary means of reference. If the designator is meant for human consumption it
 should consist of a two letter Prefix unique for that model, a secquence number and a check digit. If the
 designator is not (or seldom) for human consumption it should be a random unique value frefixed by two
-letters. See  https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefixes used so far.
+letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefixes used so far.
 
 
     class Task(models.Model):
@@ -145,8 +145,8 @@ letters. See  https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise pref
 ## Misc
 
 * [Fail-Fast][failfast], [crash early, crash often][crasearly]
-* you can assume that setuptools, virtualenv, pip and hudorakit are installed
-* requirements have to be mentioned in requirements.txt and setup.py
+* you can assume that setuptools, virtualenv, and pip are installed
+* requirements have to be mentioned in `requirements.txt` and `setup.py`
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 
 [failfast]: http://en.wikipedia.org/wiki/Fail-fast
