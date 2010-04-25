@@ -1,3 +1,4 @@
+0.45:   Funktion zur Rundung von datetime-Objekten
 0.44:   Code Quality checks: reindent.py & pep8.py
 0.43p1: xmltools.encode_text unterstuetzt jetzt callables
 0.43:   Code zur Berechnung und Validierung von IBAN
