@@ -42,7 +42,6 @@ Here we store Information in regard to Software Development at Hudora.
 
 [refactor]: http://www.extremeprogramming.org/rules/refactor.html
 [commitmessage]: http://www.tpope.net/node/106
-[divmod]: http://divmod.org/trac/wiki/UltimateQualityDevelopmentSystem
 [timeline]: https://github.com/
 
 
@@ -147,13 +146,9 @@ letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefi
 
 ## Misc
 
-* [Fail-Fast][failfast], [crash early, crash often][crasearly]
 * you can assume that setuptools, virtualenv, and pip are installed
 * requirements have to be mentioned in `requirements.txt` and `setup.py`
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
-
-[failfast]: http://en.wikipedia.org/wiki/Fail-fast
-[crashearly]: http://blogs.23.nu/c0re/offensive-programming-crash-early-crash-often/
 
 
 ## Required Reading
