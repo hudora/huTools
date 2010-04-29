@@ -1,6 +1,8 @@
 #!/usr/local/bin/bash
 
-BASEDIR=${BASEDIR:-'/usr/local/SPEDITION/kommibelege'}
+#SPEDITION=${SPEDITION:-'SPEDITION'}
+
+BASEDIR=${BASEDIR:-"/usr/local/$SPEDITION/kommibelege"}
 
 HOSTNAME=${HOSTNAME:-"FTPSERVER"}
 USERNAME=${USERNAME:-"FTPUSER"}
@@ -27,4 +29,4 @@ do
 done
 
 # alle vorhandenen Daten hochladen und aus dem Uploaddir entfernen
-lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> /usr/local/maeuler/kommibelege/lftp.log
+lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> $BASEDIR/lftp.log
