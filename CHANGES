@@ -1,3 +1,7 @@
+0.46:   Function for retrieving the index of the week for a date
+0.45:   Function for rounding / truncating date(time) objects
+0.44:   Code Quality checks: reindent.py & pep8.py
+0.43p1: xmltools.encode_text unterstuetzt jetzt callables
 0.43:   Code zur Berechnung und Validierung von IBAN
 0.40:   added NetStringIO
 0.39p3: Version Number bumped for fix in [6688] (RO)

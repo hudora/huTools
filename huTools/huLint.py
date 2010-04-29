@@ -39,15 +39,15 @@ def process_file(filename):
     checkers.initialize(linter)
     linter.read_config_file()
     linter.quiet = 1
-    
+
     filemods = linter.expand_files((filename, ))
     if filemods:
         old_stats = config.load_results(filemods[0].get('basename'))
         old_score = old_stats.get('global_note', 0.0)
-    
+
     linter.check(filename)
     score = eval(linter.config.evaluation, {}, linter.stats)
-    
+
     # Calculate the credit for both scores
     if score < 0:
         credit = 2.0 * score
@@ -57,9 +57,9 @@ def process_file(filename):
         credit = -1.5 * (MINIMUM_SCORE - score)
     else:
         credit = score - old_score
-    
+
     return score, old_score, credit
-    
+
 
 def main(repos, revision):
     """
@@ -68,7 +68,7 @@ def main(repos, revision):
 
     import pysvn
     import os.path
-    
+
     client = pysvn.Client()
     diff = client.diff_summarize(repos,
              revision1=pysvn.Revision(pysvn.opt_revision_kind.number, revision-1),
@@ -82,12 +82,12 @@ def main(repos, revision):
     for entry in filter(func, diff):
         path = os.path.join(repos, entry.path)
         score, old_score, credit = process_file(path)
-        
+
         info = client.info(path)
-        
+
         PythonScore(username=info['commit_author'], pathname=path, revision="1",
                 score=score, old_score=old_score, credit=credit)
-    
+
 
 if __name__ == "__main__":
     # We are probably called as a subversion post-commit hook

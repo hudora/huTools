@@ -27,7 +27,7 @@ def only_digits(data):
 
 def int_or_0(data, default=0):
     """Wandelt "None" in default, lässt alle anderen werte unverändert.
-    
+
     >>> int_or_0(5)
     5
     >>> int_or_0(None)
@@ -56,13 +56,13 @@ def int_or_0(data, default=0):
 
 
 def io0(data):
-    warnings.warn("io0() is deprecated. Use int_or_0()", DeprecationWarning, stacklevel=2) 
+    warnings.warn("io0() is deprecated. Use int_or_0()", DeprecationWarning, stacklevel=2)
     return int_or_0(data)
 
 
 def float_or_0(data, default=0.0):
     """Helper fnc. Returns data casted to a float value if possible, else to 0.
-    
+
     >>> float_or_0(5.0)
     5.0
     >>> float_or_0(None)
@@ -75,7 +75,7 @@ def float_or_0(data, default=0.0):
     0.0
     >>> float_or_0(tuple())
     0.0
-    
+
     """
     if not data:
         return default

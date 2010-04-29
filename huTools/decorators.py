@@ -29,10 +29,10 @@ def _getattr_(obj, name, default_thunk):
 @decorator
 def memoize(func, *args):
     """This decorator caches the results of the function it decorates.
-    
+
     See http://en.wikipedia.org/wiki/Memoisation for fare more than ypou ever want to know on that topic.
     """
-    
+
     dic = _getattr_(func, "memoize_dic", dict)
     # memoize_dic is created at the first call
     if args in dic:
@@ -49,20 +49,20 @@ def cache_function(length):
     """
     A variant of the snippet posted by Jeff Wheeler at
     http://www.djangosnippets.org/snippets/109/
-    
+
     Caches a function, using the function and its arguments as the key, and the return
     value as the value saved. It passes all arguments on to the function, as
     it should.
-    
+
     The decorator itself takes a length argument, which is the number of
     seconds the cache will keep the result around.
     """
-    
+
     def decorator(func):
-        
+
         def inner_func(*args, **kwargs):
             from django.core.cache import cache
-            
+
             raw = [func.__name__, func.__module__, args, kwargs]
             pickled = pickle.dumps(raw, protocol=pickle.HIGHEST_PROTOCOL)
             key = hashlib.md5(pickled).hexdigest()
@@ -75,13 +75,13 @@ def cache_function(length):
                 return result
         return inner_func
     return decorator
-    
+
 
 # from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/425445
 
 def func_once(func):
     "A decorator that runs a function only once."
-    
+
     def decorated(*args, **kwargs):
         try:
             return decorated._once_result
@@ -94,7 +94,7 @@ def func_once(func):
 def method_once(method):
     "A decorator that runs a method only once."
     attrname = "_%s_once_result" % id(method)
-    
+
     def decorated(self, *args, **kwargs):
         try:
             return getattr(self, attrname)
@@ -114,4 +114,3 @@ def none_on_exception(func):
         except Exception:
             return None
     return _decorator
-

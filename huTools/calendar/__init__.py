@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Calnedar-related functions.
+Calendar-related functions.
 
-Copyright (c) 2006 HUDORA GmbH. Published under a 'BSD License'.
+Copyright (c) 2006-2010 HUDORA GmbH. Published under a 'BSD License'.
 """
 
 __revision__ = "$Revision$"

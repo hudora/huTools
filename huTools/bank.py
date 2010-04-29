@@ -24,14 +24,14 @@ def convert_character(string):
 def iban(ktonr, blz, land="DE"):
     """
     Berechnet die International Bank Account Number für deutsche Konten
-    
+
     Zunächst wird die Basic Bank Account Number für deutsche Konten berechnet.
     Der Laendercode wird mit zwei '0' aufgefüllt und an die BBAN gehangen.
     Aus diesem wird der Prüfcode als Modulo 97-10 (DIN ISO 7064) berechnet.
 
-    >>> 
+    >>>
     """
-    
+
     bban = "%08d%010d" % (int(blz), int(ktonr))
     tmp = convert_character("%s%s00" % (bban, land))
     pruefziffer = 98 - (int(tmp) % 97)

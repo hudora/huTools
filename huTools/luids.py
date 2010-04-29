@@ -37,20 +37,20 @@ _counter_lock = _thread.allocate_lock()
 def unique_machine32():
     """
     Generate an ID which has a low probability of repeating on this machine.
-    
+
     What goes where:
-    
+
       PP ^
     TTtt ^
     c
-    
-    So the first byte is an combination of a counter (c) and the first byte of the least significant 
-    (and thus fastest changing) word (TT) of the current timestamp. This is followed by the next byte of the 
-    least significant word of the current timestamp (TT). The next two bytes are the PID (PP) and the most 
+
+    So the first byte is an combination of a counter (c) and the first byte of the least significant
+    (and thus fastest changing) word (TT) of the current timestamp. This is followed by the next byte of the
+    least significant word of the current timestamp (TT). The next two bytes are the PID (PP) and the most
     significant word of the current timestamp (tt) XORed.
-    
-    Assuming 16bit PIDs this should result in unique IDs on a machine even with multi-threading. But there 
-    are degenerated scenarios (more than 2**16 concurrent/fast spawning processes, while there are more than 
+
+    Assuming 16bit PIDs this should result in unique IDs on a machine even with multi-threading. But there
+    are degenerated scenarios (more than 2**16 concurrent/fast spawning processes, while there are more than
     2**8 threads bussy generating unique IDs) where the IDs might not be unique.
     To avoid these use unique_machine64.
     """
@@ -65,27 +65,27 @@ def unique_machine32():
     finally:
         _counter_lock.release()
     return ret
-    
+
 
 def unique_machine64():
     """
     Generate an ID which should never repeat on this machine.
-    
-    This function is suggested as the base for generating filenames and the like. Processes/Threads 
-    running on the same machine should never be able to generate the same ID and no ID should be created 
+
+    This function is suggested as the base for generating filenames and the like. Processes/Threads
+    running on the same machine should never be able to generate the same ID and no ID should be created
     twice.
-    
+
     What goes where:
     TTTT     ^
         PP   ^
         cccc
-        
+
     The first two words are the current timestamp. The next word is the current  PID xored with the most
-    significant word of a counter. The last byte is the most significant word of a counter. 
-    The counter is being increased by 1 in every call. This should make this function thread 
+    significant word of a counter. The last byte is the most significant word of a counter.
+    The counter is being increased by 1 in every call. This should make this function thread
     save unless you call it more than 2**16 times per second.
     """
-    
+
     global _counter
     try: # Entering critical section.
         _counter_lock.acquire()
@@ -95,26 +95,26 @@ def unique_machine64():
     finally:
         _counter_lock.release()
     return ret
-    
+
 
 _hostname = None
 
 
 def luid():
     """Generate an ID which should be globally unique.
-    
-    This only works if gethostname() returns an unique name. This usually is true to a certain degree if you 
+
+    This only works if gethostname() returns an unique name. This usually is true to a certain degree if you
     use your machine in an NIS/NFS configuration. So this function is mainly usefull to generate unique
     filenames for NFS-shared filesystems.
-    
+
     So this is very well suited for generationg IDs in a setup where you controll all the machines and thus
     hostnames."""
-    
+
     global _hostname
     if not _hostname:
         _hostname = socket.gethostname()
     return "%s%x" % (_hostname, unique_machine64())
-    
+
 
 def guid128(salt='*'):
     """Generates an 26 character ID which should be globally unique.
@@ -123,11 +123,11 @@ def guid128(salt='*'):
     """
     data = "%r%r%r" % (luid(), salt, time.time())
     return str(base64.b32encode(hashlib.md5(data).digest()).rstrip('='))
-    
+
 
 class _uuidsTests(unittest.TestCase):
     """Simple Testcases for uuid generation."""
-    
+
     def test_unique_machine32(self):
         """Basic tests for unique_machine32."""
         seen = set()
@@ -142,7 +142,7 @@ class _uuidsTests(unittest.TestCase):
             self.assertTrue((uuid <= 0xffffffff) and (uuid >= 0))
             self.assertFalse(uuid in seen)
             seen.add(uuid)
-    
+
     def test_unique_machine64(self):
         """Basic tests for unique_machine64."""
         seen = set()
@@ -151,11 +151,11 @@ class _uuidsTests(unittest.TestCase):
             self.assertFalse(uuid in seen)
             self.assertTrue((uuid <= 0xffffffffffff) and (uuid >= 0))
             seen.add(uuid)
-    
+
     def test_guid128(self):
         """Basic tests for test_guid128"""
         self.assertEqual(len(guid128()), 26)
-        
+
 
 if __name__ == '__main__':
     unittest.main()

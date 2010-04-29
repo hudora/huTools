@@ -12,7 +12,28 @@ import xml.etree.ElementTree as ET
 
 
 def encode_text(data):
-    """Encode for usage in XML Tree"""
+    """
+    Encode for usage in XML Tree
+    
+    >>> encode_text(None)
+    u''
+    >>> encode_text('Alex')
+    u'Alex'
+    >>> encode_text(u'Alex')
+    u'Alex'
+    >>> encode_text(12)
+    u'12'
+    >>> encode_text(callable(encode_text))
+    u'True'
+    >>> encode_text(callable)
+    u''
+    """
+    
+    if callable(data):
+        try:
+            return encode_text(data())
+        except TypeError:
+            return u''
     
     if isinstance(data, str):
         return data.decode('utf-8', 'replace')
@@ -37,3 +58,8 @@ def add_fields(root, source, fieldnames):
         if hasattr(source, fieldname):
             elem.text = encode_text(getattr(source, fieldname, ''))
     return root
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

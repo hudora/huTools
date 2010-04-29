@@ -19,16 +19,16 @@ import sys
 def dicttoxml(datadict, roottag='data'):
     """Converts a dict representing one of the protocoles described in
     http://github.com/hudora/huTools/tree/master/doc/standards to XML.
-    
+
     Returns an UTF-8 encoded String.
-    
+
     >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
     ... "ort": u"Hücksenwagen",
     ... "positionen": [{"menge": 12, "artnr": "14640/XL", "posnr": 1},],
     ... "versandeinweisungen": [{"guid": "2103839-XalE", "bezeichner": "avisierung48h",
     ...                          "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
     ...]}
-    
+
     >>> print toxml(data, 'kommiauftrag')
     '''<kommiauftrag>
     <anliefertermin>2009-11-25</anliefertermin>
@@ -89,7 +89,7 @@ def test():
             "artnr":"14695",
             "batchnr": "3104247"}
     print dicttoxml(data, roottag='warenzugang')
-    
+
     # kommiauftrag
     data = {"kommiauftragsnr":2103839,
      "anliefertermin":"2009-11-25",
@@ -123,7 +123,7 @@ def test():
                               "anweisung": u"Paletten höchstens auf 140 cm Packen"}]
     }
     print dicttoxml(data, roottag='kommiauftrag')
-    
+
     # Rückmeldung
     data = {"kommiauftragsnr":2103839,
      "positionen": [{"menge": 4,
@@ -148,7 +148,7 @@ def test():
               {"nve": "43255634634653546",
                "gewicht": 28256,
                 "art": "paket"}]}
-    
+
     print dicttoxml(data, roottag='rueckmeldung')
 
 if __name__ == '__main__':
@@ -157,4 +157,3 @@ if __name__ == '__main__':
     jsondata = open(sys.argv[1]).read()
     data = json.loads(jsondata)
     print dicttoxml(data, os.path.basename(sys.argv[1].split('.')[0]))
-    
