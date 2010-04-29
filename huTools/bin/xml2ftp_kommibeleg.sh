@@ -1,8 +1,6 @@
 #!/usr/local/bin/bash
 
-#SPEDITION=${SPEDITION:-'SPEDITION'}
-
-BASEDIR=${BASEDIR:-"/usr/local/$SPEDITION/kommibelege"}
+BASEDIR=${BASEDIR:-"/usr/local/SPEDITION/kommibelege"}
 
 HOSTNAME=${HOSTNAME:-"FTPSERVER"}
 USERNAME=${USERNAME:-"FTPUSER"}
