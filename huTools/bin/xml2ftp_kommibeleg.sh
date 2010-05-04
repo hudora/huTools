@@ -20,9 +20,10 @@ for file in $WORKDIR/*
 do
     if xmllint "$file" > /dev/null 2>&1
     then
-        outfile="$UPLOADDIR/$(basename $file)"
-        xsltproc -o $outfile.xml $STYLESHEET $file
+        outfile="$UPLOADDIR/$(basename $file).xml"
+        xsltproc -o $outfile $STYLESHEET $file
         mv $file $ARCHIVDIR
+        cp $outfile $ARCHIVDIR
     fi
 done
 
