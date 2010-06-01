@@ -53,8 +53,6 @@
             <xsl:when test="//Versandart='DPDUNF'">DPD</xsl:when>
             <xsl:when test="//Versandart='DHL'">DHL</xsl:when>
             <xsl:otherwise>
-            <xsl:text> SCheissse
-            </xsl:text>
                 <xsl:value-of select="//Versandart" />
             </xsl:otherwise>
         </xsl:choose>

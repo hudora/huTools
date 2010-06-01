@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-BASEDIR=${BASEDIR:-'/usr/local/SPEDITION/kommibelege'}
+BASEDIR=${BASEDIR:-"/usr/local/SPEDITION/kommibelege"}
 
 HOSTNAME=${HOSTNAME:-"FTPSERVER"}
 USERNAME=${USERNAME:-"FTPUSER"}
@@ -20,11 +20,12 @@ for file in $WORKDIR/*
 do
     if xmllint "$file" > /dev/null 2>&1
     then
-        outfile="$UPLOADDIR/$(basename $file)"
-        xsltproc -o $outfile.xml $STYLESHEET $file
+        outfile="$UPLOADDIR/$(basename $file).xml"
+        xsltproc -o $outfile $STYLESHEET $file
         mv $file $ARCHIVDIR
+        cp $outfile $ARCHIVDIR
     fi
 done
 
 # alle vorhandenen Daten hochladen und aus dem Uploaddir entfernen
-lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> /usr/local/maeuler/kommibelege/lftp.log
+lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> $BASEDIR/lftp.log

@@ -38,7 +38,25 @@ def date_trunc(date, trtype):
     else:
         raise ValueError("Unknown ")
 
+
+def get_week(date):
+    """
+    Calculates the week of the year for a given date
+    and returns the year and week number.
+    """
+    
+    date = date_trunc(date, 'week')
+    
+    first_monday = date_trunc(date_trunc(date, 'year'), 'week')
+    if first_monday.year < date.year:
+        first_monday += datetime.timedelta(days=7)
+    diff = date_trunc(date, 'day') - first_monday
+    week = 1 + (diff.days / 7)
+    return week, first_monday.year
+
+
 class DateTruncTestCase(unittest.TestCase):
+    """Unittests for date_trunc"""
     
     def test_truncate_year(self):
         self.assertEqual(date_trunc(datetime.datetime(1980, 5, 4), 'year'), datetime.datetime(1980, 1, 1))
@@ -83,6 +101,19 @@ class DateTruncTestCase(unittest.TestCase):
     def test_invalid(self):
         self.assertRaises(ValueError, date_trunc, datetime.datetime.now(), 'alex')
         self.assertRaises(AttributeError, date_trunc, 'alex', 'day')
+
+
+class WeekTestCase(unittest.TestCase):
+    """Unittests for get_week"""
+    def test_week(self):
+        self.assertEqual(get_week(datetime.datetime(1979, 1, 1)), (1, 1979))
+        self.assertEqual(get_week(datetime.datetime(1980, 1, 1)), (53, 1979))
+        self.assertEqual(get_week(datetime.datetime(1980, 1, 2)), (53, 1979))
+        self.assertEqual(get_week(datetime.datetime(1980, 1, 6)), (53, 1979))
+        self.assertEqual(get_week(datetime.datetime(1980, 1, 7)), (1, 1980))
+        self.assertEqual(get_week(datetime.datetime(1980, 5, 4)), (17, 1980))
+        self.assertEqual(get_week(datetime.datetime(1990, 1, 1)), (1, 1990))
+        self.assertEqual(get_week(datetime.datetime(1989, 12, 31)), (52, 1989))
 
 
 if __name__ == "__main__":
