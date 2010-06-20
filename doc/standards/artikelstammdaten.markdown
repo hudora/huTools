@@ -15,8 +15,7 @@ Dies ist das grundlegende Format für Artikelstammdaten, dass bei [Hudora][1] ve
 
 ## Zusatzfelder
 
-* **`name_en`** - Englischer Beschreibener Name des Artikels.
-* **`einheit`** - Mengeneinheit wie Stück, Paar usw.
+* **`name_en`** - Englischer, beschreibener Name des Artikels.
 * **`package_weight`** - Bruttogewicht der Produktverpackung in Gramm
 * **`package_size_l`** - Länge der Produktverpackung in mm
 * **`package_size_b`** - Breite der Produktverpackung in mm
@@ -57,6 +56,13 @@ Dies ist das grundlegende Format für Artikelstammdaten, dass bei [Hudora][1] ve
 * **`products_in_40fthq_container`** - Anzahl der Artikel in einem 40-Fuss High-Cube Container
 * **`image`** - Produktbild (URL) 
 
+   "set_consiting_of": [], 
+   "features": [], 
+
+### Folgende Felder werden in zukünftigen Versionen entfernt:
+
+* **`einheit`** - Mengeneinheit wie Stück, Paar usw.
+
 
 ## Beispiel
 
@@ -65,7 +71,6 @@ Dies ist das grundlegende Format für Artikelstammdaten, dass bei [Hudora][1] ve
       <artnr>01104</artnr>
       <name>joey's Skate Set, Gr&#xF6;&#xDF;e 30-33 mit Rucksack und Protektoren</name>
       <name_en>joey's Skate Set, size 30-33, backpack+protectors</name_en>
-      <einheit>stueck</einheit>
       <ean>4005998011041</ean>
       <package_weight>2440</package_weight>
       <package_size_l>200</package_size_l>
