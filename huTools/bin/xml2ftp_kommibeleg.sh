@@ -28,4 +28,5 @@ do
 done
 
 # alle vorhandenen Daten hochladen und aus dem Uploaddir entfernen
+echo "--------------------" $(date) >> $BASEDIR/lftp.log
 lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> $BASEDIR/lftp.log
