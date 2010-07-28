@@ -62,7 +62,7 @@ class Client(object):
     All data is encoded as JSON.
     """
     
-    def __init__(self, username, password, endpoint):
+    def __init__(self, username, password, endpoint=None):
         self.username = username
         self.password = password
         self.endpoint = endpoint
