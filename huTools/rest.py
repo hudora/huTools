@@ -38,23 +38,23 @@ def build_url(base, *args):
     return os.path.join(*tmp) # pylint: disable=W0142
 
 
-class ApiException(Exception):
+class ClientException(Exception):
     """Basisklasse für Exceptions"""
     pass
 
-class ApiNotFoundException(ApiException):
+class ClientNotFoundException(ClientException):
     """ HTTP Status 404 - das Dokument wurde nicht gefunden """
     pass
 
-class ApiForbiddenException(ApiException):
+class ClientForbiddenException(ClientException):
     """ HTTP Status 403 - kein Zugriff erlaubt """
     pass
 
-class ApiUnauthorizedExecption(ApiException):
+class ClientUnauthorizedExecption(ClientException):
     """ HTTP Status 401 - Authentifizierung via OAuth/ BasicAuth fehlt """
     pass
 
-class ApiServerErrorExecption(ApiException):
+class ClientServerErrorExecption(ClientException):
     """ HTTP Status 500 - wenn ein allgemeiner Serverfehler aufgetreten ist """
     pass
 
@@ -101,13 +101,13 @@ class Client(object):
             return { 'status': 201,
                      'success': 'created' }
         if response.status == 401:
-            raise ApiUnauthorizedExecption()
+            raise ClientUnauthorizedExecption()
         elif response.status == 403:
-            raise ApiForbiddenException()
+            raise ClientForbiddenException()
         elif response.status == 404:
-            raise ApiNotFoundException()
+            raise ClientNotFoundException()
         elif response.status == 500:
-            raise ApiServerErrorExecption()
+            raise ClientServerErrorExecption()
 
         try:
             return json.loads(content)
