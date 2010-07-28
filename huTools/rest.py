@@ -35,7 +35,7 @@ def build_url(base, *args):
         tmp.append(components.pop(0))
         if args:
             tmp.append(str(args.pop(0)))
-    return os.path.join(*tmp)
+    return os.path.join(*tmp) # pylint: disable=W0142
 
 
 class ApiException(Exception):
@@ -43,15 +43,19 @@ class ApiException(Exception):
     pass
 
 class ApiNotFoundException(ApiException):
+    """ HTTP Status 404 - das Dokument wurde nicht gefunden """
     pass
 
 class ApiForbiddenException(ApiException):
+    """ HTTP Status 403 - kein Zugriff erlaubt """
     pass
 
 class ApiUnauthorizedExecption(ApiException):
+    """ HTTP Status 401 - Authentifizierung via OAuth/ BasicAuth fehlt """
     pass
 
 class ApiServerErrorExecption(ApiException):
+    """ HTTP Status 500 - wenn ein allgemeiner Serverfehler aufgetreten ist """
     pass
 
 
@@ -80,9 +84,8 @@ class Client(object):
     def __call__(self, fnc, *args, **kwargs):
         """Do a remote procedure call via HTTP"""
         
-        headers = {'content-type':'application/json'}            
+        headers = {'content-type':'application/json'}
         path = os.path.join(self.endpoint, build_url(fnc, *args), '')
-        
         if 'params' in kwargs:
             path = "%s?%s" % (path, urllib.urlencode(kwargs.pop('params')))
 
@@ -94,9 +97,6 @@ class Client(object):
             method = 'GET'
         
         response, content = self.connection.request(path, method=method, body=body, headers=headers)
-        
-        #if response.status == 200:
-        #    print "OK"
         if response.status == 201: 
             return { 'status': 201,
                      'success': 'created' }
@@ -111,7 +111,7 @@ class Client(object):
 
         try:
             return json.loads(content)
-        except:
+        except Exception:
             return {'status': response.status,
                     'error': 'unparseable response',
                     'data': content }
