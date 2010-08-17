@@ -1,8 +1,9 @@
 # encoding: utf-8
 
 """
+struct.py - handle structured data/dicts/objects
 
-Created 2010-06-04 by MAximillian Dornseif
+Created 2010-06-04 by Maximillian Dornseif
 Copyright (c) 2010 HUDORA. All rights reserved."""
 
 
@@ -16,6 +17,10 @@ class Struct(object):
         self.default = default
 
     def __getattr__(self, name):
+        if name.startswith('_'):
+            # copy excepts __deepcopy__, __getnewargs__ to raise AttributeError
+            # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/e76b9fbb1b2ee171?#e76b9fbb1b2ee171
+            raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.default
 
 

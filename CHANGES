@@ -1,3 +1,4 @@
+0.47p1: struct now can handle copy.copy()
 0.47:   huTools.rest.Client - a basic REST client
 0.46:   Function for retrieving the index of the week for a date
 0.45:   Function for rounding / truncating date(time) objects
