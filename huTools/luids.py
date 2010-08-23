@@ -22,13 +22,13 @@ import os
 import time
 import socket
 import unittest
+import uuid
 
 try:
     import thread as _thread
 except ImportError:
     import dummy_thread as _thread
 
-__revision__ = "$Revision$"
 
 _counter = 0
 _counter_lock = _thread.allocate_lock()
@@ -116,13 +116,15 @@ def luid():
     return "%s%x" % (_hostname, unique_machine64())
 
 
-def guid128(salt='*'):
+def guid128(salt=None):
     """Generates an 26 character ID which should be globally unique.
     >>> guid128()
     'MTB2ONDSL3YWJN3CA6XIG7O4HM'
     """
-    data = "%r%r%r" % (luid(), salt, time.time())
-    return str(base64.b32encode(hashlib.md5(data).digest()).rstrip('='))
+    if salt:
+        data = "%s%s%s" % (salt, uuid.uuid1(), salt)
+        return str(base64.b32encode(hashlib.md5(data).digest()).rstrip('='))
+    return str(base64.b32encode(uuid.uuid1().bytes).rstrip('='))
 
 
 class _uuidsTests(unittest.TestCase):

@@ -15,6 +15,7 @@ huTools is a small collection of helpful tools we use.
 * "printing":http://github.com/hudora/huTools/blob/master/huTools/printing.py - access printers
 * "ReReadingConfigParser":http://github.com/hudora/huTools/blob/master/huTools/ReReadingConfigParser.py - ConfigParser which detects changes in config files
 * "robusttypecasts":http://github.com/hudora/huTools/blob/master/huTools/robusttypecasts.py - type conversionts that seldom fail
+* structured - access dicts like an object and the other way arround
 * "unicode":http://github.com/hudora/huTools/blob/master/huTools/unicode.py - real-world unicode handling
 * "world":http://github.com/hudora/huTools/blob/master/huTools/world.py - country codes
 * "xml":http://github.com/hudora/huTools/blob/master/huTools/xml.py - various XML helpers
