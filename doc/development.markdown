@@ -4,19 +4,16 @@ Here we store Information in regard to Software Development at Hudora.
 
 ## Tools
 
-* We use [howsmycode.com][howsmycode] for code reviews.
-  ([Introduction][howsmycodeintro]) - you should create an account there
+
 * We use [github.com/hudora][github] for version control
   ([Introduction][githubintro])  - you should create an account there
 * We use [help.hudora.biz][tender] for support
   ([Introduction][tenderintro]) - you should create an account there
 * We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests
   ([Introduction][lighthousintro]) - you should create an account there
-* [Textmate][textmatetips] is the offical Editor at Hudora Cybernetics. Use the `PyBicicle Repair Man`
+* [Textmate][textmatetips] is the offical editor at Hudora Cybernetics. Use the `PyBicicle Repair Man`
   and `Python PEP8` Plugins.
 
-[howsmycode]: http://howsmycode.com/
-[howsmycodeintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/howsmycode-erste-schritte/
 [github]: http://github.com/hudora
 [githubintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/github-it-is/
 [tender]: http://help.hudora.biz/
@@ -34,11 +31,11 @@ Here we store Information in regard to Software Development at Hudora.
  * Before ending the day, always check in and push to our central repository.
  * Your commit messages should be in english, use markdown and follow general
    [commit message best practices][commitmessage].
- * Work in branches. For every feature/ticket create a branch.
  * Check the [timeline/dashboard][timeline] regulary to see what's happening.
    Skimm the changesets and ask if you don't understand something.
  * always do `make test`, `make check` or equivalent before commit.
  * add the URL of the ticket in the ticket system to the end of your commit message
+ * Work in branches where appropriate. For every feature/ticket a branch may be appropriate.
 
 [refactor]: http://www.extremeprogramming.org/rules/refactor.html
 [commitmessage]: http://www.tpope.net/node/106
@@ -63,16 +60,17 @@ Here we store Information in regard to Software Development at Hudora.
    guidelines on naming.
  * Variable Names should not be abbreviated. The only exceptions are "nummer" -> "nr" and
    "kommissionier" -> "kommi".
- * Code should be targeted at Python 2.6 on FreeBSD / Ubuntu Linux
+ * Code should be targeted at Python 2.5 on FreeBSD / Ubuntu Linux
  * Functions should be no longer than a screen.
  * Helper functions should appear above their parent functions.
  * `__underscore_methods__()` and inner classes should always be defined first within a class.
  * Let [the Zen of Python][zen] guide you and avoid [Anti-Idioms][donts].
  * [Fail Fast][failfast] and [crash early][crashearly]!
- * Write doctests. Write unittests. Aim for a [test coverage][coverage]
-   of at least 80%. The higher the better.
+ * Make your stuff [Idempotent][idempotent].
  * avoid float values where possible. They [probably don't work as you think they work][floats]. Store
    Cent instead of Euro, Millimeters instead of Centimeters and so on.
+ * Write doctests. Write unittests. Aim for a [test coverage][coverage]
+   of at least 80%. The higher the better.
 
 [pep8]: http://www.python.org/dev/peps/pep-0008/
 [pep8py]: http://svn.browsershots.org/trunk/devtools/pep8/pep8.py
@@ -84,14 +82,15 @@ Here we store Information in regard to Software Development at Hudora.
 [crashearly]: https://cybernetics.hudora.biz/intern/wordpress/2008/11/offensive-programming-or-crash-early-crash-often/
 [coverage]: http://www.python.org/pypi/coverage
 [floats]: http://docs.sun.com/source/806-3568/ncg_goldberg.html
-
+[idempotent]: http://en.wikipedia.org/wiki/Idempotent
 
 ## Conventions
 
-Use our naming conventions for [Adresses][adressprot] and
+Use our naming conventions for [Adresses][adressprot], [Orders][orderprotocol] and
 [Warehouse related stuff][icwmsprot] (more to come).
 
 [adressprot]: http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown
+[orderprotocol]: http://github.com/hudora/huTools/blob/master/doc/standards/verysimpleorderprotocol.markdown
 [icwmsprot]: http://github.com/hudora/huTools/blob/master/doc/standards/messaging_ic-wms.markdown
 
 
@@ -142,6 +141,8 @@ letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefi
             # instance.designator = huTools.checksumming.build_verhoeff_id("TC", instance.id)
             instance.save()
     models.signals.post_save.connect(_task_post_save_cb, Task)
+
+Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with a decent value.
 
 
 ## Misc
