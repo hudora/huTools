@@ -45,14 +45,18 @@ def extend_audittrail(audit_info='', audit_trail=''):
 def empty_message(creator, audit_info='', audit_trail='', guid=''):
     """Returns an empty message template following the huMessaging Standard.
 
-    creator:     user (prefered) or library tool which created the message. Suitable for audit messages.
-                 Example: "Maximillian Dornseif via cs.zwitscher/r3456"
-    audit_info:  a human readable description of the processing stage.
-                 Example: "flagged as problematic by nachschieber.py"
-    audit_trail: semicolen sparated list of previous processing stages.
-    guid:        Unique id of this message. Should never repeat. Generate by something unique for your
-                 processing step. E.g. "lieferschenrueckmeldung-4234543". Should only contain
-                 printable ASCII characters.
+    creator
+      user (prefered) or library tool which created the message. Suitable for audit messages.
+      Example: "Maximillian Dornseif via cs.zwitscher/r3456"
+    audit_info
+      a human readable description of the processing stage.
+      Example: "flagged as problematic by nachschieber.py"
+    audit_trail
+      semicolen sparated list of previous processing stages.
+    guid
+      Unique id of this message. Should never repeat. Generate by something unique for your
+      processing step. E.g. "lieferschenrueckmeldung-4234543". Should only contain
+      printable ASCII characters.
     """
 
     warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)

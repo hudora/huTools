@@ -44,7 +44,7 @@ setup(
     keywords='python library',
     author='Maximillian Dornseif',
     author_email='md@hudora.de',
-    url='http://github.com/hudora/huTools/',
+    url='http://hudora.github.com/huTools/',
     license='BSD',
     packages = find_packages(exclude=['bootstrap', 'pavement',]),
     include_package_data=True,

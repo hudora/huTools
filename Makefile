@@ -62,12 +62,8 @@ statistics:
 upload: doc
 	python setup.py build sdist upload
 
-doc:
-	rm -Rf html
-	mkdir -p html
-	mkdir -p html/calendar
-	sh -c '(cd html; pydoc -w ../huTools/*.py)'
-	sh -c '(cd html/calendar; pydoc -w ../../huTools/calendar/*.py)'
+doc: examples
+	paver gh_pages_build gh_pages_update -m "documentation fixup"
 
 install: build
 	sudo python setup.py install

@@ -2,12 +2,9 @@
 *.pyc
 *~
 .DS_Store
-build/
-build/*
 dist/
 dist/*
 docs/_build/doctrees/*
-html/
 huTools.egg-info/
 huTools.egg-info/*
 testenv

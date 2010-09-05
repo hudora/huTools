@@ -42,18 +42,22 @@ else:
 def daemonize(pidfile=None, stdoutlogfile=None):
     """Detach a process from the controlling terminal and run it in the
     background as a daemon.
-
+    
     based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/278731
-
+    
     daemonize
-      1.) The current working directory set to the "/" directory.
-      2.) The current file creation mode mask set to 0.
-      3.) Close all open files (1024).
-      4.) Redirect standard I/O streams to "/dev/null".
+    
+    1. The current working directory set to the "/" directory.
+    2. The current file creation mode mask set to 0.
+    3. Close all open files (1024).
+    4. Redirect standard I/O streams to "/dev/null".
+    
     A failed call to fork() now raises an exception.
-    References:
-      1) Advanced Programming in the Unix Environment: W. Richard Stevens
-      2) Unix Programming Frequently Asked Questions:
+    
+    References
+    
+    1. Advanced Programming in the Unix Environment: W. Richard Stevens
+    2. Unix Programming Frequently Asked Questions:
             http://www.erlenstar.demon.co.uk/unix/faq_toc.html
     """
 

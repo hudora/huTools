@@ -15,6 +15,8 @@ import urlparse
 import simplejson as json
 
 
+# TODO: rewrite to use httplib / urllib. httplib2 has issues with Appengine and reliability
+
 def build_url(base, *args):
     """
     Create URLs for a REST API

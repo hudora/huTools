@@ -15,12 +15,13 @@ def _egg_info(path_to_egg='../'):
     return egg_info.name, egg_info.author, version, release
 
 project, author, version, release = _egg_info()
-copyright = '2010, Maximillian Dornseif'
+copyright = '2006-2010, Maximillian Dornseif'
 
 # Extension
 extensions = [
-	 # -*-Extensions: -*-
-	]
+    # -*-Extensions: -*-
+    'sphinx.ext.autodoc'
+    ]
 intersphinx_mapping = {'http://docs.python.org/': None}
 
 # Source
