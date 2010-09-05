@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-xml.py
+xmltools.py
 
 Created by Christian Klein on 2010-02-26.
 Copyright (c) 2010 HUDORA GmbH. All rights reserved.
