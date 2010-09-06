@@ -96,6 +96,7 @@ Version 3a hat `<wunschtermin>` in `<wunschdatum_von>` und `<wunschdatum_bis>` u
 
 * [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown)
 * [VerySimpleStatusProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/verysimplestatusprotocol.markdown)
+* [LieferungProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/lieferungprotocol.markdown)
 * UBL [Ordering](http://docs.oasis-open.org/ubl/cs-UBL-2.0/UBL-2.0.html#d0e1620)
 * EDIFACT [ORDERS](http://www.edifactory.de/msginfo.php?s=D08A&m=ORDERS) 
 
