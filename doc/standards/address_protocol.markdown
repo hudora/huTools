@@ -31,12 +31,13 @@ The *Address Protocol* ist designed to be easy to encode in a wide range of form
  * **fax** - fax number relevant to the address/delivery (formated like [DIN 5008][6] or [E.123][7])
  * **mobil** - additional phone number relevant to the address/delivery (formated like [DIN 5008][6] or [E.123][7])
  * **mail** - E-Mail address relevant to the address/delivery
- * **iln** - [GLN][8], the worldwide uniqe number of that company/address [allocated by GS1][9]
+ * **iln** - [GLN][8], the worldwide uniqe number of that company/address [allocated by GS1][9] Note that there is an URN format to write ILNs, e.g. `urn:epc:id:sgln:0614141.33254.0`, see [RfC 5134][9a] for details. For now we don't use this format.
 
 [6]: http://de.wikipedia.org/wiki/Rufnummer#Schreibweise_in_Deutschland_und_.C3.96sterreich
 [7]: http://en.wikipedia.org/wiki/E.123
 [8]: http://en.wikipedia.org/wiki/Global_Location_Number
 [9]: http://www.gs1.org/glnrules/storyboard/
+[9a]: http://tools.ietf.org/html/rfc5134
 
 ## Additional Explanation
 
