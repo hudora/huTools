@@ -15,7 +15,7 @@ class Struct(object):
 
     def __getattr__(self, name):
         if name.startswith('_'):
-            # copy excepts __deepcopy__, __getnewargs__ to raise AttributeError
+            # copy expects __deepcopy__, __getnewargs__ to raise AttributeError
             # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/e76b9fbb1b2ee171?#e76b9fbb1b2ee171
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.default
@@ -24,12 +24,12 @@ class Struct(object):
     #    raise TypeError('Struct objects are immutable')
 
 
-def make_struct(obj):
+def make_struct(obj, default=None):
     """Converts a dict to an object, leaves the object untouched.
     Read Only!
     """
     if not hasattr(obj, '__dict__') and isinstance(obj, collections.Mapping):
-        struct = Struct(obj)
+        struct = Struct(obj, default=default)
         for k, v in obj.items():
             setattr(struct, k, make_struct(v))
         return struct
