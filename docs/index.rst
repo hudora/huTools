@@ -1,11 +1,17 @@
+Introduction
+============
+
 .. include:: ../README.rst
 
-Contents:
+Contents of huTools and related Documentation
+=============================================
 
 .. toctree::
    :maxdepth: 2
 
+   standards
    overview
+   othertools
    changes
 
 

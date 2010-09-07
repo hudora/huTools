@@ -1,19 +1,22 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Auftragsliste>
   <Auftrag>
     <Auftragskopf>
-      <EinlagererNr>UNKLAR</EinlagererNr>
+      <EinlagererNr>10056</EinlagererNr>
       <FremdlieferscheinNr>2103839</FremdlieferscheinNr>
       <KundenauftragsNr>1025575</KundenauftragsNr>
     </Auftragskopf>
     <Auftragsinformationen>
       <Liefertermin>20091125</Liefertermin>
+      <Terminart>BIS</Terminart>
       <Textcode1>8</Textcode1>
-      <Auftragstext>Besuch H. Gerlach</Auftragstext>
+      <Auftragstext>abholer: Abholung durch Spedition Dornseif$hebebuehne: True$</Auftragstext>
       <Textcode2>2</Textcode2>
-      <Kommissioniertext>Hier könnten die Versandvorschriften landen</Kommissioniertext>
+      <Kommissioniertext>etiketten_speicherort: c:\desktop\Programm Data\schrecklicher windows pfad$sortenrein: True$packhoehe: 1100</Kommissioniertext>
       <EmpfaengerILN/>
-      <Auftragsprioritaet>105003</Auftragsprioritaet>
+      <Auftragsprioritaet>7</Auftragsprioritaet>
+      <Versandart/>
+      <Frankatur>FRHS</Frankatur>
     </Auftragsinformationen>
     <Empfaengeranschrift>
       <EmpfaengerkundenNr>21548</EmpfaengerkundenNr>
