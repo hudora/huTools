@@ -7,7 +7,7 @@ Created by Maximillian Dornseif on 2009-12-27.
 Created by Maximillian Dornseif on 2010-06-04.
 Copyright (c) 2009, 2010 HUDORA. All rights reserved."""
 
-from xml.etree import ElementTree
+import xml.etree.cElementTree as ET
 import os.path
 import simplejson as json
 import sys
@@ -43,11 +43,50 @@ def make_struct(obj):
 
 # Code is based on http://code.activestate.com/recipes/573463/
 
-def dicttoxml(datadict, roottag='data'):
-    """Converts a dict representing one of the protocoles described in
-    http://github.com/hudora/huTools/tree/master/doc/standards to XML.
+def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
+    # we can't convert bare lists
+    assert not isinstance(dictitem, list)
 
-    Returns an UTF-8 encoded String.
+    if isinstance(dictitem, dict):
+        for (tag, child) in dictitem.iteritems():
+            if isinstance(child, list):
+                # iterate through the array and convert
+                listelem = ET.Element(tag)
+                parent.append(listelem)
+                for listchild in child:
+                    elem = ET.Element(listnames.get(tag, 'item'))
+                    listelem.append(elem)
+                    _convert_dict_to_xml_recurse(elem, listchild, listnames)
+            else:
+                elem = ET.Element(tag)
+                parent.append(elem)
+                _convert_dict_to_xml_recurse(elem, child, listnames)
+    else:
+        parent.text = unicode(dictitem)
+
+
+def dict2et(xmldict, roottag='data', listnames=None):
+    """Converts a dict to an Elementtree.
+
+    Converts a dictionary to an XML ElementTree Element::
+    
+    >>> data = {"nr": "xq12", "positionen": [{"menge": 12}, {"menge": 2}]}
+    >>> root = ConvertDictToXml(data)
+    >>> ET.tostring(root)
+    <data><nr>xq12</nr><positionen><item><menge>12</menge></item><item><menge>2</menge></item></positionen></data>
+    
+    Per default ecerything ins put in an enclosing '<data>' element. Also per default lists are converted
+    to collecitons of `<item>` elements. But by provding a mapping between list names and element names,
+    you van generate different elements::
+    
+    >>> data = {"positionen": [{"m": 12}, {"m": 2}]}
+    >>> root = ConvertDictToXml(data, roottag='xml)
+    >>> ET.tostring(root)
+    <xml><positionen><item><m>12</m></item><item><m>2</m></item></positionen></xml>
+
+    >>> root = ConvertDictToXml(data, roottag='xml, listnames={'positionen': 'position'})
+    >>> ET.tostring(root)
+    <xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>
 
     >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
     ... "ort": u"Hücksenwagen",
@@ -56,7 +95,7 @@ def dicttoxml(datadict, roottag='data'):
     ...                          "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
     ...]}
 
-    >>> print toxml(data, 'kommiauftrag')
+    >>> print ET.tostring(rtoxml(data, 'kommiauftrag', listnames={'positionen': 'position', 'versandeinweisungen': 'versandeinweisung'}))
     '''<kommiauftrag>
     <anliefertermin>2009-11-25</anliefertermin>
     <positionen>
@@ -78,35 +117,31 @@ def dicttoxml(datadict, roottag='data'):
     <kommiauftragsnr>2103839</kommiauftragsnr>
     </kommiauftrag>'''
     """
+    
+    if not listnames:
+        listnames = {}
+    root = ET.Element(roottag)
+    _convert_dict_to_xml_recurse(root, xmldict, listnames)
+    return root
 
-    root = ElementTree.Element(roottag)
-    _ConvertDictToXmlRecurse(root, datadict)
-    return ElementTree.tostring(root, 'utf-8')
+
+def list2et(xmllist, root, elementname):
+    """Converts a dict to an Elementtree."""
+
+    basexml = dict2et({root: xmllist}, 'xml', listnames={root: elementname})
+    return basexml.find(root)
 
 
-# defines how listitems are packaged
-_listnames = {'positionen': 'position',
-             'versandeinweisungen': 'versandeinweisung'}
+def dicttoxml(datadict, roottag='data', listnames=None):
+    """Converts a dictionary to an UTF-8 encoded XML string.
+    
+    See also dict2et()
+    """
+    return ET.tostring(dict2et(datadict, roottag, listnames), 'utf-8')
 
-def _ConvertDictToXmlRecurse(parent, dictitem):
-    assert not isinstance(dictitem, type([]))
 
-    if isinstance(dictitem, dict):
-        for (tag, child) in dictitem.iteritems():
-            if isinstance(child, type([])):
-                # iterate through the array and convert
-                listelem = ElementTree.Element(tag)
-                parent.append(listelem)
-                for listchild in child:
-                    elem = ElementTree.Element(_listnames.get(tag, tag))
-                    listelem.append(elem)
-                    _ConvertDictToXmlRecurse(elem, listchild)
-            else:
-                elem = ElementTree.Element(tag)
-                parent.append(elem)
-                _ConvertDictToXmlRecurse(elem, child)
-    else:
-        parent.text = unicode(dictitem)
+def list2xml(datadict, root, elementname):
+    return ET.tostring(list2et(xmllist, root, elementname), 'utf-8')
 
 
 def test():
