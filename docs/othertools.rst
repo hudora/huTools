@@ -9,6 +9,7 @@ We have developed a suite of tools which extend hutools for our dayly use.
  * `pyBookkeeping <http://github.com/hudora/pyBookkeeping>`_ - access to SWIFT and other Banking standards and to the Xero API
  * `pyShipping <http://github.com/hudora/pyShipping>`_ - shipping related calculations and routing Information for DPD/Geopost
  * `pyPostal <http://github.com/hudora/pyPostal>`_ - printing and sending of letters through Pixelletter
+ * `EDIlib <http://github.com/hudora/EDIlib>`_ - various EDI/data exchange formats
  * `huSoftM <http://github.com/hudora/huSoftM>`_ - access to the huSoftM ERP System
  * `huDjango <http://github.com/hudora/huDjango>`_ - mist helpers for the Django Framework
  * `huImages <http://github.com/hudora/huImages>`_ - high preformance image serfing stack
