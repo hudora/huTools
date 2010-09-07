@@ -2,6 +2,7 @@
 Changes
 =======
 
+* 0.50    monetary - easy but often used monetary functions
 * 0.48:   renamed struct to structured, luids.guid128() now uses uuid1
 * 0.47p1: struct now can handle copy.copy()
 * 0.47:   huTools.rest.Client - a basic REST client
