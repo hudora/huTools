@@ -41,14 +41,14 @@ def make_struct(obj):
         return struc
     return obj
 
-# Code is based on http://code.activestate.com/recipes/573463/
 
+# Code is based on http://code.activestate.com/recipes/573463/
 def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
     # we can't convert bare lists
     assert not isinstance(dictitem, list)
 
     if isinstance(dictitem, dict):
-        for (tag, child) in dictitem.iteritems():
+        for (tag, child) in sorted(dictitem.iteritems()):
             if isinstance(child, list):
                 # iterate through the array and convert
                 listelem = ET.Element(tag)
@@ -132,7 +132,7 @@ def list2et(xmllist, root, elementname):
     return basexml.find(root)
 
 
-def dicttoxml(datadict, roottag='data', listnames=None):
+def dict2xml(datadict, roottag='data', listnames=None):
     """Converts a dictionary to an UTF-8 encoded XML string.
     
     See also dict2et()
@@ -150,8 +150,9 @@ def test():
             "menge":7,
             "artnr":"14695",
             "batchnr": "3104247"}
-    xmlstr = dicttoxml(data, roottag='warenzugang')
-    assert xmlstr == '''<warenzugang><guid>3104247-7</guid><menge>7</menge><artnr>14695</artnr><batchnr>3104247</batchnr></warenzugang>'''
+    xmlstr = dict2xml(data, roottag='warenzugang')
+    #print xmlstr
+    assert xmlstr == '''<warenzugang><artnr>14695</artnr><batchnr>3104247</batchnr><guid>3104247-7</guid><menge>7</menge></warenzugang>'''
 
     data = {"kommiauftragsnr":2103839,
      "anliefertermin":"2009-11-25",
@@ -185,7 +186,7 @@ def test():
                               "anweisung": u"Paletten höchstens auf 140 cm Packen"}]
     }
     
-    xmlstr = dicttoxml(data, roottag='kommiauftrag')
+    xmlstr = dict2xml(data, roottag='kommiauftrag')
     # print xmlstr
 
     # Rückmeldung
@@ -213,7 +214,7 @@ def test():
                "gewicht": 28256,
                 "art": "paket"}]}
 
-    xmlstr = dicttoxml(data, roottag='rueckmeldung')
+    xmlstr = dict2xml(data, roottag='rueckmeldung')
     #print xmlstr
 
 
