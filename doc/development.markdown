@@ -152,6 +152,15 @@ Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with 
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 
 
+## Identifiers
+
+Use global unique identifiers where ever possible. `huTools.luids.guid123()` creates somewhat compact representations of random IDs. It's even better if you can find an standartisized Scheme of unique IDs. Good Candidates are found in the [EPC Tag Data Standard (TDS)][tds], in [Tag URIs][taguri] as defined in [RfC 4151][rfc4151].
+
+[tds]: http://www.epcglobalinc.org/standards/tds/
+[taguri]: http://en.wikipedia.org/wiki/Tag_URI
+[rfc4151]: http://tools.ietf.org/html/rfc4151
+
+
 ## Required Reading
 
 * [The Zen of Python][zen]
