@@ -52,10 +52,15 @@ def euro_to_cent(amount):
 
 
 def netto(amount, tax=19):
-    """Mehrwertsteuer aus den Preisen rausrechnen."""
+    """
+    Mehrwertsteuer aus den Preisen rausrechnen.
     
-    val /= decimal.Decimal("1.%d" % tax)
-    return val.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
+    >>> netto(decimal.Decimal('1.19'))
+    Decimal('1.00')
+    """
+    
+    amount /= decimal.Decimal("1.%d" % tax)
+    return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
 
 
 if __name__ == "__main__":
