@@ -168,6 +168,7 @@ Use global unique identifiers where ever possible. `huTools.luids.guid123()` cre
 * [Google Python Style Guide][pyguide]
 * [Refactoring: Improving the Design of Existing Code][refactoring] by Fowler, Beck, Brant, Opdyke, Roberts
 * [An Illustrated History of Failure][failure] (Video)
+* [Getting unicode right in Python][unicode]
 * [Developing reusable apps][reusable]
 
 [zen]: http://www.python.org/dev/peps/pep-0020/
@@ -175,5 +176,6 @@ Use global unique identifiers where ever possible. `huTools.luids.guid123()` cre
 [pyguide]: http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
 [refactoring]: http://www.pearsonhighered.com/academic/product/0,,0201485672,00%2Ben-USS_01DBC.html
 [failure]: http://cybernetics.hudora.biz/nonpublic/Paul%20Fenwick,%20Perl%20Training%20Australia_%20_An%20Illustrated%20History%20of%20Failure_.mov
+[unicode]: http://blog.notdot.net/2010/07/Getting-unicode-right-in-Python
 [reusable]: http://www.b-list.org/weblog/2008/mar/15/slides/
 
