@@ -82,7 +82,7 @@ options(
     )
 
 options.setup.package_data=paver.setuputils.find_package_data(
-    'hutools', package='hutools', only_in_packages=False)
+    'huTools', package='huTools', only_in_packages=False)
 
 if ALL_TASKS_LOADED:
     @task
