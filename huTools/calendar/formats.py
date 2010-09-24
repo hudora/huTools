@@ -24,6 +24,23 @@ def rfc3339_date(date=None):
 def rfc3339_date_parse(date):
     """Parses an RfC 3339 timestamp into a datetime object."""
     return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
+
+
+def convert_to_date(date):
+    """
+    Converts argument into a date object.
+    
+    Assumes argument to be a RfC 3339 coded date or a date(time) object.
+    """
+    
+    if isinstance(date, datetime.date):
+        return date
+    elif isinstance(date, datetime.datetime):
+        return date.date()
+    elif isinstance(date, basestring):
+        date = date[:10]  # strip timestamp
+        return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    raise ValueError("Unknown value %r (%s)" % (date, type(date)))
     
 
 def rfc2616_date(date=None):
