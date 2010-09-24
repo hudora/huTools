@@ -2,16 +2,19 @@
 
 """
 structured.py - handle structured data/dicts/objects
+"""
 
-Created by Maximillian Dornseif on 2009-12-27.
-Created by Maximillian Dornseif on 2010-06-04.
-Copyright (c) 2009, 2010 HUDORA. All rights reserved."""
+# Created by Maximillian Dornseif on 2009-12-27.
+# Created by Maximillian Dornseif on 2010-06-04.
+# Copyright (c) 2009, 2010 HUDORA. All rights reserved.
+
 
 import xml.etree.cElementTree as ET
 import os.path
 import simplejson as json
 import sys
 import collections
+
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
 class Struct(object):
@@ -32,7 +35,26 @@ class Struct(object):
 
 def make_struct(obj):
     """Converts a dict to an object, leaves the object untouched.
-    Read Only!
+    
+    Someting like obj.vars() = dict() - Read Only!
+    
+    >>> obj = make_struct(dict(foo='bar'))
+    >>> obj.foo
+    'bar'
+
+    make_struct leaves objects alone.
+    >>> class MyObj(object): pass
+    >>> data = MyObj()
+    >>> data.foo = 'bar'
+    >>> obj = make_struct(data)
+    >>> obj.foo
+    'bar'
+    
+    make_struct also is idempotent
+    >>> obj = make_struct(make_struct(dict(foo='bar')))
+    >>> obj.foo
+    'bar'
+    
     """
     if not hasattr(obj, '__dict__') and isinstance(obj, collections.Mapping):
         struc = Struct(obj)
@@ -70,32 +92,34 @@ def dict2et(xmldict, roottag='data', listnames=None):
 
     Converts a dictionary to an XML ElementTree Element::
     
-    >>> data = {"nr": "xq12", "positionen": [{"menge": 12}, {"menge": 2}]}
-    >>> root = ConvertDictToXml(data)
+    >>> data = {"nr": "xq12", "positionen": [{"m": 12}, {"m": 2}]}
+    >>> root = dict2et(data)
     >>> ET.tostring(root)
-    <data><nr>xq12</nr><positionen><item><menge>12</menge></item><item><menge>2</menge></item></positionen></data>
-    
+    '<data><nr>xq12</nr><positionen><item><m>12</m></item><item><m>2</m></item></positionen></data>'
+
     Per default ecerything ins put in an enclosing '<data>' element. Also per default lists are converted
     to collecitons of `<item>` elements. But by provding a mapping between list names and element names,
     you van generate different elements::
     
     >>> data = {"positionen": [{"m": 12}, {"m": 2}]}
-    >>> root = ConvertDictToXml(data, roottag='xml)
+    >>> root = dict2et(data, roottag='xml')
     >>> ET.tostring(root)
-    <xml><positionen><item><m>12</m></item><item><m>2</m></item></positionen></xml>
+    '<xml><positionen><item><m>12</m></item><item><m>2</m></item></positionen></xml>'
 
-    >>> root = ConvertDictToXml(data, roottag='xml, listnames={'positionen': 'position'})
+    >>> root = dict2et(data, roottag='xml', listnames={'positionen': 'position'})
     >>> ET.tostring(root)
-    <xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>
+    '<xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>'
 
-    >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
+    >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,  
     ... "ort": u"Hücksenwagen",
     ... "positionen": [{"menge": 12, "artnr": "14640/XL", "posnr": 1},],
     ... "versandeinweisungen": [{"guid": "2103839-XalE", "bezeichner": "avisierung48h",
     ...                          "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
-    ...]}
+    ... ]}
 
-    >>> print ET.tostring(rtoxml(data, 'kommiauftrag', listnames={'positionen': 'position', 'versandeinweisungen': 'versandeinweisung'}))
+    >>> print ET.tostring(dict2et(data, 'kommiauftrag', 
+    ... listnames={'positionen': 'position', 'versandeinweisungen': 'versandeinweisung'}))
+    ...  # doctest: +SKIP
     '''<kommiauftrag>
     <anliefertermin>2009-11-25</anliefertermin>
     <positionen>
@@ -126,7 +150,10 @@ def dict2et(xmldict, roottag='data', listnames=None):
 
 
 def list2et(xmllist, root, elementname):
-    """Converts a dict to an Elementtree."""
+    """Converts a list to an Elementtree.
+    
+        See also dict2et()
+    """
 
     basexml = dict2et({root: xmllist}, 'xml', listnames={root: elementname})
     return basexml.find(root)
@@ -141,6 +168,10 @@ def dict2xml(datadict, roottag='data', listnames=None):
 
 
 def list2xml(datadict, root, elementname):
+    """Converts a list to an UTF-8 encoded XML string.
+    
+    See also dict2et()
+    """
     return ET.tostring(list2et(xmllist, root, elementname), 'utf-8')
 
 
@@ -219,6 +250,8 @@ def test():
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
     d = make_struct({
         'item1': 'string',
         'item2': ['dies', 'ist', 'eine', 'liste'],
