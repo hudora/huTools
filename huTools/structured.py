@@ -11,9 +11,14 @@ structured.py - handle structured data/dicts/objects
 
 import xml.etree.cElementTree as ET
 import os.path
-import simplejson as json
 import sys
 import collections
+
+# TODO: move to hujson
+try:
+    from django.utils import simplejson as json # Google appengine
+except:
+    import simplejson as json
 
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
@@ -159,20 +164,50 @@ def list2et(xmllist, root, elementname):
     return basexml.find(root)
 
 
-def dict2xml(datadict, roottag='data', listnames=None):
+def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
     """Converts a dictionary to an UTF-8 encoded XML string.
 
     See also dict2et()
     """
-    return ET.tostring(dict2et(datadict, roottag, listnames), 'utf-8')
+    tree = dict2et(datadict, roottag, listnames)
+    if pretty:
+        indent(tree)
+    return ET.tostring(tree, 'utf-8')
 
 
-def list2xml(datadict, root, elementname):
+def list2xml(datadict, root, elementname, pretty=False):
     """Converts a list to an UTF-8 encoded XML string.
 
     See also dict2et()
     """
-    return ET.tostring(list2et(xmllist, root, elementname), 'utf-8')
+    tree = list2et(xmllist, root, elementname)
+    if pretty:
+        indent(tree)
+    return ET.tostring(tree, 'utf-8')
+
+
+# From http://effbot.org/zone/element-lib.htm
+# prettyprint: Prints a tree with each node indented according to its depth. This is 
+# done by first indenting the tree (see below), and then serializing it as usual.
+# indent: Adds whitespace to the tree, so that saving it as usual results in a prettyprinted tree.
+# in-place prettyprint formatter
+
+def indent(elem, level=0):
+    i = "\n" + level*" "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + " "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for child in elem:
+            indent(child, level+1)
+        if not child.tail or not child.tail.strip():
+            child.tail = i
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
 
 
 def test():
