@@ -3,9 +3,7 @@
 *~
 .DS_Store
 dist/
-dist/*
 docs/_build/doctrees/*
 huTools.egg-info/
-huTools.egg-info/*
-testenv
-virtual-env/*
+testenv/
+build/

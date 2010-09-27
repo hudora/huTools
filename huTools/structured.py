@@ -2,16 +2,24 @@
 
 """
 structured.py - handle structured data/dicts/objects
+"""
 
-Created by Maximillian Dornseif on 2009-12-27.
-Created by Maximillian Dornseif on 2010-06-04.
-Copyright (c) 2009, 2010 HUDORA. All rights reserved."""
+# Created by Maximillian Dornseif on 2009-12-27.
+# Created by Maximillian Dornseif on 2010-06-04.
+# Copyright (c) 2009, 2010 HUDORA. All rights reserved.
+
 
 import xml.etree.cElementTree as ET
 import os.path
-import simplejson as json
 import sys
 import collections
+
+# TODO: move to hujson
+try:
+    from django.utils import simplejson as json # Google appengine
+except:
+    import simplejson as json
+
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
 class Struct(object):
@@ -32,7 +40,26 @@ class Struct(object):
 
 def make_struct(obj, default=None):
     """Converts a dict to an object, leaves the object untouched.
-    Read Only!
+
+    Someting like obj.vars() = dict() - Read Only!
+
+    >>> obj = make_struct(dict(foo='bar'))
+    >>> obj.foo
+    'bar'
+
+    make_struct leaves objects alone.
+    >>> class MyObj(object): pass
+    >>> data = MyObj()
+    >>> data.foo = 'bar'
+    >>> obj = make_struct(data)
+    >>> obj.foo
+    'bar'
+
+    make_struct also is idempotent
+    >>> obj = make_struct(make_struct(dict(foo='bar')))
+    >>> obj.foo
+    'bar'
+
     """
     if not hasattr(obj, '__dict__') and isinstance(obj, collections.Mapping):
         struc = Struct(obj, default=default)
@@ -69,33 +96,35 @@ def dict2et(xmldict, roottag='data', listnames=None):
     """Converts a dict to an Elementtree.
 
     Converts a dictionary to an XML ElementTree Element::
-    
-    >>> data = {"nr": "xq12", "positionen": [{"menge": 12}, {"menge": 2}]}
-    >>> root = ConvertDictToXml(data)
+
+    >>> data = {"nr": "xq12", "positionen": [{"m": 12}, {"m": 2}]}
+    >>> root = dict2et(data)
     >>> ET.tostring(root)
-    <data><nr>xq12</nr><positionen><item><menge>12</menge></item><item><menge>2</menge></item></positionen></data>
-    
+    '<data><nr>xq12</nr><positionen><item><m>12</m></item><item><m>2</m></item></positionen></data>'
+
     Per default ecerything ins put in an enclosing '<data>' element. Also per default lists are converted
     to collecitons of `<item>` elements. But by provding a mapping between list names and element names,
     you van generate different elements::
-    
-    >>> data = {"positionen": [{"m": 12}, {"m": 2}]}
-    >>> root = ConvertDictToXml(data, roottag='xml)
-    >>> ET.tostring(root)
-    <xml><positionen><item><m>12</m></item><item><m>2</m></item></positionen></xml>
 
-    >>> root = ConvertDictToXml(data, roottag='xml, listnames={'positionen': 'position'})
+    >>> data = {"positionen": [{"m": 12}, {"m": 2}]}
+    >>> root = dict2et(data, roottag='xml')
     >>> ET.tostring(root)
-    <xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>
+    '<xml><positionen><item><m>12</m></item><item><m>2</m></item></positionen></xml>'
+
+    >>> root = dict2et(data, roottag='xml', listnames={'positionen': 'position'})
+    >>> ET.tostring(root)
+    '<xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>'
 
     >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
     ... "ort": u"Hücksenwagen",
     ... "positionen": [{"menge": 12, "artnr": "14640/XL", "posnr": 1},],
     ... "versandeinweisungen": [{"guid": "2103839-XalE", "bezeichner": "avisierung48h",
     ...                          "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
-    ...]}
+    ... ]}
 
-    >>> print ET.tostring(rtoxml(data, 'kommiauftrag', listnames={'positionen': 'position', 'versandeinweisungen': 'versandeinweisung'}))
+    >>> print ET.tostring(dict2et(data, 'kommiauftrag',
+    ... listnames={'positionen': 'position', 'versandeinweisungen': 'versandeinweisung'}))
+    ...  # doctest: +SKIP
     '''<kommiauftrag>
     <anliefertermin>2009-11-25</anliefertermin>
     <positionen>
@@ -117,7 +146,7 @@ def dict2et(xmldict, roottag='data', listnames=None):
     <kommiauftragsnr>2103839</kommiauftragsnr>
     </kommiauftrag>'''
     """
-    
+
     if not listnames:
         listnames = {}
     root = ET.Element(roottag)
@@ -126,22 +155,59 @@ def dict2et(xmldict, roottag='data', listnames=None):
 
 
 def list2et(xmllist, root, elementname):
-    """Converts a dict to an Elementtree."""
+    """Converts a list to an Elementtree.
+
+        See also dict2et()
+    """
 
     basexml = dict2et({root: xmllist}, 'xml', listnames={root: elementname})
     return basexml.find(root)
 
 
-def dict2xml(datadict, roottag='data', listnames=None):
+def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
     """Converts a dictionary to an UTF-8 encoded XML string.
-    
+
     See also dict2et()
     """
-    return ET.tostring(dict2et(datadict, roottag, listnames), 'utf-8')
+    tree = dict2et(datadict, roottag, listnames)
+    if pretty:
+        indent(tree)
+    return ET.tostring(tree, 'utf-8')
 
 
-def list2xml(datadict, root, elementname):
-    return ET.tostring(list2et(xmllist, root, elementname), 'utf-8')
+def list2xml(datadict, root, elementname, pretty=False):
+    """Converts a list to an UTF-8 encoded XML string.
+
+    See also dict2et()
+    """
+    tree = list2et(xmllist, root, elementname)
+    if pretty:
+        indent(tree)
+    return ET.tostring(tree, 'utf-8')
+
+
+# From http://effbot.org/zone/element-lib.htm
+# prettyprint: Prints a tree with each node indented according to its depth. This is 
+# done by first indenting the tree (see below), and then serializing it as usual.
+# indent: Adds whitespace to the tree, so that saving it as usual results in a prettyprinted tree.
+# in-place prettyprint formatter
+
+def indent(elem, level=0):
+    i = "\n" + level*" "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + " "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for child in elem:
+            indent(child, level+1)
+        if not child.tail or not child.tail.strip():
+            child.tail = i
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
 
 
 def test():
@@ -185,7 +251,7 @@ def test():
                               "bezeichner": "abpackern140",
                               "anweisung": u"Paletten höchstens auf 140 cm Packen"}]
     }
-    
+
     xmlstr = dict2xml(data, roottag='kommiauftrag')
     # print xmlstr
 
@@ -219,6 +285,8 @@ def test():
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
     d = make_struct({
         'item1': 'string',
         'item2': ['dies', 'ist', 'eine', 'liste'],
