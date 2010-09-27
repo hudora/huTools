@@ -28,6 +28,7 @@ classifiers = [
 install_requires = [
     # -*- Install requires: -*-
     'setuptools',
+    'decorator'
     ]
 
 entry_points="""
@@ -71,6 +72,7 @@ options(
             # -*- Virtualenv packages to install: -*-
             'github-tools',
             "nose",
+            'decorator',
             "Sphinx>=0.6b1",
             "pkginfo", 
             "virtualenv"],
