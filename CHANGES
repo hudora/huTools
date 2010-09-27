@@ -2,7 +2,8 @@
 Changes
 =======
 
-* 0.50    monetary - easy but often used monetary functions
+* 0.52:   postmark API client - see http://postmarkapp.com/
+* 0.50:   monetary - easy but often used monetary functions
 * 0.49:   depreciated huTools.protocols, removed huTools.struct
 * 0.48:   renamed struct to structured, luids.guid128() now uses uuid1
 * 0.47p1: struct now can handle copy.copy()

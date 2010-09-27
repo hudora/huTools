@@ -11,12 +11,13 @@ Consider it BSD licensed.
 """
 
 
+from cStringIO import StringIO
+from httplib2 import Http
+import logging
 import os
 import os.path
 import uuid
 import xml.etree.ElementTree as ET
-from cStringIO import StringIO
-from httplib2 import Http
 
 
 class JasperException(RuntimeError):
@@ -109,6 +110,7 @@ class JasperGenerator(object):
             content_type, content = encode_multipart_formdata(fields=dict(design=design, xpath=xpath, 
                                                                       xmldata=xmldata))
 
+        logging.debug('POSTing to %s' % url)
         resp, content = Http().request(url, 'POST', body=content, headers={"Content-Type": content_type})
         if not resp.get('status') == '200':
             raise JasperException("%s -- %r" % (content, resp))
