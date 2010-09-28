@@ -9,12 +9,15 @@ Created by Maximillian Dornseif on 2010-09-27.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
+
 import email
+import httplib
+import hujson
+import logging
 import sys
 import urllib
 import urllib2
-import httplib
-import hujson
+
 
 __POSTMARK_URL__ = 'http://api.postmarkapp.com/'
 
@@ -56,7 +59,7 @@ def send_mail(message, api_key=None):
         for attachment in message.get('Attachments', []):
             attachments.append({
                     "Name": attachment['Name'],
-                    "Content": attachment['Name'].encode('base64'),
+                    "Content": attachment['Content'].encode('base64'),
                     "ContentType": attachment['ContentType'],
                     })
         if attachments:
@@ -73,6 +76,7 @@ def send_mail(message, api_key=None):
             }
         )
         
+        logging.debug('Accessing %semail' % __POSTMARK_URL__)
         try:
             result = urllib2.urlopen(req)
             result.close()
