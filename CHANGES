@@ -2,6 +2,7 @@
 Changes
 =======
 
+* 0.52p1  Ported JasperGenerator.get_report from pyJasper
 * 0.52:   postmark API client - see http://postmarkapp.com/
 * 0.50:   monetary - easy but often used monetary functions
 * 0.49:   depreciated huTools.protocols, removed huTools.struct
