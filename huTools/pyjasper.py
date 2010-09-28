@@ -102,8 +102,7 @@ class JasperGenerator(object):
     
     def get_report(self):
         """Get JasperReport template"""
-        with open(self.reportname) as report:
-            return report.read()
+        return open(self.reportname).read()
     
     def generate_pdf_server(self, design, xpath, xmldata, multi=False):
         """Generate report via pyJasperServer."""
