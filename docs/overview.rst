@@ -83,6 +83,13 @@ luids
    :members:
 
 
+monetary
+========
+
+.. automodule:: huTools.monetary
+   :members:
+
+
 NetStringIO
 ===========
 
@@ -108,6 +115,13 @@ protocols
 =========
 
 .. automodule:: huTools.protocols
+   :members:
+
+
+pyjasper
+========
+
+.. automodule:: huTools.pyjasper
    :members:
 
 

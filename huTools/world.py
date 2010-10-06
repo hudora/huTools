@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-world.py - countries of the world (to be procise: countries we do buiseness with)
+hutools/world - countries of the world (to be procise: countries we do buiseness with)
+
+Most interesting are the constants COUNTRY_CHOICES and COUNTRIES.
+
+COUNTRY_CHOICES = [('DE', 'Deutschland'), ('AT', u'Österreich'), ...]
+COUNTRIES = ['DE', 'AT', ...]
 
 Created by Maximillian Dornseif on 2007-05-01.
-Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
+Copyright (c) 2007, 2010 HUDORA GmbH. BSD Licensed.
 """
 
 import doctest
 import sys
-
-__revision__ = "$Revision$"
 
 COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    + sorted([
@@ -51,6 +54,9 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('MT', 'Malta'),
                    ('CY', 'Zypern'),
                   ])
+
+
+COUNTRIES = dict(COUNTRY_CHOICES).keys()
 
 
 # Stand: Mai 2009 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.
