@@ -150,6 +150,7 @@ Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with 
 * you can assume that setuptools, virtualenv, and pip are installed
 * requirements have to be mentioned in `requirements.txt` and `setup.py`
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
+* Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
 
 
 ## Identifiers
