@@ -11,12 +11,39 @@ Consider it BSD licensed.
 """
 
 
-import os
-import os.path
-import uuid
-import xml.etree.ElementTree as ET
 from cStringIO import StringIO
 from httplib2 import Http
+import logging
+import os
+import os.path
+import time
+import uuid
+import xml.etree.ElementTree as ET
+
+
+def fetch_httplib2(url, content, content_type):
+    """Fetch an url with httplib2"""
+    resp, content = Http().request(url, 'POST', body=content, headers={"Content-Type": content_type})
+    return resp.get('status'), content
+
+
+def fetch(url, content, content_type):
+    "fetch an url via appengine"
+    result = urlfetch.fetch(url=url,
+                            payload=content,
+                            method=urlfetch.POST,
+                            headers={'Content-Type': content_type},
+                            deadline=10)
+    return result.status_code, result.content
+
+
+# TRy appengine specific code
+try:
+    from google.appengine.api import urlfetch
+    logging.info("using urlfetch")
+except ImportError:
+    fetch = fetch_httplib2
+    logging.info("using httplib2")
 
 
 class JasperException(RuntimeError):
@@ -99,6 +126,10 @@ class JasperGenerator(object):
         buf.close()
         return ret
     
+    def get_report(self):
+        """Get JasperReport template"""
+        return open(self.reportname).read()
+    
     def generate_pdf_server(self, design, xpath, xmldata, multi=False):
         """Generate report via pyJasperServer."""
         url = self.serverurl
@@ -109,14 +140,18 @@ class JasperGenerator(object):
             content_type, content = encode_multipart_formdata(fields=dict(design=design, xpath=xpath, 
                                                                       xmldata=xmldata))
 
-        resp, content = Http().request(url, 'POST', body=content, headers={"Content-Type": content_type})
-        if not resp.get('status') == '200':
-            raise JasperException("%s -- %r" % (content, resp))
+        logging.info('POSTing %d bytes to %s' % (len(content), url))
+        start = time.time()
+        status, content = fetch(url, content, content_type)
+        logging.debug('POSTing to %s took %f seconds' % (url, time.time()-start))
+
+        if not status == '200':
+            raise JasperException("%s -- %r" % (content, status))
         return content
 
     def generate_pdf(self, data=None):
         """Generates a PDF document by using Jasper-Reports."""
-        design = open(self.reportname).read()
+        design = self.get_report()
         xmldata = self.get_xml(data)
         if self.debug:
             open('/tmp/pyjasper-%s-debug.xml' % os.path.split(self.reportname)[-1], 'w').write(xmldata)

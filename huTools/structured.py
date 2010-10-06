@@ -13,6 +13,7 @@ import xml.etree.cElementTree as ET
 import os.path
 import sys
 import collections
+import logging
 
 # TODO: move to hujson
 try:
@@ -39,7 +40,7 @@ class Struct(object):
 
 
 def make_struct(obj, default=None):
-    """Converts a dict to an object, leaves the object untouched.
+    """Converts a dict to an object, leaves objects untouched.
 
     Someting like obj.vars() = dict() - Read Only!
 
@@ -61,12 +62,15 @@ def make_struct(obj, default=None):
     'bar'
 
     """
-    if not hasattr(obj, '__dict__') and isinstance(obj, collections.Mapping):
+    if (not hasattr(obj, '__dict__')) and hasattr(obj, 'iterkeys'):
+        # this should be a dict
         struc = Struct(obj, default=default)
+        # handle recursive sub-dicts
         for k, v in obj.items():
             setattr(struc, k, make_struct(v))
         return struc
-    return obj
+    else:
+        return obj
 
 
 # Code is based on http://code.activestate.com/recipes/573463/

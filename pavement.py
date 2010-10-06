@@ -18,7 +18,7 @@ except ImportError, e:
 
 
 
-version = '0.51'
+version = '0.52p1'
 
 classifiers = [
     # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -28,6 +28,7 @@ classifiers = [
 install_requires = [
     # -*- Install requires: -*-
     'setuptools',
+    'decorator'
     ]
 
 entry_points="""
@@ -71,6 +72,7 @@ options(
             # -*- Virtualenv packages to install: -*-
             'github-tools',
             "nose",
+            'decorator',
             "Sphinx>=0.6b1",
             "pkginfo", 
             "virtualenv"],
