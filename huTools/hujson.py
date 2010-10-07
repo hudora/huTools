@@ -22,6 +22,10 @@ def _unknown_handler(value):
         return str(value)
     elif isinstance(value, datetime.datetime):
         return value.isoformat() + 'Z'
+    elif hasattr(value, 'properties'):
+        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
+    elif 'google.appengine.api.users.User' in str(type(value)):
+        return "%s/%s" % (value.user_id(), value.email())
     raise UnknownSerializerError("%s(%s)" % (type(value), value))
 
 
