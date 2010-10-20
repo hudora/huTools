@@ -40,6 +40,8 @@ def convert_to_date(date):
     elif isinstance(date, basestring):
         date = date[:10]  # strip timestamp
         return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    elif not date:
+        return None
     raise ValueError("Unknown value %r (%s)" % (date, type(date)))
     
 

@@ -11,7 +11,7 @@ Copyright (c) 2007 HUDORA GmbH. All rights reserved.
 import cPickle as pickle
 import functools
 import hashlib
-from decorator import decorator
+from _decorator import decorator
 from functools import wraps
 
 
