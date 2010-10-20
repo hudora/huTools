@@ -27,6 +27,7 @@
                 <xsl:for-each select="descendant::versandeinweisung">
                     <xsl:if test="contains('packliste
                                             separater_lieferschein
+                                            avisieren_unter
                                             abholer
                                             hebebuehne',
                                             bezeichner)">
