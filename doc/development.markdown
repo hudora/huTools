@@ -7,19 +7,11 @@ Here we store Information in regard to Software Development at Hudora.
 
 * We use [github.com/hudora][github] for version control
   ([Introduction][githubintro])  - you should create an account there
-* We use [help.hudora.biz][tender] for support
-  ([Introduction][tenderintro]) - you should create an account there
-* We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests
-  ([Introduction][lighthousintro]) - you should create an account there
 * [Textmate][textmatetips] is the offical editor at Hudora Cybernetics. Use the `PyBicicle Repair Man`
   and `Python PEP8` Plugins.
 
 [github]: http://github.com/hudora
 [githubintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/github-it-is/
-[tender]: http://help.hudora.biz/
-[tenderintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/tender-it-is/
-[lighthouseapp]: http://hudora.lighthouseapp.com
-[lighthousintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/lighthouse-it-is/
 [textmatetips]: http://al3x.net/2008/12/03/how-i-use-textmate.html
 
 
@@ -50,7 +42,7 @@ Here we store Information in regard to Software Development at Hudora.
  * Follow [PEP 8][pep8].
    Use [pep8.py][pep8py] `--ignore=E501,W291 --repeat` to verify compliance.
  * Follow [PEP 257][pep257] for docstrings
- * No tabs. Not anywhere. Always indent with 4 spaces.
+ * No tabs. Not anywhere (except in Makefiles). Always indent with 4 spaces.
  * Use [pylint][pylint]. Aim for a score of at least 8. The higher the better. If you score is below 8
    be prepared to present a good reason for it.
  * Classes/Variables which reference Objects specific to our ERP/our Industry/german trade
@@ -71,6 +63,7 @@ Here we store Information in regard to Software Development at Hudora.
    Cent instead of Euro, Millimeters instead of Centimeters and so on.
  * Write doctests. Write unittests. Aim for a [test coverage][coverage]
    of at least 80%. The higher the better.
+ * Provide a `Makefile` with `dependencies`, `test` and `check` (pylint/pep8) targets.
 
 [pep8]: http://www.python.org/dev/peps/pep-0008/
 [pep8py]: http://svn.browsershots.org/trunk/devtools/pep8/pep8.py
@@ -94,18 +87,34 @@ Use our naming conventions for [Adresses][adressprot], [Orders][orderprotocol] a
 [icwmsprot]: http://github.com/hudora/huTools/blob/master/doc/standards/messaging_ic-wms.markdown
 
 
+## Identifiers
+
+Use global unique identifiers where ever possible. `huTools.luids.guid128()` creates somewhat compact representations of random IDs. It's even better if you can find an standartisized Scheme of unique IDs. Good Candidates are found in the [EPC Tag Data Standard (TDS)][tds], in [Tag URIs][taguri] as defined in [RfC 4151][rfc4151].
+
+[tds]: http://www.epcglobalinc.org/standards/tds/
+[taguri]: http://en.wikipedia.org/wiki/Tag_URI
+[rfc4151]: http://tools.ietf.org/html/rfc4151
+
+
+## Misc
+
+* you can assume that setuptools, virtualenv, and pip are installed
+* requirements have to be mentioned in `requirements.txt` and `setup.py`
+* Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
+* Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
+* use [huTools](http://hudora.github.com/huTools/) where appropriate
+
+
 ## Django Specifica
 
 * Target [Django 1.1.1][django]
 * make extensive use of the [Django Admin][djangoadmin]
 * [hd_django_project_template][hd_django_project_template] codifies our current best practices to structure
   a project.
-* use [`cs.global_django_settings.py`][global_django_settings].
+* use [`cs.global_django_settings.py`][global_django_settings] (internal use only).
 * including the directory `generic_templates` containing git@github.com:hudora/html.git
-  (`git clone git@github.com:hudora/html.git html;ln -s html/templates generic_templates`)
+  (`git clone git@github.com:hudora/html.git html;ln -s html/templates generic_templates`) (internal use only)
 * Use [googleappsauth][googleappsauth] to authenticate local users ([example][googleappsauthexample])
-* Use [hoptoad][hoptoad] to report errors ([example][hoptoadexample]).
-* Try to use [Silver Lining][silverlining].
 
 [django]: http://www.djangoproject.com/
 [djangoadmin]: http://docs.djangoproject.com/en/1.1/ref/contrib/admin/
@@ -145,21 +154,12 @@ letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefi
 Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with a decent value.
 
 
-## Misc
+## Tools for internal Developers
 
-* you can assume that setuptools, virtualenv, and pip are installed
-* requirements have to be mentioned in `requirements.txt` and `setup.py`
-* Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
-* Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
-
-
-## Identifiers
-
-Use global unique identifiers where ever possible. `huTools.luids.guid128()` creates somewhat compact representations of random IDs. It's even better if you can find an standartisized Scheme of unique IDs. Good Candidates are found in the [EPC Tag Data Standard (TDS)][tds], in [Tag URIs][taguri] as defined in [RfC 4151][rfc4151].
-
-[tds]: http://www.epcglobalinc.org/standards/tds/
-[taguri]: http://en.wikipedia.org/wiki/Tag_URI
-[rfc4151]: http://tools.ietf.org/html/rfc4151
+* We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests
+  ([Introduction][lighthousintro]) - you should create an account there
+[lighthouseapp]: http://hudora.lighthouseapp.com
+[lighthousintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/lighthouse-it-is/
 
 
 ## Required Reading
