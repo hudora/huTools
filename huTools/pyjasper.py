@@ -117,12 +117,11 @@ class JasperGenerator(object):
         self.debug = debug
         self.serverurl = serverurl
         if not self.serverurl:
-            if config:
-                try:
-                    self.serverurl = config.PYJASPER_SERVLET_URL
-                except:
-                    self.serverurl = os.getenv('PYJASPER_SERVLET_URL',
-                                               default='http://localhost:8080/pyJasper/jasper.py')
+            try:
+                self.serverurl = config.PYJASPER_SERVLET_URL
+            except:
+                self.serverurl = os.getenv('PYJASPER_SERVLET_URL',
+                                           default='http://localhost:8080/pyJasper/jasper.py')
 
     def generate_xml(self, data=None):
         """To be overwritten by subclasses.
