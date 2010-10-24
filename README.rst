@@ -18,12 +18,12 @@ Installation
 
 The easiest way to get huTools is if you have setuptools_ installed::
 
-	easy_install huTools
+    easy_install huTools
 
 Without setuptools, it's still pretty easy. Download the huTools.tgz file from 
 `huTools's Cheeseshop page`_, untar it and run::
 
-	python setup.py install
+    python setup.py install
 
 .. _huTools's Cheeseshop page: http://pypi.python.org/pypi/huTools/
 .. _setuptools: http://peak.telecommunity.com/DevCenter/EasyInstall
@@ -38,3 +38,18 @@ at http://github.com/hudora/huTools/issues.
 
 See `CHANGES <http://github.com/hudora/huTools/blob/master/CHANGES>`_
 for version differences.
+
+License
+=======
+
+This distribution includes `_jsonlib.py <http://pypi.python.org/pypi/jsonlib/>`_
+Copyright (c) 2008-2009 John Millikin <jmillikin@gmail.com>
+Distributed under the GNU General Public License
+
+This distribution contains `_decorator.py <http://pypi.python.org/pypi/decorator>`_
+Copyright (c) 2005, Michele Simionato
+Distributed under a MIT-like License.
+
+This distribution contains `poster_encode.py <http://atlee.ca/software/poster/>`_ 
+Copyright (c) 2008-2010 Chris AtLee <chris@atlee.ca>
+Distributed under a MIT-like License.

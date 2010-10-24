@@ -5,7 +5,7 @@
 pyJasper client.py - Way to a pyJasper Server.
 See http://pypi.python.org/pypi/pyJasper/ for further enligthenment.
 
-You must tell the code where the pyJasper Servlet is running. Either gife the URL via
+You must tell the code where the pyJasper Servlet is running. Either give the URL via
 instatntion `JasperGenerator(serverurl='MYURL')`.
 
 Alternatively the code tries to import a module config and find in the the constant

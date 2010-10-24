@@ -158,10 +158,13 @@ XSLT stylesheet:
 
 [13]: http://www.imc.org/pdi/vcardoverview.html
 [14]: http://www.glimbh.eu/edifact/m_1002/m_A/trsd/trsdnad.htm
-[15]: http://www.edifactory.de/seginfo.php?s=D07A&g=LOC
-[16]: http://www.edifactory.de/seginfo.php?s=D07A&g=ADR
+[15]: http://www.edifactory.de/seglist.D09A?s=LOC
+[16]: http://www.edifactory.de/seglist.D09A?s=ADR
 
 
 ## See Also
 
-VerySimpleOrderProtocol and LieferungProtocol.
+[VerySimpleOrderProtocol][17] and [LieferungProtocol][18].
+
+[17]: http://github.com/hudora/huTools/blob/master/doc/standards/verysimpleorderprotocol.markdown#readme
+[18]: http://github.com/hudora/huTools/blob/master/doc/standards/lieferungprotocol.markdown
