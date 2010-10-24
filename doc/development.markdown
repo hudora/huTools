@@ -103,7 +103,7 @@ Use global unique identifiers where ever possible. `huTools.luids.guid128()` cre
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 * Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
 * use [huTools](http://hudora.github.com/huTools/) where appropriate
-
+* `Iñtërnâtiônàlizætiøn <script>alert("XSS");</script> %+'"<!--` might be a goot test string.
 
 ## Django Specifica
 

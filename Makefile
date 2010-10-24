@@ -1,5 +1,5 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
-PATH := ./testenv/bin:$(PATH)
+PATH := ./pythonenv/bin:$(PATH)
 
 default: dependencies check test examples
 
@@ -16,18 +16,20 @@ check:
 	-/usr/local/hudorakit/bin/hd_pylint huTools
 
 test:
-	PYTHONPATH=. python huTools/NetStringIO.py
-	PYTHONPATH=. python huTools/calendar/formats.py
-	PYTHONPATH=. python huTools/calendar/workdays.py
-	PYTHONPATH=. python huTools/checksumming.py
-	PYTHONPATH=. python huTools/humessaging.py
-	PYTHONPATH=. python huTools/luids.py
-	PYTHONPATH=. python huTools/obfuscation.py
-	PYTHONPATH=. python huTools/unicode.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/workdays.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/checksumming.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
+	PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
 
 coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
-	printf '/usr/local/lib/.*\n/opt/.*\ntestenv/.*\n' >> .figleaf-exclude.txt
+	printf '/usr/local/lib/.*\n/opt/.*\npythonenv/.*\n' >> .figleaf-exclude.txt
 	printf '.*manage.py\n.*settings.py\n.*setup.py\n.*urls.py\n' >> .figleaf-exclude.txt
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/NetStringIO.py
 	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/ReReadingConfigParser.py
@@ -53,8 +55,8 @@ build: examples
 	python setup.py build
 
 dependencies:
-	virtualenv testenv
-	pip -q install -E testenv -r requirements.txt
+	virtualenv pythonenv
+	pip -q install -E pythonenv -r requirements.txt
 
 statistics:
 	sloccount --wide --details huTools | tee sloccount.sc
@@ -77,7 +79,7 @@ examples: doc/standards/examples/warenzugang.xml doc/standards/examples/kommiauf
 
 
 clean:
-	rm -Rf testenv build dist html test.db pylint.out sloccount.sc pip-log.txt
+	rm -Rf testenv pythonenv build dist html test.db pylint.out sloccount.sc pip-log.txt
 	find . -name '*.pyc' -delete
 
-.PHONY: build clean install upload check doc
+.PHONY: build clean install upload check doc docs test

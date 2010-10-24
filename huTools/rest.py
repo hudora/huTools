@@ -7,7 +7,7 @@ Created by Christian Klein on 2010-07-21.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
-import httplib2
+import huTools.http._httplib2 as httplib2
 import os
 import tempfile
 import urllib
@@ -73,6 +73,7 @@ class Client(object):
         self.password = password
         self.endpoint = endpoint
         
+        # TODO: move to huTools.http.fetch
         cachedir = os.path.join(tempfile.gettempdir(), 'robotrock')
         self.connection = httplib2.Http(cache=cachedir, timeout=20)
         self.connection.add_credentials(username, password, domain=urlparse.urlsplit(self.endpoint).netloc)

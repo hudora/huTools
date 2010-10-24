@@ -10,7 +10,7 @@
       <Liefertermin>20091125</Liefertermin>
       <Terminart>BIS</Terminart>
       <Textcode1>8</Textcode1>
-      <Auftragstext>abholer: Abholung durch Spedition Dornseif$hebebuehne: True$</Auftragstext>
+      <Auftragstext>abholer: Abholung durch Spedition Dornseif$avisieren_unter: +49123456$hebebuehne: True$</Auftragstext>
       <Textcode2>2</Textcode2>
       <Kommissioniertext>etiketten_speicherort: c:\desktop\Programm Data\schrecklicher windows pfad$sortenrein: True$packhoehe: 1100</Kommissioniertext>
       <EmpfaengerILN/>
