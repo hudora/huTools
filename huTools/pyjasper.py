@@ -26,8 +26,9 @@ try:
     from django.conf import settings
     # trigger the lazy importer
     getattr(settings, 'DUMMY', None)
-except ImportError:
+except (ImportError, EnvironmentError):
     settings = object()
+
 try:
     import config
 except:
