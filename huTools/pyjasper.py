@@ -77,6 +77,7 @@ class JasperGenerator(object):
         self.xpath = None
         self.debug = debug
         self.serverurl = _find_server(serverurl)
+        self.extra = {}
 
     def generate_xml(self, data=None):
         """To be overwritten by subclasses.
@@ -111,7 +112,7 @@ class JasperGenerator(object):
         if multi:
             content = dict(designs=design, xpath=xpath, xmldata=xmldata)
         else:
-            content = dict(design=design, xpath=xpath, xmldata=xmldata)
+            content = dict(design=design, xpath=xpath, xmldata=xmldata, **self.extra)
         status, _headers, content = fetch(self.serverurl, content, 'POST')
 
         if not status == 200:
