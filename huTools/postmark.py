@@ -21,6 +21,7 @@ import urllib2
 
 __POSTMARK_URL__ = 'http://api.postmarkapp.com/'
 
+
 def send_mail(message, api_key=None):
         '''
         Send the email through the Postmark system.
@@ -46,7 +47,7 @@ def send_mail(message, api_key=None):
         Attachments:    A list of attachments. Attachments can be either
                         a list of {name, data, content_type} dicts,
         '''
-        
+
         if 'Sender' in message and ('From' not in message):
             message['From'] = message['Sender']
         for attr in 'From To Subject'.split():
@@ -75,7 +76,7 @@ def send_mail(message, api_key=None):
                 'X-Postmark-Server-Token': api_key,
             }
         )
-        
+
         logging.debug('Accessing %semail' % __POSTMARK_URL__)
         try:
             result = urllib2.urlopen(req)

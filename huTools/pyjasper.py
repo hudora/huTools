@@ -163,7 +163,7 @@ class JasperGenerator(object):
         logging.info('POSTing %d bytes to %s' % (len(content), url))
         start = time.time()
         status, content = fetch(url, content, content_type)
-        logging.debug('POSTing to %s took %f seconds' % (url, time.time()-start))
+        logging.debug('POSTing to %s took %f seconds' % (url, time.time() - start))
 
         if not status == '200':
             raise JasperException("%s -- %r" % (content, status))

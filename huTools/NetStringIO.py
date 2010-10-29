@@ -22,8 +22,6 @@ __copyright__ = """(c) 2001 twisd AG, Bonn - http://www.twisd.de/
 further distribution is granted under the terms of LGPL or classical
 MIT Licence."""
 
-
-
 # * Im not sure at the moment what NetStringIO has to implement to
 #   qualify as an file-like object.
 #
@@ -33,7 +31,10 @@ MIT Licence."""
 # * Should I implement readline(), readlines() and writelinesU()?
 #   They do not realy make sense withe netstrings, do they?
 
-import os, sys, string
+import os
+import string
+import sys
+
 
 class NetStringIO:
     __doc__ = """Warping arround a file object changing all I/O to netstrings.
@@ -49,7 +50,7 @@ class NetStringIO:
     string argument. You even can specify another delimiter than '\n'
     """
 
-    def __init__(self, fileo, delim = '\n'):
+    def __init__(self, fileo, delim='\n'):
         __doc__ = """Create a Netstring object warping a file-like object.
 
         n = NetStringIO.NetStringIO(file [, delimiter])
@@ -68,12 +69,10 @@ class NetStringIO:
         self.file = fileo
         self.delim = delim
 
-
     def close(self):
         __doc__ = "Closes the underlying file object."
 
         self.file.close()
-
 
     def isatty(self):
         __doc__ = """Checks if the underlying file Object is a tty.
@@ -83,7 +82,6 @@ class NetStringIO:
         """
 
         return self.file.isatty()
-
 
     def read(self):
         """Read from the underlying file object.
@@ -104,9 +102,9 @@ class NetStringIO:
                 # we are ready reading the length
                 break
             elif not c:
-                raise IOError, "short netstring read at length specification"
+                raise IOError("short netstring read at length specification")
             elif c not in string.digits:
-                raise IOError, "not a valid netstring: %s is not digit" % c
+                raise IOError("not a valid netstring: %s is not digit" % c)
             l += c
             c = self.file.read(1)
 
@@ -122,15 +120,14 @@ class NetStringIO:
         while len(s) < strlen:
             s1 = self.file.read(strlen - len(s))
             if s1 == "":
-                raise IOError, "short netstring read at netstring body"
+                raise IOError("short netstring read at netstring body")
             s = s + s1
 
         c = self.file.read(1 + len(self.delim))
         if c != "," + self.delim:
-            raise IOError, "not a valid netstring: wrong termination"
+            raise IOError("not a valid netstring: wrong termination")
 
         return s
-
 
     def write(self, s):
         __doc__ = """Writes a Netstring to the underlying fileobject."""

@@ -12,8 +12,9 @@ hudson: dependencies test statistics coverage
 	grep "our code has been rated at" < .pylint.out|cut -d '/' -f 1|cut -d ' ' -f 7 >> .pylint.score
 
 check:
-	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	-/usr/local/hudorakit/bin/hd_pylint huTools
+	pep8 -r --ignore=E501 huTools/
+	sh -c 'PYTHONPATH=`python config.py` pyflakes huTools/'
+	-sh -c 'PYTHONPATH=`python config.py` pylint -iy --max-line-length=110 huTools/' # -rn
 
 test:
 	PYTHONPATH=. python huTools/NetStringIO.py

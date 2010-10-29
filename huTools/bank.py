@@ -9,6 +9,7 @@ Copyright (c) 2010 Christian Klein. All rights reserved.
 
 from string import ascii_uppercase
 
+
 def convert_character(string):
     """Konvertierung von nicht-numerischen Zeichen in einer IBAN"""
     result = []

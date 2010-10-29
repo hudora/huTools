@@ -42,20 +42,20 @@ else:
 def daemonize(pidfile=None, stdoutlogfile=None):
     """Detach a process from the controlling terminal and run it in the
     background as a daemon.
-    
+
     based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/278731
-    
+
     daemonize
-    
+
     1. The current working directory set to the "/" directory.
     2. The current file creation mode mask set to 0.
     3. Close all open files (1024).
     4. Redirect standard I/O streams to "/dev/null".
-    
+
     A failed call to fork() now raises an exception.
-    
+
     References
-    
+
     1. Advanced Programming in the Unix Environment: W. Richard Stevens
     2. Unix Programming Frequently Asked Questions:
             http://www.erlenstar.demon.co.uk/unix/faq_toc.html
@@ -71,7 +71,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
     except OSError, e:
         raise RuntimeError("%s [%d]" % (e.strerror, e.errno))
 
-    if (pid == 0): # The first child.
+    if (pid == 0):  # The first child.
         # To become the session leader of this new session and the process group
         # leader of the new process group, we call os.setsid(). The process is
         # also guaranteed not to have a controlling terminal.
@@ -115,11 +115,11 @@ def daemonize(pidfile=None, stdoutlogfile=None):
             # based systems).  This second fork guarantees that the child is no
             # longer a session leader, preventing the daemon from ever acquiring
             # a controlling terminal.
-            pid = os.fork() # Fork a second child.
+            pid = os.fork()  # Fork a second child.
         except OSError, e:
             raise RuntimeError("%s [%d]" % (e.strerror, e.errno))
 
-        if (pid == 0): # The second child.
+        if (pid == 0):  # The second child.
             # Since the current working directory may be a mounted filesystem, we
             # avoid the issue of not being able to unmount the filesystem at
             # shutdown time by changing it to the root directory.
@@ -129,7 +129,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
             os.umask(UMASK)
         else:
             # exit() or _exit()?  See below.
-            os._exit(0) # Exit parent (the first child) of the second child.
+            os._exit(0)  # Exit parent (the first child) of the second child.
     else:
         # exit() or _exit()?
         # _exit is like exit(), but it doesn't call any functions registered
@@ -138,7 +138,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
         # streams to be flushed twice and any temporary files may be unexpectedly
         # removed. It's therefore recommended that child branches of a fork()
         # and the parent branch(es) of a daemon use _exit().
-        os._exit(0) # Exit parent of the first child.
+        os._exit(0)  # Exit parent of the first child.
 
     # write PID file
     pid = str(os.getpid())
@@ -175,7 +175,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
     # that can be opened by this process.  If there is not limit on the
     # resource, use the default value.
     #
-    import resource             # Resource usage information.
+    import resource  # Resource usage information.
     maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
     if (maxfd == resource.RLIM_INFINITY):
         maxfd = MAXFD
@@ -184,7 +184,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
     for fd in range(0, maxfd):
         try:
             os.close(fd)
-        except OSError: # ERROR, fd wasn't open to begin with (ignored)
+        except OSError:  # ERROR, fd wasn't open to begin with (ignored)
             pass
 
     # Redirect the standard I/O file descriptors to the specified file. Since
@@ -197,10 +197,10 @@ def daemonize(pidfile=None, stdoutlogfile=None):
 
     # This call to open is guaranteed to return the lowest file descriptor,
     # which will be 0 (stdin), since it was closed above.
-    os.open(stdoutlogfile, os.O_RDWR|os.O_APPEND|os.O_CREAT) # standard input (0)
+    os.open(stdoutlogfile, os.O_RDWR | os.O_APPEND | os.O_CREAT)  # standard input (0)
 
     # Duplicate standard input to standard output and standard error.
-    os.dup2(0, 1) # standard output (1)
-    os.dup2(0, 2) # standard error (2)
+    os.dup2(0, 1)  # standard output (1)
+    os.dup2(0, 2)  # standard error (2)
 
     return 0

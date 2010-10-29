@@ -26,6 +26,7 @@ def _getattr_(obj, name, default_thunk):
 
 # from http://www.phyast.pitt.edu/~micheles/python/documentation.html
 
+
 @decorator
 def memoize(func, *args):
     """This decorator caches the results of the function it decorates.
