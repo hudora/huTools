@@ -11,17 +11,25 @@ __all__ = ['gen_boundary', 'encode_and_quote', 'MultipartParam',
 
 try:
     import uuid
+
     def gen_boundary():
         """Returns a random string to use as the boundary for a message"""
         return uuid.uuid4().hex
 except ImportError:
-    import random, sha
+    import random
+    import sha
+
     def gen_boundary():
         """Returns a random string to use as the boundary for a message"""
         bits = random.getrandbits(160)
         return sha.new(str(bits)).hexdigest()
 
-import urllib, re, os, mimetypes
+
+import mimetypes
+import os
+import re
+import urllib
+
 
 def encode_and_quote(data):
     """If ``data`` is unicode, return urllib.quote_plus(data.encode("utf-8"))
@@ -33,6 +41,7 @@ def encode_and_quote(data):
         data = data.encode("utf-8")
     return urllib.quote_plus(data)
 
+
 def _strify(s):
     """If s is a unicode string, encode it to UTF-8 and return the results,
     otherwise return str(s), or None if s is None"""
@@ -41,6 +50,7 @@ def _strify(s):
     if isinstance(s, unicode):
         return s.encode("utf-8")
     return str(s)
+
 
 class MultipartParam(object):
     """Represents a single parameter in a multipart/form-data request
@@ -220,7 +230,7 @@ class MultipartParam(object):
                 last_block += block
                 if boundary_exp.search(last_block):
                     raise ValueError("boundary found in file data")
-                last_block = last_block[-len(encoded_boundary)-2:]
+                last_block = last_block[-len(encoded_boundary) - 2:]
                 yield block
 
     def get_size(self, boundary):
@@ -233,12 +243,14 @@ class MultipartParam(object):
 
         return len(self.encode_hdr(boundary)) + 2 + valuesize
 
+
 def encode_string(boundary, name, value):
     """Returns ``name`` and ``value`` encoded as a multipart/form-data
     variable.  ``boundary`` is the boundary string used throughout
     a single request to separate variables."""
 
     return MultipartParam(name, value).encode(boundary)
+
 
 def encode_file_header(boundary, paramname, filesize, filename=None,
         filetype=None):
@@ -263,11 +275,13 @@ def encode_file_header(boundary, paramname, filesize, filename=None,
     return MultipartParam(paramname, filesize=filesize, filename=filename,
             filetype=filetype).encode_hdr(boundary)
 
+
 def get_body_size(params, boundary):
     """Returns the number of bytes that the multipart/form-data encoding
     of ``params`` will be."""
     size = sum(p.get_size(boundary) for p in MultipartParam.from_params(params))
     return size + len(boundary) + 6
+
 
 def get_headers(params, boundary):
     """Returns a dictionary with Content-Type and Content-Length headers
@@ -277,6 +291,7 @@ def get_headers(params, boundary):
     headers['Content-Type'] = "multipart/form-data; boundary=%s" % boundary
     headers['Content-Length'] = get_body_size(params, boundary)
     return headers
+
 
 def multipart_encode(params, boundary=None):
     """Encode ``params`` as multipart/form-data.
