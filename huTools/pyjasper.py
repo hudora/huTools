@@ -76,6 +76,7 @@ class JasperGenerator(object):
         self.xpath = None
         self.debug = debug
         self.serverurl = _find_server(serverurl)
+        warnings.warn("huTools.pyjasper.JasperGenerator() is deprecated use huTools.pyjasper.generate_report() instead.", DeprecationWarning, stacklevel=2)
 
     def generate_xml(self, data=None):
         """To be overwritten by subclasses.
