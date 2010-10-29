@@ -2,6 +2,7 @@
 Changes
 =======
 
+* 0.53p1: Bugfix for _convert_dict_to_xml_recurse: Do not translate None to 'None'
 * 0.53:   poster_encode contains Chris AtLee's code for form upload
 * 0.52p1  Ported JasperGenerator.get_report from pyJasper
 * 0.52:   postmark API client - see http://postmarkapp.com/

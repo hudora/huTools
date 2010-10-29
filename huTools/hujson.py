@@ -26,6 +26,8 @@ def _unknown_handler(value):
         return dict([(key, getattr(value, key)) for key in value.properties().keys()])
     elif 'google.appengine.api.users.User' in str(type(value)):
         return "%s/%s" % (value.user_id(), value.email())
+    elif 'google.appengine.api.datastore_types.Key' in str(type(value)):
+        return str(value)
     raise UnknownSerializerError("%s(%s)" % (type(value), value))
 
 
