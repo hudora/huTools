@@ -1,7 +1,7 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
 PATH := ./testenv/bin:$(PATH)
 
-default: dependencies check test examples
+default: check test examples
 
 hudson: dependencies test statistics coverage
 	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
@@ -13,8 +13,8 @@ hudson: dependencies test statistics coverage
 
 check:
 	pep8 -r --ignore=E501 huTools/
-	sh -c 'PYTHONPATH=`python config.py` pyflakes huTools/'
-	-sh -c 'PYTHONPATH=`python config.py` pylint -iy --max-line-length=110 huTools/' # -rn
+	pyflakes huTools/
+	-pylint -iy --max-line-length=110 huTools/ # -rn
 
 test:
 	PYTHONPATH=. python huTools/NetStringIO.py

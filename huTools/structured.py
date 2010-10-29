@@ -10,16 +10,6 @@ structured.py - handle structured data/dicts/objects
 
 
 import xml.etree.cElementTree as ET
-import os.path
-import sys
-import collections
-import logging
-
-# TODO: move to hujson
-try:
-    from django.utils import simplejson as json  # Google appengine
-except:
-    import simplejson as json
 
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
@@ -184,7 +174,7 @@ def list2xml(datadict, root, elementname, pretty=False):
 
     See also dict2et()
     """
-    tree = list2et(xmllist, root, elementname)
+    tree = list2et(datadict, root, elementname)
     if pretty:
         indent(tree)
     return ET.tostring(tree, 'utf-8')

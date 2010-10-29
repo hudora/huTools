@@ -24,9 +24,11 @@ import unittest
 import uuid
 
 try:
-    import thread as _thread
+    import thread
+    _thread = thread
 except ImportError:
-    import dummy_thread as _thread
+    import dummy_thread
+    _thread = dummy_thread
 
 
 _counter = 0

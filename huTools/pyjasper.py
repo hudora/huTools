@@ -28,10 +28,11 @@ import uuid
 import xml.etree.ElementTree as ET
 
 
+config = object()
 try:
     import config
-except:
-    config = None
+except ImportError:
+    pass
 
 
 def fetch_httplib2(url, content, content_type):

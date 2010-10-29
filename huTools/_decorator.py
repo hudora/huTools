@@ -32,25 +32,10 @@ __version__ = '3.2.0'
 
 __all__ = ["decorator", "FunctionMaker", "partial"]
 
+from functools import partial
 import inspect
-import os
 import re
 import sys
-
-try:
-    from functools import partial
-except ImportError:  # for Python version < 2.5
-    class partial(object):
-        "A simple replacement of functools.partial"
-        def __init__(self, func, *args, **kw):
-            self.func = func
-            self.args = args
-            self.keywords = kw
-
-        def __call__(self, *otherargs, **otherkw):
-            kw = self.keywords.copy()
-            kw.update(otherkw)
-            return self.func(*(self.args + otherargs), **kw)
 
 DEF = re.compile('\s*def\s*([_\w][_\w\d]*)\s*\(')
 

@@ -8,18 +8,9 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 """
 
 
-import ConfigParser
-import copy
-import getopt
-import inspect
-import logging
 import os
 import os.path
-import socket
 import sys
-import time
-import unittest
-import urllib2
 
 
 # Default daemon parameters.

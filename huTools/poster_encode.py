@@ -9,26 +9,17 @@ __all__ = ['gen_boundary', 'encode_and_quote', 'MultipartParam',
         'encode_string', 'encode_file_header', 'get_body_size', 'get_headers',
         'multipart_encode']
 
-try:
-    import uuid
-
-    def gen_boundary():
-        """Returns a random string to use as the boundary for a message"""
-        return uuid.uuid4().hex
-except ImportError:
-    import random
-    import sha
-
-    def gen_boundary():
-        """Returns a random string to use as the boundary for a message"""
-        bits = random.getrandbits(160)
-        return sha.new(str(bits)).hexdigest()
-
 
 import mimetypes
 import os
 import re
 import urllib
+import uuid
+
+
+def gen_boundary():
+    """Returns a random string to use as the boundary for a message"""
+    return uuid.uuid4().hex
 
 
 def encode_and_quote(data):

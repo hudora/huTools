@@ -31,13 +31,11 @@ MIT Licence."""
 # * Should I implement readline(), readlines() and writelinesU()?
 #   They do not realy make sense withe netstrings, do they?
 
-import os
 import string
-import sys
 
 
 class NetStringIO:
-    __doc__ = """Warping arround a file object changing all I/O to netstrings.
+    """Warping arround a file object changing all I/O to netstrings.
 
     I use this class to warp it arround filehandles obtained by a call
     to socket.makefile(). With this I can build protocols using
@@ -51,7 +49,7 @@ class NetStringIO:
     """
 
     def __init__(self, fileo, delim='\n'):
-        __doc__ = """Create a Netstring object warping a file-like object.
+        """Create a Netstring object warping a file-like object.
 
         n = NetStringIO.NetStringIO(file [, delimiter])
 
@@ -70,12 +68,12 @@ class NetStringIO:
         self.delim = delim
 
     def close(self):
-        __doc__ = "Closes the underlying file object."
+        "Closes the underlying file object."
 
         self.file.close()
 
     def isatty(self):
-        __doc__ = """Checks if the underlying file Object is a tty.
+        """Checks if the underlying file Object is a tty.
 
         I guess using ttys with netstrings is of limited use but who
         knows.
@@ -130,15 +128,15 @@ class NetStringIO:
         return s
 
     def write(self, s):
-        __doc__ = """Writes a Netstring to the underlying fileobject."""
+        """Writes a Netstring to the underlying fileobject."""
 
-        # XXX check if we have to check for short writes
+        # TODO: check if we have to check for short writes
         self.file.write("%lu:%s,%s" % (len(s), s, self.delim))
         self.file.flush()
 
 
 def test():
-    __doc__ = """A little test suite."""
+    """A little test suite."""
 
     import StringIO
 

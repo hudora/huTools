@@ -12,7 +12,7 @@ import cPickle as pickle
 import functools
 import hashlib
 from _decorator import decorator
-from functools import wraps
+# TODO: können wir _decorator durch "from functools import wraps" ersetzen?
 
 
 def _getattr_(obj, name, default_thunk):

@@ -13,4 +13,4 @@ Code is based on http://code.activestate.com/recipes/573463/
 import warnings
 warnings.warn("huTools.protocols is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
 
-from huTools.structured import *
+from huTools.structured import make_struct

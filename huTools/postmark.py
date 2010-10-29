@@ -10,12 +10,8 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
 
-import email
-import httplib
 import hujson
 import logging
-import sys
-import urllib
 import urllib2
 
 
