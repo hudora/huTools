@@ -25,6 +25,10 @@ test:
 	PYTHONPATH=. python huTools/luids.py
 	PYTHONPATH=. python huTools/obfuscation.py
 	PYTHONPATH=. python huTools/unicode.py
+	rm -Rf testenv build dist
+	python setup.py sdist
+	virtualenv testenv
+	pip install -E testenv/ dist/huTools-*tar.gz
 
 coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
@@ -49,6 +53,16 @@ coverage: dependencies
 	test `grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-13|cut -d'.' -f1` -gt 70
 	printf 'YVALUE=' > .coverage.score
 	grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-12 >> .coverage.score
+
+upload:
+	rm -Rf build dist
+	python setup.py sdist
+	VERSION=`ls dist/ | perl -npe 's/.*-(\d+\..*?).tar.gz/$1/' | sort | tail -n 1`
+	python setup.py sdist upload
+	git tag v$VERSION
+	git push origin --tags
+	git commit -m "v$VERSION published on PyPi" -a
+	git push origin
 
 build: examples
 	python setup.py build
