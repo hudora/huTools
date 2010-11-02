@@ -13,7 +13,6 @@ Consider it BSD licensed.
 
 from cStringIO import StringIO
 from huTools.http import fetch
-import logging
 import os
 import os.path
 import re
@@ -132,15 +131,28 @@ class JasperGenerator(object):
         return self.generate_pdf(data)
 
 
-def generate_report(reportdesign, xpath, xmldata, url=None):
-        url = _find_server(url)
-        content = dict(design=reportdesign, xpath=xpath, xmldata=xmldata)
-        status, _headers, content = fetch(url, content, 'POST')
-        if not status == 200:
-            raise JasperException("%s -- %r" % (content, status))
-        # remove Timestamps so the same reports hash the same.
-        return re.sub("/(ModDate|CreationDate)\(D:\d{14}[+-]\d{2}'\d{2}'\)", '', content)
+def generate_report(reportdesign, xpath, xmldata, url=None, keyname='', callback=''):
+    """Generates a report, returns the PDF.
 
+    reportdesign, xpath and xmldata - necessary data to generate a JasperReport.
+    url - points to a jasper server
+    keyname - key for the signature lying on the server
+    callback - url to where the generated report will be sent
+
+    Return value is pdf data stripped of timestamps for modification and creaton dates.
+    If a callback is given, the server will sent the pdf data to the given URL instead.
+    """
+    url = _find_server(url)
+    content = dict(design=reportdesign, xpath=xpath, xmldata=xmldata)
+    if callback:
+        content['callback'] = callback
+    if keyname:
+        content['keyname'] = keyname
+    status, _headers, content = fetch(url, content, 'POST')
+    if not status == 200:
+        raise JasperException("%s -- %r" % (content, status))
+    # remove Timestamps so the same reports hash the same.
+    return re.sub("/(ModDate|CreationDate)\(D:\d{14}[+-]\d{2}'\d{2}'\)", '', content)
 
 
 _testreport = """<?xml version="1.0" encoding="UTF-8"?>
@@ -167,6 +179,7 @@ _testreport = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 class _TestGenerator(JasperGenerator):
+
     def generate_xml(self, dummy):
         self.xpath = '/elements/element'
         xmlroot = ET.Element('elements')
@@ -182,6 +195,7 @@ class _TestGenerator(JasperGenerator):
 
 
 class testTests(unittest.TestCase):
+
     def test_legacy_class(self):
         gen = _TestGenerator()
         content = gen.generate()
@@ -189,7 +203,8 @@ class testTests(unittest.TestCase):
     def test_function(self):
         content = generate_report(_testreport, 
                                   '/elements/element',
-                                  '<elements><element><data>TEST</data></element></elements>')
+                                  '<elements><element><data>TEST</data></element></elements>',
+                                 keyname="hudora-rechnungen")
 
 
 if __name__ == '__main__':
