@@ -18,7 +18,7 @@ except ImportError, e:
 
 
 
-version = '0.53p1'
+version = '0.53p2'
 
 classifiers = [
     # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
