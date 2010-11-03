@@ -179,12 +179,12 @@ def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
     return ET.tostring(tree, 'utf-8')
 
 
-def list2xml(datadict, root, elementname, pretty=False):
+def list2xml(datalist, root, elementname, pretty=False):
     """Converts a list to an UTF-8 encoded XML string.
 
     See also dict2et()
     """
-    tree = list2et(xmllist, root, elementname)
+    tree = list2et(datalist, root, elementname)
     if pretty:
         indent(tree)
     return ET.tostring(tree, 'utf-8')
