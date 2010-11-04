@@ -83,7 +83,7 @@ WRITE_ESCAPES = {
 	# a <script> tag.
 	# 
 	# See: http://t3.dotgnu.info/blog/insecurity/quotes-dont-help.html
-	'/': '\\/',
+	#'/': '\\/', - but WE don't do that
 	'"': '\\"',
 	'\t': '\\t',
 	'\b': '\\b',
