@@ -548,7 +548,7 @@ class Serializer (object):
 		indent, post_indent = self.get_separators (len (parent_ids))
 		
 		a ('{')
-		for key, item in items:
+		for key, item in sorted(items):
 			if isinstance (key, UserString):
 				key = key.data
 			if not isinstance (key, (str, unicode)):
