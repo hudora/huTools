@@ -2,6 +2,18 @@
 Changes
 =======
 
+* 0.60:   huTools.http API and function-based pyJasper Interface. Dependencie Reduction
+
+          This version introduces a HTTP-API menat to allow easy use on pure Python and AppEngine plattforms.
+          All other huTools modules should reley on them instead of httplib2 and others.
+
+          pyjasper now comes with an non Object Oriented interface and also strips timestamps from generated
+          PDFs to ensure the same input generates EXACTLY the same output.
+
+          use hujson instead of simplejson, alsp big cleanup, github-tools/paver for documentation, better
+          documentation at http://hudora.github.com/huTools/ , hujson, rework of the structured module, Python
+          2.5, Google AppEngine compabitility (also in hujson), reduced dependencies, http - a simple http
+          client, unified credential configuration for postmark and jasper, support for signing in pyJasper,
 * 0.53p2: calendar.formats.convert_to_datetime() added convert_to_date() is more robust now
 * 0.53p1: Bugfix for _convert_dict_to_xml_recurse: Do not translate None to 'None'
 * 0.53:   poster_encode contains Chris AtLee's code for form upload
