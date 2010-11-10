@@ -2,6 +2,7 @@
 Changes
 =======
 
+* 0.60p1: huTools.http implements authentication
 * 0.60:   huTools.http API and function-based pyJasper Interface. Dependencie Reduction
 
           This version introduces a HTTP-API menat to allow easy use on pure Python and AppEngine plattforms.

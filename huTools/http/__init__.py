@@ -81,5 +81,9 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
     # convert all header values to strings (what about unicode?)
     for k, v in headers.items():
         headers[k] = str(v)
+    # add authentication
+    if credentials and not 'Authorization' in headers.keys():
+        authheader =  "Basic %s" % credentials.encode('base64').strip('=')
+        headers["Authorization"] = authheader
 
     return request(url, method, content, headers)
