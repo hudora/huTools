@@ -83,7 +83,7 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
         headers[k] = str(v)
     # add authentication
     if credentials and not 'Authorization' in headers.keys():
-        authheader =  "Basic %s" % credentials.encode('base64').strip('=')
+        authheader =  "Basic %s" % credentials.encode('base64').strip('=\n')
         headers["Authorization"] = authheader
 
     return request(url, method, content, headers)
