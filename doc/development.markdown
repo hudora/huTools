@@ -154,6 +154,14 @@ letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefi
 Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with a decent value.
 
 
+## Google AppEngine Specifica
+
+* Use `filter()` instead of GQL - skips the parsing step.
+* Use [gaetk][gaetk], instead of Django
+
+[gaetk]: https://github.com/mdornseif/appengine-toolkit
+
+
 ## Tools for internal Developers
 
 * We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests
