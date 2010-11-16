@@ -59,7 +59,7 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
             # we assume content is a dict which needs to be encoded
             # decide to use multipart/form-data encoding or application/x-www-form-urlencoded
             for v in content.values():
-                if hasattr(v, 'name'):
+                if hasattr(v, 'read'):  # file() or StringIO()
                     multipart = True
             if multipart:
                 datagen, mp_headers = poster_encode.multipart_encode(content)
