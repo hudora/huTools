@@ -131,12 +131,13 @@ class JasperGenerator(object):
         return self.generate_pdf(data)
 
 
-def generate_report(reportdesign, xpath, xmldata, url=None, keyname='', callback=''):
+def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sign_reason='', callback=''):
     """Generates a report, returns the PDF.
 
     reportdesign, xpath and xmldata - necessary data to generate a JasperReport.
     url - points to a jasper server
-    keyname - key for the signature lying on the server
+    sign_keyname - key for the signature lying on the server
+    sign_reason - reason to be sent within the signed document
     callback - url to where the generated report will be sent
 
     Return value is pdf data stripped of timestamps for modification and creaton dates.
@@ -146,8 +147,12 @@ def generate_report(reportdesign, xpath, xmldata, url=None, keyname='', callback
     content = dict(design=reportdesign, xpath=xpath, xmldata=xmldata)
     if callback:
         content['callback'] = callback
-    if keyname:
-        content['keyname'] = keyname
+    if sign_keyname:
+        content['sign_keyname'] = sign_keyname
+        if not sign_reason:
+            raise Exception('reason is needed when signing documents!')
+        content['sign_reason'] = sign_reason
+
     status, _headers, content = fetch(url, content, 'POST')
     if not status == 200:
         raise JasperException("%s -- %r" % (content, status))
@@ -204,7 +209,7 @@ class testTests(unittest.TestCase):
         content = generate_report(_testreport, 
                                   '/elements/element',
                                   '<elements><element><data>TEST</data></element></elements>',
-                                 keyname="hudora-rechnungen")
+                                 sign_keyname="hudora-rechnungen", sign_reason='Testreason for generating documents')
 
 
 if __name__ == '__main__':
