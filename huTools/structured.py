@@ -25,6 +25,8 @@ except:
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
 class Struct(object):
     def __init__(self, entries, default=None):
+        # ensure all keys are strings and nothing else
+        entries = dict([(str(x), y) for x, y in entries.items()])
         self.__dict__.update(entries)
         self.default = default
 
@@ -37,6 +39,9 @@ class Struct(object):
 
     #def __setattr__(self, name, value):
     #    raise TypeError('Struct objects are immutable')
+
+    def __repr__(self):
+        return "<Struct: %r>" % self.__dict__
 
 
 def make_struct(obj, default=None):
