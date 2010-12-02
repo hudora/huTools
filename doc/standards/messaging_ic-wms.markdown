@@ -82,8 +82,6 @@ an das WMS gesendet.
 ### Zusatzfelder (Kopf)
 
 * **anliefertermin_ab** - Termin ab dem die Ware frühstens beim Kunden sein darf
-* **versandtermin** -  Termin an dem die Ware spätestens das Lager verlassen soll
-* **versandtermin_ab** - Termin ab dem die Ware das Lager frühstens verlassen darf
 * **fixtermin** - Wenn True: Zuspätlieferung kann erhebliche Kosten nach sich ziehen.
 * **gewicht** - Netto Gewicht der Ware in Gramm
 * **volumen** - Netto Volumen der Ware in Liter

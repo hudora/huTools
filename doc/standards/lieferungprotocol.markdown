@@ -15,15 +15,18 @@ The *Lieferung Protocol* ist designed to be easy to encode in a wide range of fo
 
 ### Optional fields
 
- * *anlieferdatum* - the date at which point in time the goods should be delivered. 
- * *anlieferdatum_max* - latest date for delivery. If set, _anlieferdatum_ is the first day for delivery.
- * *versanddatum* - date when the goods should be shipped
+ * *anliefertermin* - Termin, an dem die Ware spätestens beim Kunden sein soll. Wenn der Termin in der Vergangenheit liegt, soll sofort ausgeliefert werden.
+ * *anliefertermin_ab* - Termin ab dem die Ware frühstens beim Kunden sein darf
+ * *versandtermin* -  Termin an dem die Ware spätestens das Lager verlassen soll
+ * *versandtermin_ab* - Termin ab dem die Ware das Lager frühstens verlassen darf
  * *kundennr* - internal id of the recipient
  * *auftragsnr* - internal order id
  * *auftragsnr_kunde* - id of the order submitted by the customer
  * *lieferscheinnr* - id of the delivery note
+ * *info_kunde* - Freitext der für den Empfänger relevanz hat
  * *volumen* - volume of the whole _Lieferung_ in _liters_ 
  * *gewicht* - weight of the whole _Lieferung_ in _gramms_
+ * *volumen* - Netto Volumen der Ware in Liter
  * *paletten* - numbers of [EPAL-Pallets](http://de.wikipedia.org/wiki/Europoolpalette) used for transport.
  * *kartons* - number of export-packages
  * *positionen* - a list of positions/orderlines.

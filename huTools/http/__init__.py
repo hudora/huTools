@@ -19,6 +19,7 @@ File Upload just works::
                                      {'hosts': open('/etc/hosts', 'r')}, 'POST')
 
 """
+
 # Created by Maximillian Dornseif on 2010-10-24.
 # Copyright (c) 2010 HUDORA. All rights reserved.
 
