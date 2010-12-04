@@ -53,8 +53,10 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
     * `credentials` is reserved for future use
     """
 
-    if not headers:
-        headers = {}
+    myheaders = {'Accept-Encoding': 'gzip;q=1.0, *;q=0',
+                 'User-Agent': 'huTools.http (gzip)'}
+    if headers:
+        myheaders.update(headers)
     if method == 'POST':
         if hasattr(content, 'items'):
             # we assume content is a dict which needs to be encoded
@@ -64,10 +66,10 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
                     multipart = True
             if multipart:
                 datagen, mp_headers = poster_encode.multipart_encode(content)
-                headers.update(mp_headers)
+                myheaders.update(mp_headers)
                 content = "".join(datagen)
             else:
-                headers.update({'content-type': 'application/x-www-form-urlencoded'})
+                myheaders.update({'Content-Type': 'application/x-www-form-urlencoded'})
                 content = tools.urlencode(content)
     else:
         # url parmater encoding
@@ -80,11 +82,11 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
             url = urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
             content = ''
     # convert all header values to strings (what about unicode?)
-    for k, v in headers.items():
-        headers[k] = str(v)
+    for k, v in myheaders.items():
+        myheaders[k] = str(v)
     # add authentication
-    if credentials and not 'Authorization' in headers.keys():
+    if credentials and not 'Authorization' in myheaders.keys():
         authheader =  "Basic %s" % credentials.encode('base64').strip('=\n')
-        headers["Authorization"] = authheader
+        myheaders["Authorization"] = authheader
 
-    return request(url, method, content, headers)
+    return request(url, method, content, myheaders)
