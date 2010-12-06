@@ -35,7 +35,7 @@ except ImportError:
     from engine_httplib2 import request
 
 
-def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False):
+def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua=''):
     """Does a HTTP request with method `method` to `url`. 
     
     Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
@@ -50,11 +50,12 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
       or multipart/form-data and encoded. If the parameter `multipart` is `True` or if one of the values
       in content has a `name` attribute (which is the case for file objects) multipart encoding is choosen.
     * `headers` is a dict of header values
-    * `credentials` is reserved for future use
+    * `credentials` can be a user:password combination
+    * `ua` should be an additional User Agent string
     """
 
     myheaders = {'Accept-Encoding': 'gzip;q=1.0, *;q=0',
-                 'User-Agent': 'huTools.http (gzip)'}
+                 'User-Agent': '%s/huTools.http (gzip)' % ua}
     if headers:
         myheaders.update(headers)
     if method == 'POST':
