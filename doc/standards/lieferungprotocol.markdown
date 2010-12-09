@@ -2,55 +2,69 @@
 
 This is the standard way we encode information about goods beeing send somewhere at HUDORA. The *Lieferung
 Protocol* can be implemented in XML, [JSON](http://www.json.org/), as object attributes in your programming
-language of choice or whatever. The field names are in german. Consider them a "terminus technicus". This
+language of choice or whatever. The field names are in German. Consider them a "terminus technicus". This
 helps to avoid name clashes with other formats.
-
 The *Lieferung Protocol* ist designed to be easy to encode in a wide range of formats.
 
-## per Lieferung 
+The following description is in German.
 
-### Required Fields
 
- * all fields required by the [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown) - they encode the delivery address.
+## pro Lieferung 
 
-### Optional fields
+### Pflichtfelder
 
- * *anlieferdatum* - the date at which point in time the goods should be delivered. 
- * *anlieferdatum_max* - latest date for delivery. If set, _anlieferdatum_ is the first day for delivery.
- * *versanddatum* - date when the goods should be shipped
- * *kundennr* - internal id of the recipient
- * *auftragsnr* - internal order id
- * *auftragsnr_kunde* - id of the order submitted by the customer
- * *lieferscheinnr* - id of the delivery note
- * *volumen* - volume of the whole _Lieferung_ in _liters_ 
- * *gewicht* - weight of the whole _Lieferung_ in _gramms_
- * *paletten* - numbers of [EPAL-Pallets](http://de.wikipedia.org/wiki/Europoolpalette) used for transport.
- * *kartons* - number of export-packages
- * *positionen* - a list of positions/orderlines.
+ * *guid* - eindeutiger Bezeichner der Lieferung. Ein Bezeichner kann doppelt vorkommen, das empfangende System darf dann nur genau eine der Nachrichten verarbeiten.
+ * alle Pflichtfelder des [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown), wie name1, strasse, land,plz, ort.
+   Dies kodiert die Lieferadresse
+ * *positionen* - Liste der Lieferscheinpositionen, s.u.
 
-## Per Position
+### Zusatzfelder
 
-### Required Fields
+ * *anliefertermin* - Termin, an dem die Ware **spätestens** dem Empfänger übergeben werden muss
+ * *anliefertermin_ab* - Termin, an dem die Ware **frühstens** dem Empfänger übergeben werden muss
+ * *prioritaet* - Dringlichkeit des Auftrags zwischen 1 und 10, wobei niedrigere Werte dringendere Aufträge bedeuten
+ * *gewicht* - Nettogewicht der Waren in Gramm
+ * *volumen* - Nettovolumen der Waren in Liter
+ * *palettenzahl* - kalkulatorische Zahl der Versandpaletten
+ * *packanweisungen/buenderlungsvorgaenge* - Zahl der Pakete, die durch Bündeln entstehen sollen
+ * *packanweisungen/sammelkartons* - geschätzte Zahl der Sammelkartons
+ * *packanweisungen/originalkartons* - Zahl der Pakete, die unverändert versendet werden sollen
+ * *kostenrechnung/paletten* - kalkulatorische Zahl der auszulagernden Paletten
+ * *kostenrechnung/ve2* - kalkulatorische Zahl der auszulagernden VE2
+ * *kostenrechnung/ve1* - kalkulatorische Zahl der auszulagernden VE1
+ * *kostenrechnung/einzelstuecke* - kalkulatorische Zahl der auszulagernden Einzelstücke
+ * *kostenrechnung/gewichtszuschlaege* - kalkulatorische Zahl der Packstücke, für die ein Gewichtszuschlag fällig wird
+ * *kundennr* - Freitext zur besseren Referenzierung, nicht eindeutig, kann aber zum Zusammenfassen von Aufträgen verwendet werden, die vermutlich an die gleiche Adresse gehen.
+ * *infotext_kunde* - Freitext, der für den Empfänger Relevanz hat
+ * *auftragsnr* - Freitext zur besseren Referenzierung, nicht eindeutig
+ * *kundenname* - Freitext zur besseren Referenzierung, nicht eindeutig
+ * *auftragsnr_kunde*  - Freitext, der für den Empfänger Relevanz hat
+ * *versandanweisungen* - Liste mit Versandanweisungen
 
- * *menge* - quantity of the goods
- * *artnr* - internal id of the goods
 
-### Optional fields
+## Pro Position
+
+### Pflichtfelder
+
+ * *guid* - eindeutiger Bezeichner der Position
+ * *menge* - Menge der Position
+ * *artnr* - Artikelnummer der Position
+
+### Zusatzfelder
 
  * *name* - descriptive name of the goods
- * *volumen* - volume of the Position in _liters_
- * *gewicht* - weight of the Position in _gramms_
- * *paletten* - numbers of [http://de.wikipedia.org/wiki/Europoolpalette EPAL-Pallets] used for transport.
- * *kartons* - number of export-packages
 
-## Additional Explanation
+### Versandanweisungen
+ * *guid* - eindeutiger Bezeichner der Position
+ * *bezeichner* - bilateral vereinbarter Leistungsbezeichner (z.B. *avisierung48h*, *selbstabholer*, *hebebuehne*)
+ * *anweisungen* - Freitext, der die Packanweisungen beschreibt
 
-Field length is not defined. We have seen that field lengths longer than 32 characters have a high
-propability of being truncated.
+## Hinweise
 
-Dates should be represented in the default [ISO 8601 Format](http://en.wikipedia.org/wiki/ISO_8601) YYYY-MM-DD.
+Die Feldlängen sind nicht definiert.
+Datumsfelder sollen im [ISO 8601 Format](http://en.wikipedia.org/wiki/ISO_8601) angegeben werden: YYYY-MM-DD
 
-## Examples
+## Beispiele
 
 ### XML
 
@@ -103,6 +117,6 @@ This example encodes the address protocol as [Plain Old XML (POX)](http://en.wik
         "name": "Nasenschoner"}}
 
 
-## See Also
+## Referenzen
 
 [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown#readme) and [VerySimpleOrderProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/verysimpleorderprotocol.markdown#readme).
