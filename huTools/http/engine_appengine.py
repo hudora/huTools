@@ -29,5 +29,6 @@ def request(url, method, content, headers):
         method = urlfetch.PUT
     elif method == 'HEAD':
         method = urlfetch.HEAD
+    headers['User-Agent'] = headers.get('User-Agent', '') + ' (urlfetch)'
     result = urlfetch.fetch(url=url, deadline=10, payload=content, method=method, headers=headers)
     return int(result.status_code), result.headers, result.content

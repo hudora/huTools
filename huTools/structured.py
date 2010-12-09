@@ -24,11 +24,16 @@ except:
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
 class Struct(object):
-    def __init__(self, entries, default=None):
+    def __init__(self, entries, default=None, nodefault=False):
+        # ensure all keys are strings and nothing else
+        entries = dict([(str(x), y) for x, y in entries.items()])
         self.__dict__.update(entries)
         self.default = default
+        self.nodefault = nodefault
 
     def __getattr__(self, name):
+        if self.nodefault:
+            raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         if name.startswith('_'):
             # copy expects __deepcopy__, __getnewargs__ to raise AttributeError
             # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/e76b9fbb1b2ee171?#e76b9fbb1b2ee171
@@ -38,8 +43,11 @@ class Struct(object):
     #def __setattr__(self, name, value):
     #    raise TypeError('Struct objects are immutable')
 
+    def __repr__(self):
+        return "<Struct: %r>" % self.__dict__
 
-def make_struct(obj, default=None):
+
+def make_struct(obj, default=None, nodefault=False):
     """Converts a dict to an object, leaves objects untouched.
 
     Someting like obj.vars() = dict() - Read Only!
@@ -64,10 +72,10 @@ def make_struct(obj, default=None):
     """
     if (not hasattr(obj, '__dict__')) and hasattr(obj, 'iterkeys'):
         # this should be a dict
-        struc = Struct(obj, default=default)
+        struc = Struct(obj, default, nodefault)
         # handle recursive sub-dicts
         for k, v in obj.items():
-            setattr(struc, k, make_struct(v))
+            setattr(struc, k, make_struct(v, default, nodefault))
         return struc
     else:
         return obj

@@ -41,7 +41,6 @@ The following description is in German.
  * *auftragsnr_kunde*  - Freitext, der für den Empfänger Relevanz hat
  * *versandanweisungen* - Liste mit Versandanweisungen
 
-
 ## Pro Position
 
 ### Pflichtfelder

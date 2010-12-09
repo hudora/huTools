@@ -98,7 +98,6 @@ Eine Beispielnachricht in XML findet sich unter
 [warenzugang.xml]: http://github.com/hudora/huTools/blob/master/doc/standards/examples/warenzugang.xml
 
 
-
 ## Kommiauftrag
 Die Nachricht wird - möglicherweise viele Tage - vor dem gewünschten Anliefertermin von Inventory Control
 an das WMS gesendet.

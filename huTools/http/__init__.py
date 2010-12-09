@@ -19,6 +19,7 @@ File Upload just works::
                                      {'hosts': open('/etc/hosts', 'r')}, 'POST')
 
 """
+
 # Created by Maximillian Dornseif on 2010-10-24.
 # Copyright (c) 2010 HUDORA. All rights reserved.
 
@@ -34,7 +35,7 @@ except ImportError:
     from engine_httplib2 import request
 
 
-def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False):
+def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua=''):
     """Does a HTTP request with method `method` to `url`. 
     
     Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
@@ -49,24 +50,27 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
       or multipart/form-data and encoded. If the parameter `multipart` is `True` or if one of the values
       in content has a `name` attribute (which is the case for file objects) multipart encoding is choosen.
     * `headers` is a dict of header values
-    * `credentials` is reserved for future use
+    * `credentials` can be a user:password combination
+    * `ua` should be an additional User Agent string
     """
 
-    if not headers:
-        headers = {}
+    myheaders = {'Accept-Encoding': 'gzip;q=1.0, *;q=0',
+                 'User-Agent': '%s/huTools.http (gzip)' % ua}
+    if headers:
+        myheaders.update(headers)
     if method == 'POST':
         if hasattr(content, 'items'):
             # we assume content is a dict which needs to be encoded
             # decide to use multipart/form-data encoding or application/x-www-form-urlencoded
             for v in content.values():
-                if hasattr(v, 'name'):
+                if hasattr(v, 'read'):  # file() or StringIO()
                     multipart = True
             if multipart:
                 datagen, mp_headers = poster_encode.multipart_encode(content)
-                headers.update(mp_headers)
+                myheaders.update(mp_headers)
                 content = "".join(datagen)
             else:
-                headers.update({'content-type': 'application/x-www-form-urlencoded'})
+                myheaders.update({'Content-Type': 'application/x-www-form-urlencoded'})
                 content = tools.urlencode(content)
     else:
         # url parmater encoding
@@ -79,11 +83,11 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
             url = urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
             content = ''
     # convert all header values to strings (what about unicode?)
-    for k, v in headers.items():
-        headers[k] = str(v)
+    for k, v in myheaders.items():
+        myheaders[k] = str(v)
     # add authentication
-    if credentials and not 'Authorization' in headers.keys():
+    if credentials and not 'Authorization' in myheaders.keys():
         authheader =  "Basic %s" % credentials.encode('base64').strip('=\n')
-        headers["Authorization"] = authheader
+        myheaders["Authorization"] = authheader
 
-    return request(url, method, content, headers)
+    return request(url, method, content, myheaders)
