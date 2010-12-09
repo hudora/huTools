@@ -30,10 +30,10 @@ def convert_to_date(date):
     Assumes argument to be a RfC 3339 coded date or a date(time) object.
     """
     
-    if isinstance(date, datetime.date):
-        return date
-    elif isinstance(date, datetime.datetime):
+    if hasattr(date, 'date'):  # e.g. datetime objects
         return date.date()
+    elif isinstance(date, datetime.date):
+        return date
     elif isinstance(date, basestring):
         date = date[:10]  # strip timestamp
         try:
