@@ -26,7 +26,7 @@ The following description is in German.
  * *gewicht* - Nettogewicht der Waren in Gramm
  * *volumen* - Nettovolumen der Waren in Liter
  * *palettenzahl* - kalkulatorische Zahl der Versandpaletten
- * *packanweisungen/buenderlungsvorgaenge* - Zahl der Pakete, die durch Bündeln entstehen sollen
+ * *packanweisungen/buendelungsvorgaenge* - Zahl der Pakete, die durch Bündeln entstehen sollen
  * *packanweisungen/sammelkartons* - geschätzte Zahl der Sammelkartons
  * *packanweisungen/originalkartons* - Zahl der Pakete, die unverändert versendet werden sollen
  * *kostenrechnung/paletten* - kalkulatorische Zahl der auszulagernden Paletten
