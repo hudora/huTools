@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="rueckmeldung">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="guid" type="xs:string"/>
+                <xs:element name="nves" type="nves"/>
+                <xs:element name="positionen" type="positionen"/>
+            </xs:sequence>
+        </xs:complexType>
+        <!-- Element "nve" jedes Element "nve" ist Schlüssel(kandidat) -->
+        <xs:key name="nveID">
+            <xs:selector xpath="nves/nve"/>
+            <xs:field xpath="nve"/>
+        </xs:key>
+        <!-- Element "nve" in einem Element "position" ist Referenz -->
+        <xs:keyref name="nveRef" refer="nveID">
+            <xs:selector xpath="positionen/position"/>
+            <xs:field xpath="nve"/>
+        </xs:keyref>
+    </xs:element>
+    <xs:complexType name="nves">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="nve" type="nve"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="nve">
+        <xs:sequence>
+            <xs:element name="art" type="xs:string"/>
+            <xs:element name="nve" type="xs:string"/>
+            <xs:element name="gewicht" type="xs:positiveInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="positionen">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="position" type="position"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="position">
+        <xs:sequence>
+            <xs:element name="nve" type="xs:string"/>
+            <xs:element name="posnr" type="xs:positiveInteger"/>
+            <xs:element name="menge" type="xs:positiveInteger"/>
+            <xs:element name="artnr" type="xs:string"/>
+            <xs:element name="referenzen" type="referenzen"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="referenzen">
+        <xs:sequence>
+            <xs:element name="charge" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
