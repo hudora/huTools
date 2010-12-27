@@ -27,8 +27,8 @@
     <xs:complexType name="nve">
         <xs:sequence>
             <xs:element name="art" type="xs:string"/>
+            <xs:element name="gewicht" type="xs:nonNegativeInteger"/>
             <xs:element name="nve" type="xs:string"/>
-            <xs:element name="gewicht" type="xs:positiveInteger"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="positionen">

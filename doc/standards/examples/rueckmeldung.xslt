@@ -3,7 +3,6 @@
     <xsl:template match="Auftrag">
         <rueckmeldung>
             <xsl:apply-templates select="Auftragskopf"/>
-            <xsl:apply-templates select="Auftragspositionen"/>
             <nves>
                 <xsl:for-each select="Auftragspositionen/Position">
                     <nve>
@@ -13,6 +12,7 @@
                     </nve>
                 </xsl:for-each>
             </nves>
+            <xsl:apply-templates select="Auftragspositionen"/>
         </rueckmeldung>
     </xsl:template>
     <xsl:template match="Auftragskopf">
