@@ -9,11 +9,13 @@ structured.py - handle structured data/dicts/objects
 # Copyright (c) 2009, 2010 HUDORA. All rights reserved.
 
 
-import xml.etree.cElementTree as ET
-import os.path
-import sys
 import collections
 import logging
+import os.path
+import sys
+import warnings
+import xml.etree.cElementTree as ET
+
 
 # TODO: move to hujson
 try:
@@ -40,8 +42,20 @@ class Struct(object):
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.default
 
-    #def __setattr__(self, name, value):
-    #    raise TypeError('Struct objects are immutable')
+    def __getitem__(self, key):
+        warnings.warn("dict_accss[foo] on a Struct, use object_access.foo instead",
+                       DeprecationWarning, stacklevel=2)
+        if self.nodefault:
+            return self.__dict__[key]
+        return self.__dict__.get(key, self.default)
+
+    def get(self, key, default=None):
+        if key in self.__dict__:
+            return self.__dict__[key]
+        return default
+
+    def __contains__(self, item):
+        return item in self.__dict__
 
     def __repr__(self):
         return "<Struct: %r>" % self.__dict__
