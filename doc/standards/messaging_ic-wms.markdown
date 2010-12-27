@@ -22,7 +22,7 @@ Hier ein Überblick über die Nachrichtentypen, die ausgetauscht werden:
 
 * **Warenzugang** von Inventory Control an WMS
 * **Kommiauftrag** von Inventory Control an WMS
-* **Rücklmeldung** eines Auftrags von WMS an Inventory Control
+* **Rückmeldung** eines Auftrags von WMS an Inventory Control
 * **Lieferscheine** von Inventory Control an WMS
 * **Korrekturbuchung** vom WMS an Inventory Control
 * **Bestandsabgleich** von WMS und Inventory Control
@@ -157,8 +157,7 @@ Dazu wird ein HTTP DELETE Request an den gleichen URL wie beim Abruf geschickt.
 ## Rückmeldung
 
 Diese Nachricht wird vom WMS an Inventory Control gesendet, *sobald ein Kommiauftrag versendet werden soll*.
-Sie ist Voraussetzung für die Lieferscheingenerierung. Ein Kommiauftrag kann nur genau
-einmal rückgemeldet werden.
+Sie ist Voraussetzung für die Lieferscheingenerierung. Ein Kommiauftrag kann nur genau einmal rückgemeldet werden.
 
 ### Pflichtfelder
 
@@ -176,18 +175,15 @@ einmal rückgemeldet werden.
 
 ### Transport
 
-Die Rückmeldung wird per HTTP POST-Anfrage geschickt. TODO: Felder...
+Die Rückmeldung erfolgt per HTTP POST.
 Bei erfolgreicher Übertragung antwortet der Server mit Statuscode 201.
-
-TODO Bei Fehler: 40x oder 40x
-
+Wird eine Rückmeldenachricht für eine Kommiauftragsnr doppelt geschickt, antwortet der Server mit Statuscode 409.
+Bei einer ungültigen Rückmeldenachricht antwortet der Server mit Statuscode 406.
 
 ### Beispiel
 
-    TODO: Felder für FMTP
+    curl -u username:password -X POST -H "Content-Type: application/json" http://example.com/fmtp/lg200_rueckmeldung/
     
-    curl -X POST http://example.com/fmtp/lg200_rueckmeldung/
-
     {"guid":2103839,
      "positionen": [{"menge": 4,
                      "artnr": "14640/XL",
