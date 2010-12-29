@@ -10,6 +10,7 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 from __future__ import with_statement
 import huTools.http
 import huTools.hujson as json
+import mimetypes
 import os
 import urlparse
 import xml.etree.ElementTree as ET
@@ -139,7 +140,12 @@ def send(endpoint, queuename, directory='.', delete=False, credentials=None):
     for fname in os.listdir(directory):
         path = os.path.join(directory, fname)
         data = open(path).read()
-        push(endpoint, queuename, fname, data, credentials=credentials)
+        
+        mimetype, _ = mimetypes.guess_type(fname)
+        if mimetype is None:
+            mimetype = 'application/octet-stream'
+        
+        push(endpoint, queuename, fname, data, content_type=mimetype, credentials=credentials)
         if delete:
             os.unlink(path)
 
