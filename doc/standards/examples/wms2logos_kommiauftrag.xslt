@@ -56,7 +56,7 @@
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="prioritaet" /></Auftragsprioritaet>
             <Versandart>
-                <xsl:apply-templates select="versandart" />
+                <xsl:apply-templates select="packanweisungen/palettenversand" />
             </Versandart>
             <Frankatur>
                 <xsl:call-template name="TMPL_UNFREI" />
@@ -94,9 +94,10 @@ FIXME:
     - Selbstabholer
     - was ist mit DPD-EXW
 -->
-<xsl:template match="versandart">
+<xsl:template match="packanweisungen/palettenversand">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
+            <!--
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand='False' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
             <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
             <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
             <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
@@ -106,6 +107,9 @@ FIXME:
             <xsl:otherwise>
                 <xsl:value-of select="/kommiauftrag/versandart" />
             </xsl:otherwise>
+            -->
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True'">MAEIND</xsl:when>
+            <xsl:otherwise>DPDSTA</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
 
