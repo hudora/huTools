@@ -24,6 +24,7 @@ File Upload just works::
 # Copyright (c) 2010 HUDORA. All rights reserved.
 
 from huTools.http import tools
+import cgi
 import logging
 import poster_encode
 import urllib
@@ -76,7 +77,7 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
         # url parmater encoding
         if hasattr(content, 'items'):
             scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
-            qdict = urlparse.parse_qs(query)
+            qdict = cgi.parse_qs(query)
             # ugly Unicode issues, see http://bugs.python.org/issue1712522
             qdict.update(content)
             query = tools.urlencode(qdict)
