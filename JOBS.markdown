@@ -1,8 +1,8 @@
 Software-Entwickler gesucht!
 ============================
 
-Wir suchen eine Software Entwicklerin oder einen Entwickler zur Festanstellung oder als Freelancer. Sie
-sollten irgendwo in der Region Rhein-Ruhr, d.h. im Dreieck zwischen Krefeld, Bonn und Hamm ansässig sein,
+Wir suchen eine Software Entwicklerin oder einen Software Entwickler zur Festanstellung oder als Freelancer.
+Sie sollten irgendwo in der Region Rhein-Ruhr, d.h. im Dreieck zwischen Krefeld, Bonn und Hamm ansässig sein,
 damit Sie bei uns in Remscheid vorbeikommen können:
 
 
@@ -24,8 +24,8 @@ Sie sollten folgendes bieten:
 * Sie programmieren gerne.
 * Sie lernen gerne und schnell neues.
 
-Toll wäre es, wenn Sie schon an open Source Projekten gearbeitet haben. Wen sie meinen, kontaktieren Sie uns
-per Twitter [@hudora][4].
+Toll wäre es, wenn Sie schon an open Source Projekten gearbeitet haben. Wenn sie meinen, wir wuaren etwas
+füreinander kontaktieren Sie uns per Twitter [@hudora][4].
 
 
 [0]: https://github.com/hudora/
