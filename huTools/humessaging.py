@@ -75,7 +75,7 @@ def empty_message(creator, audit_info='', audit_trail='', guid=''):
     return ret
 
 
-_marker = '!2498313c6da44c02509d99642bada2d4!' # to detect decimal
+_marker = '!2498313c6da44c02509d99642bada2d4!'  # to detect decimal
 
 
 def _encode_decimal(obj):

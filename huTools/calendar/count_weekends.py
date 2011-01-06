@@ -23,9 +23,9 @@ def calculate_weekenddays_between(datetime1, datetime2):
         d2 = datetime1
 
         ## monday1 = the monday after d1
-    monday1 = (d1 + timedelta(8 - d1.isoweekday())).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    monday1 = (d1 + timedelta(8 - d1.isoweekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     ## monday2 = the monday before d2
-    monday2 = (d2 - timedelta(d2.isoweekday() - 1)).replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    monday2 = (d2 - timedelta(d2.isoweekday() - 1)).replace(hour=0, minute=0, second=0, microsecond=0)
 
     ## if monday1 <= monday2 => the dates are not in the same week
     if monday1 <= monday2:
@@ -48,7 +48,7 @@ def calculate_weekenddays_between(datetime1, datetime2):
             return d2 - d1
         else:
             return d2 - monday2 - timedelta(5)
-    
+
 
 def calculate_workingdays_between(datetime1, datetime2):
     """
@@ -66,7 +66,7 @@ def calculate_workingdays_between(datetime1, datetime2):
         d1 = datetime2
         d2 = datetime1
     return d2 - d1 - calculate_weekenddays_between(d1, d2)
-    
+
 
 def main():
     """

@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 def encode_text(data):
     """
     Encode for usage in XML Tree
-    
+
     >>> encode_text(None)
     u''
     >>> encode_text('Alex')
@@ -28,13 +28,13 @@ def encode_text(data):
     >>> encode_text(callable)
     u''
     """
-    
+
     if callable(data):
         try:
             return encode_text(data())
         except TypeError:
             return u''
-    
+
     if isinstance(data, str):
         return data.decode('utf-8', 'replace')
     elif isinstance(data, datetime.datetime):

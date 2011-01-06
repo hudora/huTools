@@ -30,8 +30,9 @@ except (ImportError, EnvironmentError):
 
 try:
     import config
-except:
+except ImportError:
     config = object()
+
 
 
 class JasperException(RuntimeError):
@@ -108,12 +109,9 @@ class JasperGenerator(object):
 
     def generate_pdf_server(self, design, xpath, xmldata, multi=False):
         """Generate report via pyJasperServer."""
-        if multi:
-            content = dict(designs=design, xpath=xpath, xmldata=xmldata)
-        else:
-            content = dict(design=design, xpath=xpath, xmldata=xmldata)
-        status, _headers, content = fetch(self.serverurl, content, 'POST')
 
+        content = dict(design=design, xpath=xpath, xmldata=xmldata)
+        status, headers, content = fetch(url, content=content, method='POST', multipart=multi)
         if not status == 200:
             raise JasperException("%s -- %r" % (content, status))
         return content

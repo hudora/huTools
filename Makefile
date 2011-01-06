@@ -1,7 +1,7 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
 PATH := ./pythonenv/bin:$(PATH)
 
-default: dependencies check test examples
+default: check test examples
 
 hudson: dependencies test statistics coverage
 	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
@@ -12,19 +12,20 @@ hudson: dependencies test statistics coverage
 	grep "our code has been rated at" < .pylint.out|cut -d '/' -f 1|cut -d ' ' -f 7 >> .pylint.score
 
 check:
-	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	-/usr/local/hudorakit/bin/hd_pylint huTools
+	pep8 -r --ignore=E501 huTools/
+	pyflakes huTools/
+	-pylint -iy --max-line-length=110 huTools/ # -rn
 
 test:
-	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/workdays.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/checksumming.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
+	PYTHONPATH=. pythonenv/bin/python huTools/http/test.py
+	PYTHONPATH=. pythonenv/bin/python huTools/NetStringIO.py
+	PYTHONPATH=. pythonenv/bin/python huTools/calendar/formats.py
+	PYTHONPATH=. pythonenv/bin/python huTools/calendar/workdays.py
+	PYTHONPATH=. pythonenv/bin/python huTools/checksumming.py
+	PYTHONPATH=. pythonenv/bin/python huTools/humessaging.py
+	PYTHONPATH=. pythonenv/bin/python huTools/luids.py
+	PYTHONPATH=. pythonenv/bin/python huTools/obfuscation.py
+	PYTHONPATH=. pythonenv/bin/python huTools/unicode.py
 	PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
 
 coverage: dependencies
@@ -50,6 +51,16 @@ coverage: dependencies
 	test `grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-13|cut -d'.' -f1` -gt 70
 	printf 'YVALUE=' > .coverage.score
 	grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-12 >> .coverage.score
+
+upload:
+	rm -Rf build dist
+	python setup.py sdist
+	VERSION=`ls dist/ | perl -npe 's/.*-(\d+\..*?).tar.gz/$1/' | sort | tail -n 1`
+	python setup.py sdist upload
+	git tag v$VERSION
+	git push origin --tags
+	git commit -m "v$VERSION published on PyPi" -a
+	git push origin
 
 build: examples
 	python setup.py build

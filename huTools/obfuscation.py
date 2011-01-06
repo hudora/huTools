@@ -11,7 +11,6 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 
 import sys
 import random
-import unittest
 
 
 class RC4:
