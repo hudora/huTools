@@ -24,11 +24,9 @@
             </Terminart>
             <Textcode1>8</Textcode1>
             <Auftragstext>
-                <xsl:for-each select="descendant::versandeinweisung">
-                    <xsl:if test="contains('packliste
-                                            separater_lieferschein
-                                            avisieren_unter
-                                            abholer
+                <xsl:for-each select="descendant::versandanweisung">
+                    <xsl:if test="contains('avisierung
+                                            selbstabholer
                                             hebebuehne',
                                             bezeichner)">
                         <xsl:value-of select="bezeichner" />
@@ -40,7 +38,7 @@
             </Auftragstext>
             <Textcode2>2</Textcode2>
             <Kommissioniertext>
-                <xsl:for-each select="descendant::versandeinweisung">
+                <xsl:for-each select="descendant::versandanweisung">
                     <xsl:if test="contains('packhoehe
                                             sortenrein
                                             etiketten
