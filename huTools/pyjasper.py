@@ -34,7 +34,6 @@ except ImportError:
     config = object()
 
 
-
 class JasperException(RuntimeError):
     """This exception indicates Jasper Server problem."""
     pass
@@ -204,7 +203,7 @@ class testTests(unittest.TestCase):
         content = gen.generate()
 
     def test_function(self):
-        content = generate_report(_testreport, 
+        content = generate_report(_testreport,
                                   '/elements/element',
                                   '<elements><element><data>TEST</data></element></elements>',
                                  sign_keyname="hudora-rechnungen", sign_reason='Testreason for generating documents')

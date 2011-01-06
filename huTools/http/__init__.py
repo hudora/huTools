@@ -4,7 +4,7 @@
 huTools/http/__init__.py
 
 Provides a simple interface for doing HTTP requests on stock Python and on Google Appengine. Provides
-unicode aware application/x-www-form-urlencoded encoding and an do multipart/form-data (file upload) 
+unicode aware application/x-www-form-urlencoded encoding and an do multipart/form-data (file upload)
 without aditional code. On Google Appengine it incerass the timeout from 5 seconds to 10.
 
 Usage is without suprises::
@@ -37,13 +37,13 @@ except ImportError:
 
 
 def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua=''):
-    """Does a HTTP request with method `method` to `url`. 
-    
+    """Does a HTTP request with method `method` to `url`.
+
     Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
     containing the headers sent by the server and `content` is the body of the http response.
-    
+
     Parameters to fetch are::
-    
+
     * `url` is the fully qualified request URL. It may contain query prameters.
     * `content` is the request body to be sent. It may be a dict which for all requests expect POST
       is converted to query parameters. If there are query parameters already in the `url` they are merged
@@ -88,7 +88,7 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
         myheaders[k] = str(v)
     # add authentication
     if credentials and not 'Authorization' in myheaders.keys():
-        authheader =  "Basic %s" % credentials.encode('base64').strip()
+        authheader = "Basic %s" % credentials.encode('base64').strip()
         myheaders["Authorization"] = authheader
 
     return request(url, method, content, myheaders)
