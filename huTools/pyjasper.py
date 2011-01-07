@@ -131,7 +131,8 @@ class JasperGenerator(object):
         return self.generate_pdf(data)
 
 
-def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sign_reason='', callback=''):
+def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sign_reason='',
+                    callback='', metadata=None):
     """Generates a report, returns the PDF.
 
     reportdesign, xpath and xmldata - necessary data to generate a JasperReport.
@@ -139,6 +140,7 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
     sign_keyname - key for the signature lying on the server
     sign_reason - reason to be sent within the signed document
     callback - url to where the generated report will be sent
+    metadata - PDF metadata
 
     Return value is pdf data stripped of timestamps for modification and creaton dates.
     If a callback is given, the server will sent the pdf data to the given URL instead.
@@ -150,8 +152,10 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
     if sign_keyname:
         content['sign_keyname'] = sign_keyname
         if not sign_reason:
-            raise Exception('reason is needed when signing documents!')
+            raise ValueError('reason is needed when signing documents!')
         content['sign_reason'] = sign_reason
+    if metadata:
+        content['metadata'] = metadata
 
     status, _headers, content = fetch(url, content, 'POST')
     if not status == 200:
