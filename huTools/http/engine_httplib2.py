@@ -11,7 +11,7 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 _http = None
 
 
-def request(url, method, content, headers):
+def request(url, method, content, headers, timeout=15):
     """Does a HTTP Request via httplib2 Service."""
 
     global _http
