@@ -30,7 +30,8 @@ def convert_to_date(date):
     Assumes argument to be a RfC 3339 coded date or a date(time) object.
     """
     
-    if hasattr(date, 'date'):  # e.g. datetime objects
+    if hasattr(date, 'date') and callable(date.date):
+        # e.g. datetime objects
         return date.date()
     elif isinstance(date, datetime.date):
         return date

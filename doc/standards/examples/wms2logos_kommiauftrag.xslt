@@ -24,11 +24,9 @@
             </Terminart>
             <Textcode1>8</Textcode1>
             <Auftragstext>
-                <xsl:for-each select="descendant::versandeinweisung">
-                    <xsl:if test="contains('packliste
-                                            separater_lieferschein
-                                            avisieren_unter
-                                            abholer
+                <xsl:for-each select="descendant::versandanweisung">
+                    <xsl:if test="contains('avisierung
+                                            selbstabholer
                                             hebebuehne',
                                             bezeichner)">
                         <xsl:value-of select="bezeichner" />
@@ -40,7 +38,7 @@
             </Auftragstext>
             <Textcode2>2</Textcode2>
             <Kommissioniertext>
-                <xsl:for-each select="descendant::versandeinweisung">
+                <xsl:for-each select="descendant::versandanweisung">
                     <xsl:if test="contains('packhoehe
                                             sortenrein
                                             etiketten
@@ -56,7 +54,7 @@
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="prioritaet" /></Auftragsprioritaet>
             <Versandart>
-                <xsl:apply-templates select="versandart" />
+                <xsl:apply-templates select="packanweisungen/palettenversand" />
             </Versandart>
             <Frankatur>
                 <xsl:call-template name="TMPL_UNFREI" />
@@ -88,31 +86,20 @@
 </Auftragsliste>
 </xsl:template>
 
-<!-- Template für die Versandart 
-FIXME: 
-    - Unterscheidung Mäuler national und Mäuler International
-    - Selbstabholer
-    - was ist mit DPD-EXW
--->
-<xsl:template match="versandart">
+<xsl:template match="packanweisungen/palettenversand">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='Mäuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='Maeuler' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='DPD'">DPDSTA</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='DPD-EXW'">DPDUNF</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='DHLfreight-EXW'">DHL</xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="/kommiauftrag/versandart" />
-            </xsl:otherwise>
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">DHL</xsl:when>
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='False' and /kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">DPDUNF</xsl:when>
+            <xsl:when test="/kommiauftrag/versandvorschriften/item/bezeichner/text()='selbstabholer'">Selbstabholer</xsl:when>
+            <xsl:otherwise>DPDSTA</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
 
 <xsl:template name="TMPL_UNFREI">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/versandart='DPD-EXW'">UNFR</xsl:when>
-            <xsl:when test="/kommiauftrag/versandart='DHLfreight-EXW'">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">UNFR</xsl:when>
             <xsl:otherwise>FRHS</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
