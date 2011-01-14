@@ -14,7 +14,7 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 from google.appengine.api import urlfetch
 import logging
 
-def request(url, method, content, headers):
+def request(url, method, content, headers, timeout=15):
     """Does a HTTP Request via Google Appengine urlfetch Service.
     
     Incereases the default appengine timeout from 5 seconds to 10."""
@@ -32,5 +32,5 @@ def request(url, method, content, headers):
     elif method == 'HEAD':
         method = urlfetch.HEAD
     headers['User-Agent'] = headers.get('User-Agent', '') + ' (urlfetch)'
-    result = urlfetch.fetch(url=url, deadline=10, payload=content, method=method, headers=headers)
+    result = urlfetch.fetch(url=url, deadline=timeout, payload=content, method=method, headers=headers)
     return int(result.status_code), result.headers, result.content

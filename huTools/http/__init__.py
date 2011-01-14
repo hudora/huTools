@@ -36,7 +36,7 @@ except ImportError:
     from engine_httplib2 import request
 
 
-def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua=''):
+def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=15):
     """Does a HTTP request with method `method` to `url`. 
     
     Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
@@ -53,6 +53,8 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
     * `headers` is a dict of header values
     * `credentials` can be a user:password combination
     * `ua` should be an additional User Agent string
+    * `timeout` is the maximum number of seconds the request might take. This is advisory and may not be
+       enforced.
     """
 
     myheaders = {'Accept-Encoding': 'gzip;q=1.0, *;q=0',
@@ -91,4 +93,4 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
         authheader =  "Basic %s" % credentials.encode('base64').strip()
         myheaders["Authorization"] = authheader
 
-    return request(url, method, content, myheaders)
+    return request(url, method, content, myheaders, timeout)

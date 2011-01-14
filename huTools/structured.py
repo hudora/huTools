@@ -43,8 +43,8 @@ class Struct(object):
         return self.default
 
     def __getitem__(self, key):
-        warnings.warn("dict_accss[foo] on a Struct, use object_access.foo instead",
-                       DeprecationWarning, stacklevel=2)
+        # warnings.warn("dict_accss[foo] on a Struct, use object_access.foo instead",
+        #                DeprecationWarning, stacklevel=2)
         if self.nodefault:
             return self.__dict__[key]
         return self.__dict__.get(key, self.default)
