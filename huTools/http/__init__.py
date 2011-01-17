@@ -36,7 +36,7 @@ except ImportError:
     from engine_httplib2 import request
 
 
-def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=15):
+def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
     """Does a HTTP request with method `method` to `url`. 
     
     Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
