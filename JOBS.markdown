@@ -24,7 +24,7 @@ Sie sollten folgendes bieten:
 * Sie programmieren gerne.
 * Sie lernen gerne und schnell neues.
 
-Toll wäre es, wenn Sie schon an open Source Projekten gearbeitet haben. Wenn sie meinen, wir wuaren etwas
+Toll wäre es, wenn Sie schon an open Source Projekten gearbeitet haben. Wenn sie meinen, wir wären etwas
 füreinander kontaktieren Sie uns per Twitter [@hudora][4].
 
 
@@ -33,3 +33,6 @@ füreinander kontaktieren Sie uns per Twitter [@hudora][4].
 [2]: http://www.hudora.de/news/2009/11/23/green-it-bei-hudora/
 [3]: http://de.wikipedia.org/wiki/System_i
 [4]: http://twitter.com/hudora
+
+
+Stand: 2010-01-17
