@@ -63,6 +63,29 @@ def netto(amount, tax=19):
     return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
 
 
+def brutto(amount, tax=19):
+    """
+    Mehrwertsteuer aus den Preisen reinrechnen.
+    
+    >>> brutto(decimal.Decimal('1.00'))
+    Decimal('1.19')
+    """
+    
+    amount *= decimal.Decimal("1.%d" % tax)
+    return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
+
+
+
+def tara(amount, tax=19):
+    """
+    Rechne die Differenz zwischen Brutto- und Nettopreis aus.
+    
+    >>> tara(decimal.Decimal('1.19'))
+    Decimal('0.19')
+    """
+    return amount - netto(amount)
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
