@@ -99,7 +99,7 @@
 
 <xsl:template name="TMPL_UNFREI">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandanweisungen/versandanweisung/bezeichner/text()='unfrei'">UNFR</xsl:when>
             <xsl:otherwise>FRHS</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
