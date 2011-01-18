@@ -88,18 +88,18 @@
 
 <xsl:template match="packanweisungen/palettenversand">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">DHL</xsl:when>
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/versandanweisungen/versandanweisung/bezeichner/text()='unfrei'">DHL</xsl:when>
             <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/land='DE'">MAEIND</xsl:when>
             <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='True' and /kommiauftrag/land!='DE'">MAEEXP</xsl:when>
-            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='False' and /kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">DPDUNF</xsl:when>
-            <xsl:when test="/kommiauftrag/versandvorschriften/item/bezeichner/text()='selbstabholer'">Selbstabholer</xsl:when>
+            <xsl:when test="/kommiauftrag/packanweisungen/palettenversand/text()='False' and /kommiauftrag/versandanweisungen/versandanweisung/bezeichner/text()='unfrei'">DPDUNF</xsl:when>
+            <xsl:when test="/kommiauftrag/versandanweisungen/versandanweisung/bezeichner/text()='selbstabholer'">Selbstabholer</xsl:when>
             <xsl:otherwise>DPDSTA</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
 
 <xsl:template name="TMPL_UNFREI">
         <xsl:choose>
-            <xsl:when test="/kommiauftrag/versandvorschriften/versandvorschrift/bezeichner/text()='unfrei'">UNFR</xsl:when>
+            <xsl:when test="/kommiauftrag/versandanweisungen/versandanweisung/bezeichner/text()='unfrei'">UNFR</xsl:when>
             <xsl:otherwise>FRHS</xsl:otherwise>
         </xsl:choose>
 </xsl:template>
