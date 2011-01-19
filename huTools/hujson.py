@@ -31,8 +31,8 @@ def _unknown_handler(value):
     raise UnknownSerializerError("%s(%s)" % (type(value), value))
 
 
-def dumps(val):
-    return _jsonlib.write(val, on_unknown=_unknown_handler, indent=' ')
+def dumps(val, indent=' '):
+    return _jsonlib.write(val, on_unknown=_unknown_handler, indent=indent)
 
 
 def loads(data):

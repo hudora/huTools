@@ -1,32 +1,39 @@
 #!/usr/local/bin/bash
+#
+# Skript zur Übertragung von Kommiaufträgen zu Mäuler
+#
+# Die Aufträge im huLogi-Format werden per XSLT in das Format von Gigaton LogoS
+# konvertiert und dann per FTP hochgeladen.
+#
+# Die Dateien werden anschließend archiviert.
 
 BASEDIR=${BASEDIR:-"/usr/local/SPEDITION/kommibelege"}
 
+# FTP-Zugangsdaten
 HOSTNAME=${HOSTNAME:-"FTPSERVER"}
 USERNAME=${USERNAME:-"FTPUSER"}
 PASSWORD=${PASSWORD:-"FTPPASSWORD"}
 
-STYLESHEET='doc/standards/examples/wms2logos_kommiauftrag.xslt'
+STYLESHEET=${STYLESHEET:-'doc/standards/examples/wms2logos_kommiauftrag.xslt'}
 
-UPLOADDIR="$BASEDIR/uploads"
-WORKDIR="$BASEDIR/work"
-ARCHIVDIR="$BASEDIR/archiv"
+# Verzeichnisse: 
+NEWDIR="$BASEDIR/new"         # Verzeichnis mit neuen Dateien
+WORKDIR="$BASEDIR/work"       # Verzeichnis mit konvertierten Dateien
+ARCHIVDIR="$BASEDIR/archiv"   # Archivverzeichnis
 
-mkdir -p $UPLOADDIR
-mkdir -p $ARCHIVDIR
+mkdir -p $NEWDIR $WORKDIR $ARCHIVDIR
 
-# Valide xml Dateien in entsprechendes Format konvertieren und ins Upload Verzeichnis stellen
-for file in $WORKDIR/*
-do
-    if xmllint "$file" > /dev/null 2>&1
-    then
-        outfile="$UPLOADDIR/$(basename $file).xml"
-        xsltproc -o $outfile $STYLESHEET $file
-        mv $file $ARCHIVDIR
-        cp $outfile $ARCHIVDIR
-    fi
+# nullglob
+# If set, Bash allows filename patterns which match no files to expand to a null string, rather than themselves. 
+shopt -s nullglob
+
+for file in $NEWDIR/*; do
+    outfile="$WORKDIR/$(basename $file).xml"
+    xsltproc -o $outfile $STYLESHEET $file
+    cp $outfile $ARCHIVDIR
+    mv $file $ARCHIVDIR
 done
 
-# alle vorhandenen Daten hochladen und aus dem Uploaddir entfernen
+# alle vorhandenen Daten hochladen und aus dem Arbeitsverzeichnis entfernen
 echo "--------------------" $(date) >> $BASEDIR/lftp.log
-lftp -c "debug 6 ; open  -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $UPLOADDIR in" > /dev/null 2>> $BASEDIR/lftp.log
+lftp -c "debug 6 ; open -u $USERNAME,$PASSWORD $HOSTNAME; mirror --Remove-source-files --reverse --verbose=1 $WORKDIR in" > /dev/null 2>> $BASEDIR/lftp.log

@@ -103,7 +103,7 @@ Use global unique identifiers where ever possible. `huTools.luids.guid128()` cre
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 * Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
 * use [huTools](http://hudora.github.com/huTools/) where appropriate
-
+* `Iñtërnâtiônàlizætiøn <script>alert("XSS");</script> %+'"<!--` might be a goot test string.
 
 ## Django Specifica
 
@@ -152,6 +152,14 @@ letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefi
     models.signals.post_save.connect(_task_post_save_cb, Task)
 
 Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with a decent value.
+
+
+## Google AppEngine Specifica
+
+* Use `filter()` instead of GQL - skips the parsing step.
+* Use [gaetk][gaetk], instead of Django
+
+[gaetk]: https://github.com/mdornseif/appengine-toolkit
 
 
 ## Tools for internal Developers

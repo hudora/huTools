@@ -5,5 +5,5 @@
 dist/
 docs/_build/doctrees/*
 huTools.egg-info/
-testenv/
+pythonenv/
 build/

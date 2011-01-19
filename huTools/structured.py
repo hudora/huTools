@@ -6,7 +6,7 @@ structured.py - handle structured data/dicts/objects
 
 # Created by Maximillian Dornseif on 2009-12-27.
 # Created by Maximillian Dornseif on 2010-06-04.
-# Copyright (c) 2009, 2010 HUDORA. All rights reserved.
+# Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
 
 
 import xml.etree.cElementTree as ET
@@ -14,22 +14,42 @@ import xml.etree.cElementTree as ET
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
 class Struct(object):
-    def __init__(self, entries, default=None):
+    def __init__(self, entries, default=None, nodefault=False):
+        # ensure all keys are strings and nothing else
+        entries = dict([(str(x), y) for x, y in entries.items()])
         self.__dict__.update(entries)
         self.default = default
+        self.nodefault = nodefault
 
     def __getattr__(self, name):
+        if self.nodefault:
+            raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         if name.startswith('_'):
             # copy expects __deepcopy__, __getnewargs__ to raise AttributeError
             # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/e76b9fbb1b2ee171?#e76b9fbb1b2ee171
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.default
 
-    #def __setattr__(self, name, value):
-    #    raise TypeError('Struct objects are immutable')
+    def __getitem__(self, key):
+        # warnings.warn("dict_accss[foo] on a Struct, use object_access.foo instead",
+        #                DeprecationWarning, stacklevel=2)
+        if self.nodefault:
+            return self.__dict__[key]
+        return self.__dict__.get(key, self.default)
+
+    def get(self, key, default=None):
+        if key in self.__dict__:
+            return self.__dict__[key]
+        return default
+
+    def __contains__(self, item):
+        return item in self.__dict__
+
+    def __repr__(self):
+        return "<Struct: %r>" % self.__dict__
 
 
-def make_struct(obj, default=None):
+def make_struct(obj, default=None, nodefault=False):
     """Converts a dict to an object, leaves objects untouched.
 
     Someting like obj.vars() = dict() - Read Only!
@@ -54,10 +74,10 @@ def make_struct(obj, default=None):
     """
     if (not hasattr(obj, '__dict__')) and hasattr(obj, 'iterkeys'):
         # this should be a dict
-        struc = Struct(obj, default=default)
+        struc = Struct(obj, default, nodefault)
         # handle recursive sub-dicts
         for k, v in obj.items():
-            setattr(struc, k, make_struct(v))
+            setattr(struc, k, make_struct(v, default, nodefault))
         return struc
     else:
         return obj
@@ -169,7 +189,7 @@ def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
     return ET.tostring(tree, 'utf-8')
 
 
-def list2xml(datadict, root, elementname, pretty=False):
+def list2xml(datalist, root, elementname, pretty=False):
     """Converts a list to an UTF-8 encoded XML string.
 
     See also dict2et()

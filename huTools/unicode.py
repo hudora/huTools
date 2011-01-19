@@ -7,6 +7,7 @@ Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
 
 import doctest
 import sys
+import unicodedata
 from types import StringType
 
 __revision__ = "$Revision$"
@@ -48,6 +49,9 @@ def deUmlaut(data):
                 data = data.replace(from_char, to_char)
             except UnicodeDecodeError:
                 data = data
+    
+    data = unicodedata.normalize('NFKD', data)
+    
     try:
         return data.encode('ascii', 'replace')
     except UnicodeEncodeError, msg:

@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <rueckmeldung>
+  <guid>2103839</guid>
   <nves>
-    <nves>
+    <nve>
       <art>paket</art>
       <nve>23455326543222553</nve>
       <gewicht>28256</gewicht>
-    </nves>
-    <nves>
+    </nve>
+    <nve>
       <art>paket</art>
       <nve>43255634634653546</nve>
       <gewicht>28256</gewicht>
-    </nves>
+    </nve>
   </nves>
   <positionen>
     <position>
@@ -18,25 +19,36 @@
       <posnr>1</posnr>
       <menge>4</menge>
       <artnr>14640/XL</artnr>
+      <referenzen>
+          <charge>LQN4711</charge>
+      </referenzen>
     </position>
     <position>
       <nve>43255634634653546</nve>
       <posnr>1</posnr>
       <menge>8</menge>
       <artnr>14640/XL</artnr>
+      <referenzen>
+          <charge>LQN4711</charge>
+      </referenzen>
     </position>
     <position>
       <nve>43255634634653546</nve>
       <posnr>2</posnr>
       <menge>4</menge>
       <artnr>14640/03</artnr>
+      <referenzen>
+          <charge>LQN4711</charge>
+      </referenzen>
     </position>
     <position>
       <nve>23455326543222553</nve>
       <posnr>3</posnr>
       <menge>2</menge>
       <artnr>10105</artnr>
+      <referenzen>
+          <charge>LQN4711</charge>
+      </referenzen>
     </position>
   </positionen>
-  <kommiauftragsnr>2103839</kommiauftragsnr>
 </rueckmeldung>
