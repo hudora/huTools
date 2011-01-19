@@ -17,6 +17,7 @@ import os
 import os.path
 import re
 import unittest
+import urllib
 import warnings
 import xml.etree.ElementTree as ET
 
@@ -157,7 +158,7 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
             raise ValueError('reason is needed when signing documents!')
         content['sign_reason'] = sign_reason
     if metadata:
-        content['metadata'] = metadata
+        content['metadata'] = urllib.urlencode(metadata)
 
     status, _headers, content = fetch(url, content, 'POST')
     if not status == 200:
