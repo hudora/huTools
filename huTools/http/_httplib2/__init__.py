@@ -154,7 +154,8 @@ class ServerNotFoundError(HttpLib2Error):
 DEFAULT_MAX_REDIRECTS = 5
 
 # Which headers are hop-by-hop headers by default
-HOP_BY_HOP = ['connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailers', 'transfer-encoding', 'upgrade']
+HOP_BY_HOP = ['connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailers',
+              'transfer-encoding', 'upgrade']
 
 
 def _get_end2end_headers(response):
@@ -226,14 +227,16 @@ NORMALIZE_SPACE = re.compile(r'(?:\r\n)?[ \t]+')
 
 
 def _normalize_headers(headers):
-    return dict([(key.lower(), NORMALIZE_SPACE.sub(value, ' ').strip())  for (key, value) in headers.iteritems()])
+    return dict([(key.lower(), NORMALIZE_SPACE.sub(value, ' ').strip())
+                 for (key, value) in headers.iteritems()])
 
 
 def _parse_cache_control(headers):
     retval = {}
     if 'cache-control' in headers.has_key:
         parts = headers['cache-control'].split(',')
-        parts_with_args = [tuple([x.strip().lower() for x in part.split("=", 1)]) for part in parts if -1 != part.find("=")]
+        parts_with_args = [tuple([x.strip().lower() for x in part.split("=", 1)])
+                           for part in parts if -1 != part.find("=")]
         parts_wo_args = [(name.strip().lower(), 1) for name in parts if -1 == name.find("=")]
         retval = dict(parts_with_args + parts_wo_args)
     return retval
@@ -247,11 +250,17 @@ USE_WWW_AUTH_STRICT_PARSING = 0
 
 # In regex below:
 #    [^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+             matches a "token" as defined by HTTP
-#    "(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?"    matches a "quoted-string" as defined by HTTP, when LWS have already been replaced by a single space
-# Actually, as an auth-param value can be either a token or a quoted-string, they are combined in a single pattern which matches both:
-#    \"?((?<=\")(?:[^\0-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")[^\0-\x08\x0A-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+(?!\"))\"?
-WWW_AUTH_STRICT = re.compile(r"^(?:\s*(?:,\s*)?([^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+)\s*=\s*\"?((?<=\")(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")[^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+(?!\"))\"?)(.*)$")
-WWW_AUTH_RELAXED = re.compile(r"^(?:\s*(?:,\s*)?([^ \t\r\n=]+)\s*=\s*\"?((?<=\")(?:[^\\\"]|\\.)*?(?=\")|(?<!\")[^ \t\r\n,]+(?!\"))\"?)(.*)$")
+#    "(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?"    matches a "quoted-string" as defined by HTTP,
+#                                                   when LWS have already been replaced by a single space
+# Actually, as an auth-param value can be either a token or a quoted-string, they are combined in a single
+# pattern which matches both:
+#    \"?((?<=\")(?:[^\0-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")[^\0-\x08\x0A-\x1f\x7f-\xff()<>@,;
+#    :\\\"/[\]?={} \t]+(?!\"))\"?
+WWW_AUTH_STRICT = re.compile(r"^(?:\s*(?:,\s*)?([^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+)\s*=\s*\"?"
+                             r"((?<=\")(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")"
+                             r"[^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+(?!\"))\"?)(.*)$")
+WWW_AUTH_RELAXED = re.compile(r"^(?:\s*(?:,\s*)?([^ \t\r\n=]+)\s*=\s*\"?((?<=\")(?:[^\\\"]|\\.)*?(?=\")"
+                              r"|(?<!\")[^ \t\r\n,]+(?!\"))\"?)(.*)$")
 UNQUOTE_PAIRS = re.compile(r'\\(.)')
 
 
@@ -275,7 +284,7 @@ def _parse_www_authenticate(headers, headername='www-authenticate'):
             while match:
                 if match and len(match.groups()) == 3:
                     (key, value, the_rest) = match.groups()
-                    auth_params[key.lower()] = UNQUOTE_PAIRS.sub(r'\1', value)  # '\\'.join([x.replace('\\', '') for x in value.split('\\\\')])
+                    auth_params[key.lower()] = UNQUOTE_PAIRS.sub(r'\1', value)
                 match = www_auth.search(the_rest)
             retval[auth_scheme.lower()] = auth_params
             authenticate = the_rest.strip()
@@ -372,7 +381,8 @@ def _decompressContent(response, new_content):
             del response['content-encoding']
     except IOError:
         content = ""
-        raise FailedToDecompressContent(_("Content purported to be compressed with %s but failed to decompress.") % response.get('content-encoding'), response, content)
+        raise FailedToDecompressContent(_("Content purported to be compressed with %s but failed to"
+                " decompress.") % response.get('content-encoding'), response, content)
     return content
 
 
@@ -415,7 +425,8 @@ def _updateCache(request_headers, response_headers, content, cache, cachekey):
 
 
 def _cnonce():
-    dig = _md5("%s:%s" % (time.ctime(), ["0123456789"[random.randrange(0, 9)] for i in range(20)])).hexdigest()
+    dig = _md5("%s:%s" % (time.ctime(),
+                          ["0123456789"[random.randrange(0, 9)] for i in range(20)])).hexdigest()
     return dig[:16]
 
 
@@ -487,7 +498,8 @@ class DigestAuthentication(Authentication):
             raise UnimplementedDigestAuthOptionError(_("Unsupported value for qop: %s." % qop))
         self.challenge['algorithm'] = self.challenge.get('algorithm', 'MD5').upper()
         if self.challenge['algorithm'] != 'MD5':
-            raise UnimplementedDigestAuthOptionError(_("Unsupported value for algorithm: %s." % self.challenge['algorithm']))
+            raise UnimplementedDigestAuthOptionError(_("Unsupported value for algorithm: %s."
+                                                       % self.challenge['algorithm']))
         self.A1 = "".join([self.credentials[0], ":", self.challenge['realm'], ":", self.credentials[1]])
         self.challenge['nc'] = 1
 
@@ -502,7 +514,8 @@ class DigestAuthentication(Authentication):
                     self.challenge['cnonce'],
                     self.challenge['qop'], H(A2)
                     ))
-        headers['Authorization'] = 'Digest username="%s", realm="%s", nonce="%s", uri="%s", algorithm=%s, response=%s, qop=%s, nc=%08x, cnonce="%s"' % (
+        headers['Authorization'] = ('Digest username="%s", realm="%s", nonce="%s", uri="%s",'
+                                    ' algorithm=%s, response=%s, qop=%s, nc=%08x, cnonce="%s"' % (
                 self.credentials[0],
                 self.challenge['realm'],
                 self.challenge['nonce'],
@@ -512,7 +525,7 @@ class DigestAuthentication(Authentication):
                 self.challenge['qop'],
                 self.challenge['nc'],
                 self.challenge['cnonce'],
-                )
+                ))
         self.challenge['nc'] += 1
 
     def response(self, response, content):
@@ -633,7 +646,8 @@ class GoogleLoginAuthentication(Authentication):
         #    service = "wise"
 
         auth = dict(Email=credentials[0], Passwd=credentials[1], service=service, source=headers['user-agent'])
-        resp, content = self.http.request("https://www.google.com/accounts/ClientLogin", method="POST", body=urlencode(auth), headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        resp, content = self.http.request("https://www.google.com/accounts/ClientLogin", method="POST",
+                        body=urlencode(auth), headers={'Content-Type': 'application/x-www-form-urlencoded'})
         lines = content.split('\n')
         d = dict([tuple(line.split("=", 1)) for line in lines if line])
         if resp.status == 403:
@@ -664,7 +678,7 @@ class FileCache(object):
     Not really safe to use if multiple threads or processes are going to
     be running on the same cache.
     """
-    def __init__(self, cache, safe=safename):  # use safe=lambda x: md5.new(x).hexdigest() for the old behavior
+    def __init__(self, cache, safe=safename):
         self.cache = cache
         self.safe = safe
         if not os.path.exists(cache):
@@ -862,7 +876,8 @@ the same interface as FileCache."""
         for cred in self.credentials.iter(host):
             for scheme in AUTH_SCHEME_ORDER:
                 if scheme in challenges:
-                    yield AUTH_SCHEME_CLASSES[scheme](cred, host, request_uri, headers, response, content, self)
+                    yield AUTH_SCHEME_CLASSES[scheme](cred, host, request_uri, headers, response,
+                                                      content, self)
 
     def add_credentials(self, name, password, domain=""):
         """Add a name and password that will be used
@@ -916,7 +931,8 @@ the same interface as FileCache."""
         """Do the actual request using the connection object
         and also follow one level of redirects if necessary"""
 
-        auths = [(auth.depth(request_uri), auth) for auth in self.authorizations if auth.inscope(host, request_uri)]
+        auths = [(auth.depth(request_uri), auth) for auth in self.authorizations if auth.inscope(host,
+                                                                                                 request_uri)]
         auth = auths and sorted(auths)[0][1] or None
         if auth:
             auth.request(method, request_uri, headers, body)
@@ -966,10 +982,12 @@ the same interface as FileCache."""
                         if not 'content-location' in old_response:
                             old_response['content-location'] = absolute_uri
                         redirect_method = ((response.status == 303) and (method not in ["GET", "HEAD"])) and "GET" or method
-                        (response, content) = self.request(location, redirect_method, body=body, headers=headers, redirections=redirections - 1)
+                        (response, content) = self.request(location, redirect_method, body=body,
+                                                           headers=headers, redirections=redirections - 1)
                         response.previous = old_response
                 else:
-                    raise RedirectLimit(_("Redirected more times than rediection_limit allows."), response, content)
+                    raise RedirectLimit(_("Redirected more times than rediection_limit allows."),
+                                        response, content)
             elif response.status in [200, 203] and method == "GET":
                 # Don't cache 206's since we aren't going to handle byte range requests
                 if not 'content-location' in response:
@@ -985,7 +1003,8 @@ the same interface as FileCache."""
 # Then need to optionally turn all exceptions into status codes
 # including all socket.* and httplib.* exceptions.
 
-    def request(self, uri, method="GET", body=None, headers=None, redirections=DEFAULT_MAX_REDIRECTS, connection_type=None):
+    def request(self, uri, method="GET", body=None, headers=None, redirections=DEFAULT_MAX_REDIRECTS,
+                connection_type=None):
         """ Performs a single HTTP request.
 The 'uri' is the URI of the HTTP resource and can begin
 with either 'http' or 'https'. The value of 'uri' must be an absolute URI.
@@ -1028,13 +1047,15 @@ a string that contains the response entity body.
                 conn = self.connections[conn_key]
             else:
                 if not connection_type:
-                    connection_type = (scheme == 'https') and HTTPSConnectionWithTimeout or HTTPConnectionWithTimeout
+                    connection_type = ((scheme == 'https') and HTTPSConnectionWithTimeout
+                                       or HTTPConnectionWithTimeout)
                 certs = list(self.certificates.iter(authority))
                 if scheme == 'https' and certs:
                     conn = self.connections[conn_key] = connection_type(authority, key_file=certs[0][0],
                         cert_file=certs[0][1], timeout=self.timeout, proxy_info=self.proxy_info)
                 else:
-                    conn = self.connections[conn_key] = connection_type(authority, timeout=self.timeout, proxy_info=self.proxy_info)
+                    conn = self.connections[conn_key] = connection_type(authority, timeout=self.timeout,
+                                                                        proxy_info=self.proxy_info)
                 conn.set_debuglevel(debuglevel)
 
             if method in ["GET", "HEAD"] and 'range' not in headers and 'accept-encoding' not in headers:
@@ -1050,7 +1071,7 @@ a string that contains the response entity body.
                     #
                     # Need to replace the line above with the kludge below
                     # to fix the non-existent bug not fixed in this
-                    # bug report: http://mail.python.org/pipermail/python-bugs-list/2005-September/030289.html
+                    # bug report:http://mail.python.org/pipermail/python-bugs-list/2005-September/030289.html
                     try:
                         info, content = cached_value.split('\r\n\r\n', 1)
                         feedparser = email.FeedParser.FeedParser()
@@ -1064,7 +1085,8 @@ a string that contains the response entity body.
             else:
                 cachekey = None
 
-            if method in self.optimistic_concurrency_methods and self.cache and 'etag' in info and not self.ignore_etag and 'if-match' not in headers:
+            if (method in self.optimistic_concurrency_methods and self.cache and 'etag' in info
+                and not self.ignore_etag and 'if-match' not in headers):
                 # http://www.w3.org/1999/04/Editing/
                 headers['if-match'] = info['etag']
 
@@ -1087,7 +1109,8 @@ a string that contains the response entity body.
             if cached_value and method in ["GET", "HEAD"] and self.cache and 'range' not in headers:
                 if '-x-permanent-redirect-url' in info:
                     # Should cached permanent redirects be counted in our redirection count? For now, yes.
-                    (response, new_content) = self.request(info['-x-permanent-redirect-url'], "GET", headers=headers, redirections=redirections - 1)
+                    (response, new_content) = self.request(info['-x-permanent-redirect-url'], "GET",
+                                                           headers=headers, redirections=redirections - 1)
                     response.previous = Response(info)
                     response.previous.fromcache = True
                 else:
@@ -1098,7 +1121,8 @@ a string that contains the response entity body.
                     # There seems to be three possible answers:
                     # 1. [FRESH] Return the cache entry w/o doing a GET
                     # 2. [STALE] Do the GET (but add in cache validators if available)
-                    # 3. [TRANSPARENT] Do a GET w/o any cache validators (Cache-Control: no-cache) on the request
+                    # 3. [TRANSPARENT] Do a GET w/o any cache validators (Cache-Control: no-cache)
+                    #    on the request
                     entry_disposition = _entry_disposition(info, headers)
 
                     if entry_disposition == "FRESH":
@@ -1118,7 +1142,8 @@ a string that contains the response entity body.
                     elif entry_disposition == "TRANSPARENT":
                         pass
 
-                    (response, new_content) = self._request(conn, authority, uri, request_uri, method, body, headers, redirections, cachekey)
+                    (response, new_content) = self._request(conn, authority, uri, request_uri, method, body,
+                                                            headers, redirections, cachekey)
 
                 if response.status == 304 and method == "GET":
                     # Rewrite the cache entry with the new end-to-end headers
@@ -1148,7 +1173,8 @@ a string that contains the response entity body.
                     response = Response(info)
                     content = ""
                 else:
-                    (response, content) = self._request(conn, authority, uri, request_uri, method, body, headers, redirections, cachekey)
+                    (response, content) = self._request(conn, authority, uri, request_uri, method, body,
+                                                        headers, redirections, cachekey)
         except Exception, e:
             if self.force_exception_to_status_code:
                 if isinstance(e, HttpLib2ErrorWithResponse):
