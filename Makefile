@@ -7,7 +7,6 @@ check:
 	pyflakes huTools
 	pep8 -r --ignore=E501 huTools/
 	# Zeilen laenger als 110 Zeichen
-	test 0 = `awk 'length > 110'  *.py | wc -l`
 	find huTools/ -name '*.py' -exec awk 'length > 110' {} \;
 	test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
 	# pyLint
