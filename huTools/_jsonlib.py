@@ -630,7 +630,7 @@ class Serializer(object):
                 # encoded.
                 if 0xD800 <= ochar <= 0xDBFF:
                     try:
-                        nextc = next(stream)
+                        nextc = stream.next()
                     except StopIteration:
                         self.raise_.incomplete_surrogate()
                     onext = ord(nextc)
