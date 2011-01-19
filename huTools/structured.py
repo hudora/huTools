@@ -6,22 +6,13 @@ structured.py - handle structured data/dicts/objects
 
 # Created by Maximillian Dornseif on 2009-12-27.
 # Created by Maximillian Dornseif on 2010-06-04.
-# Copyright (c) 2009, 2010 HUDORA. All rights reserved.
+# Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
 
 
-import collections
-import logging
-import os.path
-import sys
-import warnings
 import xml.etree.cElementTree as ET
 
 
-# TODO: move to hujson
-try:
-    from django.utils import simplejson as json # Google appengine
-except:
-    import simplejson as json
+import huTools.hujson as json
 
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object

@@ -3,17 +3,17 @@ PATH := ./pythonenv/bin:$(PATH)
 
 default: dependencies check test examples
 
-hudson: dependencies test statistics coverage
-	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	/usr/local/hudorakit/bin/hd_pylint huTools
-	# we can't use tee because it eats the error code from hd_pylint
-	/usr/local/hudorakit/bin/hd_pylint -f parseable huTools > .pylint.out
-	printf 'YVALUE=' > .pylint.score
-	grep "our code has been rated at" < .pylint.out|cut -d '/' -f 1|cut -d ' ' -f 7 >> .pylint.score
-
 check:
 	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
 	-/usr/local/hudorakit/bin/hd_pylint huTools
+	pyflakes huTools
+	pep8 -r --ignore=E501 huTools/
+	# Zeilen laenger als 110 Zeichen
+	test 0 = `awk 'length > 110'  *.py | wc -l`
+	find huTools/ -name '*.py' -exec awk 'length > 110' {} \;
+	test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
+	# pyLint
+	-pylint -iy --max-line-length=110 huTools/'
 
 test:
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
