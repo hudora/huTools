@@ -4,8 +4,6 @@ PATH := ./pythonenv/bin:$(PATH)
 default: check test examples
 
 check:
-		-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	-/usr/local/hudorakit/bin/hd_pylint huTools
 	pyflakes huTools
 	pep8 -r --ignore=E501 huTools/
 	# Zeilen laenger als 110 Zeichen

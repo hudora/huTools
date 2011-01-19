@@ -194,7 +194,7 @@ def list2xml(datalist, root, elementname, pretty=False):
 
     See also dict2et()
     """
-    tree = list2et(datadict, root, elementname)
+    tree = list2et(datalist, root, elementname)
     if pretty:
         indent(tree)
     return ET.tostring(tree, 'utf-8')

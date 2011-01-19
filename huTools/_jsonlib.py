@@ -77,20 +77,20 @@ READ_ESCAPES = {
 }
 
 WRITE_ESCAPES = {
-	# Escaping the solidus is a security measure intended for
-	# protecting users from broken browser parsing, if the consumer
-	# is stupid enough to parse JSON by including it directly into
-	# a <script> tag.
-	# 
-	# See: http://t3.dotgnu.info/blog/insecurity/quotes-dont-help.html
-	#'/': '\\/', - but WE don't do that (md)
-	'"': '\\"',
-	'\t': '\\t',
-	'\b': '\\b',
-	'\n': '\\n',
-	'\r': '\\r',
-	'\f': '\\f',
-	'\\': '\\\\'
+        # Escaping the solidus is a security measure intended for
+        # protecting users from broken browser parsing, if the consumer
+        # is stupid enough to parse JSON by including it directly into
+        # a <script> tag.
+        #
+        # See: http://t3.dotgnu.info/blog/insecurity/quotes-dont-help.html
+        #'/': '\\/', - but WE don't do that (md)
+        '"': '\\"',
+        '\t': '\\t',
+        '\b': '\\b',
+        '\n': '\\n',
+        '\r': '\\r',
+        '\f': '\\f',
+        '\\': '\\\\'
 }
 
 

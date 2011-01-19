@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-tools.py
+tools.py - various helpers for HTTP access
 
 Created by Maximillian Dornseif on 2010-10-24.
-Copyright (c) 2010 HUDORA. All rights reserved.
+Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
-
-import urllib
-from poster_encode import multipart_encode
-import urlparse
 
 
 # quoting based on

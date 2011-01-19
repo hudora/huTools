@@ -49,9 +49,9 @@ def deUmlaut(data):
                 data = data.replace(from_char, to_char)
             except UnicodeDecodeError:
                 data = data
-    
+
     data = unicodedata.normalize('NFKD', data)
-    
+
     try:
         return data.encode('ascii', 'replace')
     except UnicodeEncodeError, msg:

@@ -6,7 +6,7 @@ pyJasper client.py - Way to talk to a pyJasper Server.
 See http://pypi.python.org/pypi/pyJasper/ for further enligthenment.
 
 Created by Maximillian Dornseif on 2007-10-12.
-Moved into huTools in 2010
+Moved into huTools in 2010, 2011
 Consider it BSD licensed.
 """
 
@@ -21,7 +21,6 @@ import warnings
 import xml.etree.ElementTree as ET
 
 
-config = object()
 try:
     from django.conf import settings
     # trigger the lazy importer
@@ -29,10 +28,11 @@ try:
 except (ImportError, EnvironmentError):
     settings = object()
 
+config = object()
 try:
     import config
 except:
-    config = object()
+    pass
 
 
 class JasperException(RuntimeError):
@@ -208,13 +208,13 @@ class testTests(unittest.TestCase):
 
     def test_legacy_class(self):
         gen = _TestGenerator()
-        content = gen.generate()
+        gen.generate()
 
     def test_function(self):
-        content = generate_report(_testreport, 
-                                  '/elements/element',
-                                  '<elements><element><data>TEST</data></element></elements>',
-                                 sign_keyname="hudora-rechnungen", sign_reason='Testreason for generating documents')
+        generate_report(_testreport,
+                        '/elements/element',
+                        '<elements><element><data>TEST</data></element></elements>',
+                        sign_keyname="hudora-rechnungen", sign_reason='Testreason for generating documents')
 
 
 if __name__ == '__main__':

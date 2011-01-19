@@ -49,10 +49,10 @@ def convert_to_date(date):
 
 def convert_to_datetime(date):
     """Converts argument into a datetime object.
-    
+
     Assumes argument to be a RfC 3339 coded date or a date(time) object.
     """
-    
+
     if isinstance(date, datetime.datetime):
         return date
     elif isinstance(date, datetime.date):  # order mattes! datetime is a subclass of date
@@ -116,7 +116,7 @@ class _FormatsTests(unittest.TestCase):
         """Test basic rfc2616_date_parse output."""
         self.assertEqual(rfc2616_date_parse('Sat, 03 Feb 2007 03:05:06 GMT'),
                          datetime.datetime(2007, 2, 3, 4, 5, 6))
-    
+
     def test_convert_to_datetime(self):
         """Test convert_to_datetime() and convert_to_date() functionality"""
         self.assertEqual(convert_to_datetime(datetime.date(2007, 2, 3)), datetime.datetime(2007, 2, 3, 0, 0))

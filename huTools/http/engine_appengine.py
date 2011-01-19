@@ -14,11 +14,12 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 from google.appengine.api import urlfetch
 import logging
 
+
 def request(url, method, content, headers, timeout=15):
     """Does a HTTP Request via Google Appengine urlfetch Service.
-    
+
     Incereases the default appengine timeout from 5 seconds to 10."""
-    
+
     # on appengine debuging is always post mortem, so better log what we arde doing
     logging.debug('fetching %s %s', method, url)
     if method == 'GET':

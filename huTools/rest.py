@@ -76,7 +76,7 @@ class Client(object):
         self.username = username
         self.password = password
         self.endpoint = endpoint
-        
+
         # TODO: move to huTools.http.fetch
         cachedir = os.path.join(tempfile.gettempdir(), 'robotrock')
         self.connection = httplib2.Http(cache=cachedir, timeout=20)
