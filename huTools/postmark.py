@@ -96,8 +96,11 @@ def send_mail(message, api_key=None):
                 raise RuntimeError('Internal server error at Postmark. Admins have been alerted.', err)
         except urllib2.URLError, err:
             if hasattr(err, 'reason'):
-                raise RuntimeError("URLError: Failed to reach the server: %s (See 'inner_exception' for details)" % err.reason, err)
+                raise RuntimeError(("URLError: Failed to reach the server: %s (See 'inner_exception' for"
+                                    " details)") % err.reason, err)
             elif hasattr(err, 'code'):
-                raise RuntimeError("URLError: %d: The server couldn't fufill the request. (See 'inner_exception' for details)" % err.code, err)
+                raise RuntimeError(("URLError: %d: The server couldn't fufill the request. (See"
+                                    " 'inner_exception' for details)") % err.code, err)
             else:
-                raise RuntimeError("URLError: The server couldn't fufill the request. (See 'inner_exception' for details)", err)
+                raise RuntimeError("URLError: The server couldn't fufill the request. (See 'inner_exception'"
+                                   " for details)", err)

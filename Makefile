@@ -8,9 +8,9 @@ check:
 	pep8 -r --ignore=E501 huTools/
 	# Zeilen laenger als 110 Zeichen
 	find huTools/ -name '*.py' -exec awk 'length > 110' {} \;
-	#test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
+	test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
 	# pyLint
-	-pylint -iy --max-line-length=110 huTools/'
+	-pylint -iy --max-line-length=110 huTools/
 
 test:
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
@@ -69,9 +69,6 @@ dependencies:
 
 statistics:
 	sloccount --wide --details huTools | tee sloccount.sc
-
-upload: doc
-	python setup.py build sdist upload
 
 doc: examples
 	paver gh_pages_build gh_pages_update -m "documentation fixup"

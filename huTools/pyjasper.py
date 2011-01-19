@@ -77,7 +77,8 @@ class JasperGenerator(object):
         self.xpath = None
         self.debug = debug
         self.serverurl = _find_server(serverurl)
-        warnings.warn("huTools.pyjasper.JasperGenerator() is deprecated use huTools.pyjasper.generate_report() instead.", DeprecationWarning, stacklevel=2)
+        warnings.warn("huTools.pyjasper.JasperGenerator() is deprecated use"
+                      " huTools.pyjasper.generate_report() instead.", DeprecationWarning, stacklevel=2)
 
     def generate_xml(self, data=None):
         """To be overwritten by subclasses.
@@ -166,7 +167,12 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
 
 
 _testreport = """<?xml version="1.0" encoding="UTF-8"?>
-        <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lieferschein" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="70" bottomMargin="28" whenResourceMissingType="Key">
+        <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+ http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+          name="Lieferschein" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="56"
+          rightMargin="56" topMargin="70" bottomMargin="28" whenResourceMissingType="Key">
             <queryString language="xPath"><![CDATA[/elements/element]]></queryString>
             <field name="testdata" class="java.lang.String">
                 <fieldDescription><![CDATA[*/data]]></fieldDescription>
@@ -180,7 +186,7 @@ _testreport = """<?xml version="1.0" encoding="UTF-8"?>
                     <textField isBlankWhenNull="true">
                         <reportElement key="field-1" x="36" y="0" width="300" height="10"/>
                         <textElement><font size="8"/></textElement>
-                        <textFieldExpression class="java.lang.String"><![CDATA[$F{testdata}]]></textFieldExpression>
+                <textFieldExpression class="java.lang.String"><![CDATA[$F{testdata}]]></textFieldExpression>
                     </textField>
                 </band>
             </detail>

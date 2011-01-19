@@ -558,13 +558,16 @@ class HmacDigestAuthentication(Authentication):
             self.challenge['reason'] = 'unauthorized'
         self.challenge['salt'] = self.challenge.get('salt', '')
         if not self.challenge.get('snonce'):
-            raise UnimplementedHmacDigestAuthOptionError(_("The challenge doesn't contain a server nonce, or this one is empty."))
+            raise UnimplementedHmacDigestAuthOptionError(_("The challenge doesn't contain a server nonce,"
+                                                           " or this one is empty."))
         self.challenge['algorithm'] = self.challenge.get('algorithm', 'HMAC-SHA-1')
         if self.challenge['algorithm'] not in ['HMAC-SHA-1', 'HMAC-MD5']:
-            raise UnimplementedHmacDigestAuthOptionError(_("Unsupported value for algorithm: %s." % self.challenge['algorithm']))
+            raise UnimplementedHmacDigestAuthOptionError(_("Unsupported value for algorithm: %s."
+                                                           % self.challenge['algorithm']))
         self.challenge['pw-algorithm'] = self.challenge.get('pw-algorithm', 'SHA-1')
         if self.challenge['pw-algorithm'] not in ['SHA-1', 'MD5']:
-            raise UnimplementedHmacDigestAuthOptionError(_("Unsupported value for pw-algorithm: %s." % self.challenge['pw-algorithm']))
+            raise UnimplementedHmacDigestAuthOptionError(_("Unsupported value for pw-algorithm: %s."
+                                                            % self.challenge['pw-algorithm']))
         if self.challenge['algorithm'] == 'HMAC-MD5':
             self.hashmod = _md5
         else:
@@ -574,7 +577,8 @@ class HmacDigestAuthentication(Authentication):
         else:
             self.pwhashmod = _sha
         self.key = "".join([self.credentials[0], ":",
-                    self.pwhashmod.new("".join([self.credentials[1], self.challenge['salt']])).hexdigest().lower(),
+                    self.pwhashmod.new("".join([self.credentials[1], self.challenge['salt']])
+                                       ).hexdigest().lower(),
                     ":", self.challenge['realm']
                     ])
         self.key = self.pwhashmod.new(self.key).hexdigest().lower()
@@ -586,9 +590,11 @@ class HmacDigestAuthentication(Authentication):
         headers_val = "".join([headers[k] for k in keys])
         created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         cnonce = _cnonce()
-        request_digest = "%s:%s:%s:%s:%s" % (method, request_uri, cnonce, self.challenge['snonce'], headers_val)
+        request_digest = "%s:%s:%s:%s:%s" % (method, request_uri, cnonce, self.challenge['snonce'],
+                                             headers_val)
         request_digest = hmac.new(self.key, request_digest, self.hashmod).hexdigest().lower()
-        headers['Authorization'] = 'HMACDigest username="%s", realm="%s", snonce="%s", cnonce="%s", uri="%s", created="%s", response="%s", headers="%s"' % (
+        headers['Authorization'] = ('HMACDigest username="'
+        '%s", realm="%s", snonce="%s", cnonce="%s", uri="%s", created="%s", response="%s", headers="%s"' % (
                 self.credentials[0],
                 self.challenge['realm'],
                 self.challenge['snonce'],
@@ -597,7 +603,7 @@ class HmacDigestAuthentication(Authentication):
                 created,
                 request_digest,
                 keylist,
-                )
+                ))
 
     def response(self, response, content):
         challenge = _parse_www_authenticate(response, 'www-authenticate').get('hmacdigest', {})
@@ -645,7 +651,8 @@ class GoogleLoginAuthentication(Authentication):
         #elif request_uri.find("spreadsheets") > 0:
         #    service = "wise"
 
-        auth = dict(Email=credentials[0], Passwd=credentials[1], service=service, source=headers['user-agent'])
+        auth = dict(Email=credentials[0], Passwd=credentials[1], service=service,
+                    source=headers['user-agent'])
         resp, content = self.http.request("https://www.google.com/accounts/ClientLogin", method="POST",
                         body=urlencode(auth), headers={'Content-Type': 'application/x-www-form-urlencoded'})
         lines = content.split('\n')
@@ -737,7 +744,8 @@ class ProxyInfo(object):
 
   p = ProxyInfo(proxy_type=socks.PROXY_TYPE_HTTP, proxy_host='localhost', proxy_port=8000)
         """
-        self.proxy_type, self.proxy_host, self.proxy_port, self.proxy_rdns, self.proxy_user, self.proxy_pass = proxy_type, proxy_host, proxy_port, proxy_rdns, proxy_user, proxy_pass
+        self.proxy_type, self.proxy_host, self.proxy_port, self.proxy_rdns, self.proxy_user, \
+            self.proxy_pass = proxy_type, proxy_host, proxy_port, proxy_rdns, proxy_user, proxy_pass
 
     def astuple(self):
         return (self.proxy_type, self.proxy_host, self.proxy_port, self.proxy_rdns,
@@ -960,7 +968,8 @@ the same interface as FileCache."""
                 # remembering first to strip the ETag header and decrement our 'depth'
                 if redirections:
                     if not 'location' in response and response.status != 300:
-                        raise RedirectMissingLocation(_("Redirected but the response is missing a Location: header."), response, content)
+                        raise RedirectMissingLocation(_("Redirected but the response is missing a Location:"
+                                                        " header."), response, content)
                     # Fix-up relative redirects (which violate an RFC 2616 MUST)
                     if 'location' in response:
                         location = response['location']
@@ -981,7 +990,8 @@ the same interface as FileCache."""
                         old_response = copy.deepcopy(response)
                         if not 'content-location' in old_response:
                             old_response['content-location'] = absolute_uri
-                        redirect_method = ((response.status == 303) and (method not in ["GET", "HEAD"])) and "GET" or method
+                        redirect_method = ((response.status == 303) and
+                                           (method not in ["GET", "HEAD"])) and "GET" or method
                         (response, content) = self.request(location, redirect_method, body=body,
                                                            headers=headers, redirections=redirections - 1)
                         response.previous = old_response

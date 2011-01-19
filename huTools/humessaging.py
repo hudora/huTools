@@ -89,7 +89,8 @@ def _encode_decimal(obj):
     raise TypeError("%r is not JSON serializable" % (obj, ))
 
 
-_decimal_re = re.compile(r'"!2498313c6da44c02509d99642bada2d4!#(\d+)\.(\d+)#!2498313c6da44c02509d99642bada2d4!"')
+_decimal_re = \
+    re.compile(r'"!2498313c6da44c02509d99642bada2d4!#(\d+)\.(\d+)#!2498313c6da44c02509d99642bada2d4!"')
 
 
 def encode(message):

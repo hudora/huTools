@@ -26,7 +26,8 @@ class Struct(object):
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         if name.startswith('_'):
             # copy expects __deepcopy__, __getnewargs__ to raise AttributeError
-            # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/e76b9fbb1b2ee171?#e76b9fbb1b2ee171
+            # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/
+            # e76b9fbb1b2ee171?#e76b9fbb1b2ee171
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.default
 
@@ -232,7 +233,8 @@ def test():
             "batchnr": "3104247"}
     xmlstr = dict2xml(data, roottag='warenzugang')
     #print xmlstr
-    assert xmlstr == '''<warenzugang><artnr>14695</artnr><batchnr>3104247</batchnr><guid>3104247-7</guid><menge>7</menge></warenzugang>'''
+    assert xmlstr == ('<warenzugang><artnr>14695</artnr><batchnr>3104247</batchnr><guid>3104247-7</guid>'
+                      '<menge>7</menge></warenzugang>')
 
     data = {"kommiauftragsnr": 2103839,
      "anliefertermin": "2009-11-25",
