@@ -13,18 +13,18 @@ check:
 	-pylint -iy --max-line-length=110 huTools/
 
 test:
-	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/workdays.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/checksumming.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
+	PYTHONPATH=. python huTools/NetStringIO.py
+	PYTHONPATH=. python huTools/calendar/formats.py
+	PYTHONPATH=. python huTools/calendar/workdays.py
+	PYTHONPATH=. python huTools/checksumming.py
+	PYTHONPATH=. python huTools/obfuscation.py
+	PYTHONPATH=. python huTools/unicode.py
+	PYTHONPATH=. python huTools/humessaging.py
+	PYTHONPATH=. python huTools/luids.py
+	PYTHONPATH=. python huTools/http/test.py
 	rm -Rf testenv build dist
 	python setup.py sdist
-	PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
+	#PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. python huTools/pyjasper.py
 
 coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
@@ -66,9 +66,6 @@ build: examples
 dependencies:
 	virtualenv pythonenv
 	pip -q install -E pythonenv -r requirements.txt
-
-statistics:
-	sloccount --wide --details huTools | tee sloccount.sc
 
 doc: examples
 	paver gh_pages_build gh_pages_update -m "documentation fixup"

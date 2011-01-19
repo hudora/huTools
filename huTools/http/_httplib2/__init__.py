@@ -233,7 +233,7 @@ def _normalize_headers(headers):
 
 def _parse_cache_control(headers):
     retval = {}
-    if 'cache-control' in headers.has_key:
+    if 'cache-control' in headers:
         parts = headers['cache-control'].split(',')
         parts_with_args = [tuple([x.strip().lower() for x in part.split("=", 1)])
                            for part in parts if -1 != part.find("=")]
