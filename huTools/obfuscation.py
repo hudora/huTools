@@ -11,7 +11,6 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 
 import sys
 import random
-import unittest
 
 
 class RC4:
@@ -37,8 +36,11 @@ class RC4:
         for i in range(0, len(input)):
             self.x = (self.x + 1) & 0xff
             self.y = (self.state_array[self.x] + self.y) & 0xff
-            self.state_array[self.x], self.state_array[self.y] = self.state_array[self.y], self.state_array[self.x]
-            self.out.append(chr((ord(input[i]) ^ self.state_array[(self.state_array[self.x] + self.state_array[self.y]) & 0xff])))
+            self.state_array[self.x], self.state_array[self.y] = \
+                self.state_array[self.y], self.state_array[self.x]
+            self.out.append(chr((ord(input[i]) ^
+                                 self.state_array[(self.state_array[self.x]
+                                                   + self.state_array[self.y]) & 0xff])))
         return "".join(self.out)
 
     def encrypt(self, cleartext, iv=None):

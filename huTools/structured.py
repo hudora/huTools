@@ -6,22 +6,10 @@ structured.py - handle structured data/dicts/objects
 
 # Created by Maximillian Dornseif on 2009-12-27.
 # Created by Maximillian Dornseif on 2010-06-04.
-# Copyright (c) 2009, 2010 HUDORA. All rights reserved.
+# Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
 
 
-import collections
-import logging
-import os.path
-import sys
-import warnings
 import xml.etree.cElementTree as ET
-
-
-# TODO: move to hujson
-try:
-    from django.utils import simplejson as json # Google appengine
-except:
-    import simplejson as json
 
 
 # siehe http://stackoverflow.com/questions/1305532/convert-python-dict-to-object
@@ -38,7 +26,8 @@ class Struct(object):
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         if name.startswith('_'):
             # copy expects __deepcopy__, __getnewargs__ to raise AttributeError
-            # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/e76b9fbb1b2ee171?#e76b9fbb1b2ee171
+            # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/
+            # e76b9fbb1b2ee171?#e76b9fbb1b2ee171
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.default
 
@@ -213,20 +202,20 @@ def list2xml(datalist, root, elementname, pretty=False):
 
 
 # From http://effbot.org/zone/element-lib.htm
-# prettyprint: Prints a tree with each node indented according to its depth. This is 
+# prettyprint: Prints a tree with each node indented according to its depth. This is
 # done by first indenting the tree (see below), and then serializing it as usual.
 # indent: Adds whitespace to the tree, so that saving it as usual results in a prettyprinted tree.
 # in-place prettyprint formatter
 
 def indent(elem, level=0):
-    i = "\n" + level*" "
+    i = "\n" + level * " "
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + " "
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
         for child in elem:
-            indent(child, level+1)
+            indent(child, level + 1)
         if not child.tail or not child.tail.strip():
             child.tail = i
         if not elem.tail or not elem.tail.strip():
@@ -238,28 +227,29 @@ def indent(elem, level=0):
 
 def test():
     # warenzugang
-    data = {"guid":"3104247-7",
-            "menge":7,
-            "artnr":"14695",
+    data = {"guid": "3104247-7",
+            "menge": 7,
+            "artnr": "14695",
             "batchnr": "3104247"}
     xmlstr = dict2xml(data, roottag='warenzugang')
     #print xmlstr
-    assert xmlstr == '''<warenzugang><artnr>14695</artnr><batchnr>3104247</batchnr><guid>3104247-7</guid><menge>7</menge></warenzugang>'''
+    assert xmlstr == ('<warenzugang><artnr>14695</artnr><batchnr>3104247</batchnr><guid>3104247-7</guid>'
+                      '<menge>7</menge></warenzugang>')
 
-    data = {"kommiauftragsnr":2103839,
-     "anliefertermin":"2009-11-25",
+    data = {"kommiauftragsnr": 2103839,
+     "anliefertermin": "2009-11-25",
      "fixtermin": True,
      "prioritaet": 7,
-     "info_kunde":"Besuch H. Gerlach",
-     "auftragsnr":1025575,
-     "kundenname":"Ute Zweihaus 400424990",
-     "kundennr":"21548",
-     "name1":"Uwe Zweihaus",
-     "name2":"400424990",
-     "name3":"",
-     u"strasse":u"Bahnhofstr. 2",
-     "land":"DE",
-     "plz":"42499",
+     "info_kunde": "Besuch H. Gerlach",
+     "auftragsnr": 1025575,
+     "kundenname": "Ute Zweihaus 400424990",
+     "kundennr": "21548",
+     "name1": "Uwe Zweihaus",
+     "name2": "400424990",
+     "name3": "",
+     u"strasse": u"Bahnhofstr. 2",
+     "land": "DE",
+     "plz": "42499",
      "ort": u"Hücksenwagen",
      "positionen": [{"menge": 12,
                      "artnr": "14640/XL",
@@ -282,7 +272,7 @@ def test():
     # print xmlstr
 
     # Rückmeldung
-    data = {"kommiauftragsnr":2103839,
+    data = {"kommiauftragsnr": 2103839,
      "positionen": [{"menge": 4,
                      "artnr": "14640/XL",
                      "posnr": 1,

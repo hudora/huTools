@@ -1,19 +1,16 @@
 # setting the PATH seems only to work in GNUmake not in BSDmake
 PATH := ./pythonenv/bin:$(PATH)
 
-default: dependencies check test examples
-
-hudson: dependencies test statistics coverage
-	find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	/usr/local/hudorakit/bin/hd_pylint huTools
-	# we can't use tee because it eats the error code from hd_pylint
-	/usr/local/hudorakit/bin/hd_pylint -f parseable huTools > .pylint.out
-	printf 'YVALUE=' > .pylint.score
-	grep "our code has been rated at" < .pylint.out|cut -d '/' -f 1|cut -d ' ' -f 7 >> .pylint.score
+default: check test examples
 
 check:
-	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
-	-/usr/local/hudorakit/bin/hd_pylint huTools
+	pyflakes huTools
+	pep8 -r --ignore=E501 huTools/
+	# Zeilen laenger als 110 Zeichen
+	find huTools/ -name '*.py' -exec awk 'length > 110' {} \;
+	test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
+	# pyLint
+	-pylint -iy --max-line-length=110 huTools/
 
 test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
@@ -51,6 +48,16 @@ coverage: dependencies
 	printf 'YVALUE=' > .coverage.score
 	grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-12 >> .coverage.score
 
+upload:
+	rm -Rf build dist
+	python setup.py sdist
+	VERSION=`ls dist/ | perl -npe 's/.*-(\d+\..*?).tar.gz/$1/' | sort | tail -n 1`
+	python setup.py sdist upload
+	git tag v$VERSION
+	git push origin --tags
+	git commit -m "v$VERSION published on PyPi" -a
+	git push origin
+
 build: examples
 	python setup.py build
 
@@ -59,12 +66,6 @@ dependencies: pythonenv/bin/python
 pythonenv/bin/python:
 	virtualenv pythonenv
 	pip -q install -E pythonenv -r requirements.txt
-
-statistics:
-	sloccount --wide --details huTools | tee sloccount.sc
-
-upload: doc
-	python setup.py build sdist upload
 
 doc: examples
 	paver gh_pages_build gh_pages_update -m "documentation fixup"
