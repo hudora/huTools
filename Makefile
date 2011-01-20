@@ -15,7 +15,7 @@ check:
 	-find huTools -name '*.py' | xargs /usr/local/hudorakit/bin/hd_pep8
 	-/usr/local/hudorakit/bin/hd_pylint huTools
 
-test:
+test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
@@ -25,7 +25,7 @@ test:
 	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
-	PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
+	#PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
 
 coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
@@ -54,7 +54,9 @@ coverage: dependencies
 build: examples
 	python setup.py build
 
-dependencies:
+dependencies: pythonenv/bin/python
+
+pythonenv/bin/python:
 	virtualenv pythonenv
 	pip -q install -E pythonenv -r requirements.txt
 
