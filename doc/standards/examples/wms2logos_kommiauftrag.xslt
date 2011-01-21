@@ -76,7 +76,9 @@
             <Position>
                 <MengeEH1><xsl:value-of select="number(descendant::menge)" /></MengeEH1>
                 <ArtikelNr><xsl:value-of select="descendant::artnr" /></ArtikelNr>
-                <FremdPos1><xsl:value-of select="descendant::posnr" /></FremdPos1>
+                <Positionstext><xsl:value-of select="descendant::guid" /></Positionstext>
+                <FremdPos1><xsl:value-of select="descendant::auftragspos" /></FremdPos1>
+                <FremdPos2><xsl:value-of select="descendant::kommibelegpos" /></FremdPos2>
                 <Warenbezeichnung><xsl:value-of select="descendant::text" /></Warenbezeichnung>
                 <EAN><xsl:value-of select="descendant::ean" /></EAN>
             </Position>
