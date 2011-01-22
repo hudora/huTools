@@ -25,14 +25,14 @@ File Upload just works::
 
 from huTools.http import tools
 import cgi
-import huTools.http.poster_encode as poster_encode
+import poster_encode
 import urlparse
 
 try:
-    import huTools.http.engine_httplib2 as engine_httplib2
+    import engine_httplib2
     request = engine_httplib2.request
 except ImportError:
-    import huTools.http.engine_appengine as engine_appengine
+    import engine_appengine
     request = engine_appengine.request
 
 
