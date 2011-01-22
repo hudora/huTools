@@ -25,8 +25,7 @@ def rfc3339_date_parse(date):
 
 
 def convert_to_date(date):
-    """
-    Converts argument into a date object.
+    """Converts argument into a date object.
 
     Assumes argument to be a RfC 3339 coded date or a date(time) object.
     """
@@ -37,7 +36,7 @@ def convert_to_date(date):
     elif isinstance(date, datetime.date):
         return date
     elif isinstance(date, basestring):
-        date = date[:10]  # strip timestamp
+        date = date[:10]  # strip time
         try:
             return datetime.datetime.strptime(date, '%Y-%m-%d').date()
         except ValueError:

@@ -10,6 +10,7 @@ structured.py - handle structured data/dicts/objects
 
 
 import xml.etree.cElementTree as ET
+import warnings
 
 
 # Basic conversation goal here is converting a dict to an object allowing

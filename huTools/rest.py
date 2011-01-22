@@ -7,15 +7,12 @@ Created by Christian Klein on 2010-07-21.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
-import huTools.http._httplib2 as httplib2
+from huTools.http import fetch
 import os
 import tempfile
 import urllib
-import urlparse
 import simplejson as json
 
-
-# TODO: rewrite to use httplib / urllib. httplib2 has issues with Appengine and reliability
 
 def build_url(base, *args):
     """
@@ -97,23 +94,24 @@ class Client(object):
             path = "%s?%s" % (path, urllib.urlencode(kwargs.pop('params')))
 
         if kwargs:
-            body = json.dumps(kwargs)
+            content = json.dumps(kwargs)
             method = 'POST'
         else:
-            body = None
+            content = None
             method = 'GET'
 
-        response, content = self.connection.request(path, method=method, body=body, headers=headers)
-        if response.status == 201:
-            return {'status': 201,
-                    'success': 'created'}
-        if response.status == 401:
+        url = urlparse.urljoin(self.endpoint, path)
+        credentials = '%s:%s' % (self.username, self.password)
+        status, headers, content = fetch(url, method=method, content=content, headers=headers, credentials=credentials)
+        if status == 201:
+            return {'status': 201, 'success': 'created'}
+        if status == 401:
             raise ClientUnauthorizedExecption()
-        elif response.status == 403:
+        elif status == 403:
             raise ClientForbiddenException()
-        elif response.status == 404:
+        elif status == 404:
             raise ClientNotFoundException()
-        elif response.status == 500:
+        elif status == 500:
             raise ClientServerErrorExecption()
 
         try:
@@ -124,12 +122,8 @@ class Client(object):
                     'data': content}
 
     def close(self):
-        """
-        Close API Client.
-
-        Delete the connection(pool)
-        """
-        del(self.connection)
+        """Close API Client."""
+        pass
 
 
 if __name__ == "__main__":
