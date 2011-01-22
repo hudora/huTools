@@ -25,14 +25,14 @@ File Upload just works::
 
 from huTools.http import tools
 import cgi
-import poster_encode
+import huTools.http.poster_encode as poster_encode
 import urlparse
 
 try:
-    import engine_httplib2
+    import huTools.http.engine_httplib2 as engine_httplib2
     request = engine_httplib2.request
 except ImportError:
-    import engine_appengine
+    import huTools.http.engine_appengine as engine_appengine
     request = engine_appengine.request
 
 
@@ -65,8 +65,8 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
         if hasattr(content, 'items'):
             # we assume content is a dict which needs to be encoded
             # decide to use multipart/form-data encoding or application/x-www-form-urlencoded
-            for v in content.values():
-                if hasattr(v, 'read'):  # file() or StringIO()
+            for val in content.values():
+                if hasattr(val, 'read'):  # file() or StringIO()
                     multipart = True
             if multipart:
                 datagen, mp_headers = poster_encode.multipart_encode(content)
@@ -86,8 +86,8 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
             url = urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
             content = ''
     # convert all header values to strings (what about unicode?)
-    for k, v in myheaders.items():
-        myheaders[k] = str(v)
+    for key, val in myheaders.items():
+        myheaders[key] = str(val)
     # add authentication
     if credentials and not 'Authorization' in myheaders.keys():
         authheader = "Basic %s" % credentials.encode('base64').strip()

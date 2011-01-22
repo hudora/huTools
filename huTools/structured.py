@@ -11,11 +11,12 @@ structured.py - handle structured data/dicts/objects
 
 import xml.etree.cElementTree as ET
 
+
 # Basic conversation goal here is converting a dict to an object allowing
 # more comfortable access. `Struct()` and `make_struct()` are used to archive
 # this goal.
 # See http://stackoverflow.com/questions/1305532/convert-python-dict-to-object for the inital Idea
-# 
+#
 # The reasoning for this is the observation that we ferry arround hundreds of dicts via JSON
 # and accessing them as `obj['key']` is tiresome after some time. `obj.key` is much nicer.
 class Struct(object):
@@ -125,7 +126,7 @@ class Struct(object):
         >>> obj.keys()
         ['a']
         """
-        return [k for (k, v) in self.__dict__.items() if not k.startswith('_Struct__')]
+        return [k for (k, _v) in self.__dict__.items() if not k.startswith('_Struct__')]
 
     def values(self):
         """Emulate dict.values() functionality.
@@ -187,8 +188,8 @@ def make_struct(obj, default=None, nodefault=False):
         # this should be a dict
         struc = Struct(obj, default, nodefault)
         # handle recursive sub-dicts
-        for k, v in obj.items():
-            setattr(struc, k, make_struct(v, default, nodefault))
+        for key, val in obj.items():
+            setattr(struc, key, make_struct(val, default, nodefault))
         return struc
     elif hasattr(obj, '__delslice__') and hasattr(obj, '__getitem__'):
         #
@@ -199,6 +200,7 @@ def make_struct(obj, default=None, nodefault=False):
 
 # Code is based on http://code.activestate.com/recipes/573463/
 def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
+    """Helper Function for XML conversion."""
     # we can't convert bare lists
     assert not isinstance(dictitem, list)
 
@@ -321,6 +323,7 @@ def list2xml(datalist, root, elementname, pretty=False):
 # in-place prettyprint formatter
 
 def indent(elem, level=0):
+    """XML prettyprint: Prints a tree with each node indented according to its depth."""
     i = "\n" + level * " "
     if len(elem):
         if not elem.text or not elem.text.strip():
@@ -329,16 +332,18 @@ def indent(elem, level=0):
             elem.tail = i
         for child in elem:
             indent(child, level + 1)
-        if not child.tail or not child.tail.strip():
-            child.tail = i
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
+        if child:
+            if not child.tail or not child.tail.strip():
+                child.tail = i
+            if not elem.tail or not elem.tail.strip():
+                elem.tail = i
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
 
 def test():
+    """Simple selftest."""
     # warenzugang
     data = {"guid": "3104247-7",
             "menge": 7,
@@ -423,15 +428,5 @@ if __name__ == '__main__':
         'item3': dict(dies=1, ist=2, ein=3, dict=4),
         'item4': 10,
         'item5': [dict(dict=1, in_einer=2, liste=3)]})
-    type(d)
-    d.item1
-    d.item2
-    d.item3
-    d.item3.dies
-    d.item3.ist
-    d.item3.ein
-    d.item3.dict
-    d.item4
-    d.item5
     test()
     sys.exit(failure_count)
