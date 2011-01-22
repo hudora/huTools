@@ -118,7 +118,7 @@ class JasperGenerator(object):
         status, _headers, content = fetch(self.serverurl, content, 'POST')
 
         content = dict(design=design, xpath=xpath, xmldata=xmldata)
-        status, headers, content = fetch(url, content=content, method='POST', multipart=multi)
+        status, headers, content = fetch(self.serverurl, content=content, method='POST', multipart=multi)
         if not status == 200:
             raise JasperException("%s -- %r" % (content, status))
         return content

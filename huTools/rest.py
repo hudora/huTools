@@ -9,8 +9,8 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 
 from huTools.http import fetch
 import os
-import tempfile
 import urllib
+import urlparse
 import simplejson as json
 
 
@@ -74,11 +74,6 @@ class Client(object):
         self.password = password
         self.endpoint = endpoint
 
-        # TODO: move to huTools.http.fetch
-        cachedir = os.path.join(tempfile.gettempdir(), 'robotrock')
-        self.connection = httplib2.Http(cache=cachedir, timeout=20)
-        self.connection.add_credentials(username, password, domain=urlparse.urlsplit(self.endpoint).netloc)
-
     def __getattr__(self, method):
         def handler(*args, **kwargs):
             """doc for handler"""
@@ -102,7 +97,8 @@ class Client(object):
 
         url = urlparse.urljoin(self.endpoint, path)
         credentials = '%s:%s' % (self.username, self.password)
-        status, headers, content = fetch(url, method=method, content=content, headers=headers, credentials=credentials)
+        status, headers, content = fetch(url, method=method, content=content, headers=headers,
+                                         credentials=credentials)
         if status == 201:
             return {'status': 201, 'success': 'created'}
         if status == 401:
@@ -117,7 +113,7 @@ class Client(object):
         try:
             return json.loads(content)
         except Exception:
-            return {'status': response.status,
+            return {'status': status,
                     'error': 'unparseable response',
                     'data': content}
 
