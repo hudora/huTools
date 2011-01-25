@@ -21,15 +21,15 @@ def avg(data):
     >>> avg([3])
     3.0
     """
-    
+
     if data:
-        return (sum(data))/float(len(data))
+        return (sum(data)) / float(len(data))
     return 0.0
 
 
 def median(data):
     """Calculated the Median of a list.
-    
+
     >>> median([1,2,3])
     2.0
     >>> median([1,2,3,4])
@@ -39,21 +39,21 @@ def median(data):
     >>> median([3])
     3.0
     """
-    
+
     if data:
         sdata = sorted(data)
         if len(sdata) % 2 == 1:
-            return float(sdata[(len(sdata)+1)/2-1])
+            return float(sdata[(len(sdata) + 1) / 2 - 1])
         else:
-            lower = sdata[len(sdata)/2-1]
-            upper = sdata[len(sdata)/2]
+            lower = sdata[len(sdata) / 2 - 1]
+            upper = sdata[len(sdata) / 2]
             return float(lower + upper) / 2
     return 0.0
 
 
 def _group_by_x(values, aggregationfunc, keyfunc, reversefunc):
     """input should be [(datetime, stuff), ...]"""
-    
+
     groupings = {}
     for date, value in values:
         key = keyfunc(date)
@@ -79,7 +79,7 @@ def _month_to_date(tup):
 
 
 def _quarter_key(date):
-    return (date.year, int(((date.month+1)/3)+1))
+    return (date.year, int(((date.month + 1) / 3) + 1))
 
 
 def _quarter_to_date(tup):

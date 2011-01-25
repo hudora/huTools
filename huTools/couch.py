@@ -9,6 +9,7 @@ Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 
 import couchdb.client
 
+
 def setup_couchdb(servername, database):
     """Get a connection handler to the CouchDB Database, creating it when needed."""
 

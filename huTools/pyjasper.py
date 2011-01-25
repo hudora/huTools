@@ -6,7 +6,7 @@ pyJasper client.py - Way to talk to a pyJasper Server.
 See http://pypi.python.org/pypi/pyJasper/ for further enligthenment.
 
 Created by Maximillian Dornseif on 2007-10-12.
-Moved into huTools in 2010
+Moved into huTools in 2010, 2011
 Consider it BSD licensed.
 """
 
@@ -17,6 +17,7 @@ import os
 import os.path
 import re
 import unittest
+import urllib
 import warnings
 import xml.etree.ElementTree as ET
 
@@ -28,10 +29,11 @@ try:
 except (ImportError, EnvironmentError):
     settings = object()
 
+config = object()
 try:
     import config
 except:
-    config = object()
+    pass
 
 
 class JasperException(RuntimeError):
@@ -76,7 +78,8 @@ class JasperGenerator(object):
         self.xpath = None
         self.debug = debug
         self.serverurl = _find_server(serverurl)
-        warnings.warn("huTools.pyjasper.JasperGenerator() is deprecated use huTools.pyjasper.generate_report() instead.", DeprecationWarning, stacklevel=2)
+        warnings.warn("huTools.pyjasper.JasperGenerator() is deprecated use"
+                      " huTools.pyjasper.generate_report() instead.", DeprecationWarning, stacklevel=2)
 
     def generate_xml(self, data=None):
         """To be overwritten by subclasses.
@@ -114,6 +117,8 @@ class JasperGenerator(object):
             content = dict(design=design, xpath=xpath, xmldata=xmldata)
         status, _headers, content = fetch(self.serverurl, content, 'POST')
 
+        content = dict(design=design, xpath=xpath, xmldata=xmldata)
+        status, headers, content = fetch(self.serverurl, content=content, method='POST', multipart=multi)
         if not status == 200:
             raise JasperException("%s -- %r" % (content, status))
         return content
@@ -131,7 +136,8 @@ class JasperGenerator(object):
         return self.generate_pdf(data)
 
 
-def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sign_reason='', callback=''):
+def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sign_reason='',
+                    callback='', metadata=None):
     """Generates a report, returns the PDF.
 
     reportdesign, xpath and xmldata - necessary data to generate a JasperReport.
@@ -139,6 +145,7 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
     sign_keyname - key for the signature lying on the server
     sign_reason - reason to be sent within the signed document
     callback - url to where the generated report will be sent
+    metadata - PDF metadata
 
     Return value is pdf data stripped of timestamps for modification and creaton dates.
     If a callback is given, the server will sent the pdf data to the given URL instead.
@@ -150,8 +157,10 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
     if sign_keyname:
         content['sign_keyname'] = sign_keyname
         if not sign_reason:
-            raise Exception('reason is needed when signing documents!')
+            raise ValueError('reason is needed when signing documents!')
         content['sign_reason'] = sign_reason
+    if metadata:
+        content['metadata'] = urllib.urlencode(metadata)
 
     status, _headers, content = fetch(url, content, 'POST')
     if not status == 200:
@@ -161,7 +170,12 @@ def generate_report(reportdesign, xpath, xmldata, url=None, sign_keyname='', sig
 
 
 _testreport = """<?xml version="1.0" encoding="UTF-8"?>
-        <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lieferschein" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="70" bottomMargin="28" whenResourceMissingType="Key">
+        <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+ http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+          name="Lieferschein" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="56"
+          rightMargin="56" topMargin="70" bottomMargin="28" whenResourceMissingType="Key">
             <queryString language="xPath"><![CDATA[/elements/element]]></queryString>
             <field name="testdata" class="java.lang.String">
                 <fieldDescription><![CDATA[*/data]]></fieldDescription>
@@ -175,7 +189,7 @@ _testreport = """<?xml version="1.0" encoding="UTF-8"?>
                     <textField isBlankWhenNull="true">
                         <reportElement key="field-1" x="36" y="0" width="300" height="10"/>
                         <textElement><font size="8"/></textElement>
-                        <textFieldExpression class="java.lang.String"><![CDATA[$F{testdata}]]></textFieldExpression>
+                <textFieldExpression class="java.lang.String"><![CDATA[$F{testdata}]]></textFieldExpression>
                     </textField>
                 </band>
             </detail>
@@ -203,13 +217,13 @@ class testTests(unittest.TestCase):
 
     def test_legacy_class(self):
         gen = _TestGenerator()
-        content = gen.generate()
+        gen.generate()
 
     def test_function(self):
-        content = generate_report(_testreport, 
-                                  '/elements/element',
-                                  '<elements><element><data>TEST</data></element></elements>',
-                                 sign_keyname="hudora-rechnungen", sign_reason='Testreason for generating documents')
+        generate_report(_testreport,
+                        '/elements/element',
+                        '<elements><element><data>TEST</data></element></elements>',
+                        sign_keyname="hudora-rechnungen", sign_reason='Testreason for generating documents')
 
 
 if __name__ == '__main__':

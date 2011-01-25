@@ -33,7 +33,7 @@ def ean_digit(arg):
 
     factor = 3
     summe = 0
-    for index in range(len(arg)-1, -1, -1):
+    for index in range(len(arg) - 1, -1, -1):
         summe += int(arg[index]) * factor
         factor = 4 - factor
     return str((10 - (summe % 10)) % 10)
@@ -138,14 +138,14 @@ def verhoeff_digit(arg):
                 (2, 7, 9, 3, 8, 0, 6, 4, 1, 5),
                 (7, 0, 4, 6, 9, 1, 3, 2, 5, 8))
 
-    check = 0 # initialize check at 0
+    check = 0  # initialize check at 0
     digit = 0
     i = 0
     for digit in reversed(arg):
         digit = ord(digit) - 48
-        check = _amatrix[check][_pmatrix[(i+1) % 8][digit]] # not quite the same...
+        check = _amatrix[check][_pmatrix[(i + 1) % 8][digit]]  # not quite the same...
         i += 1
-    return chr(_inverse[check]+48)
+    return chr(_inverse[check] + 48)
 
 
 def build_verhoeff_id(prefix, number, length=4):

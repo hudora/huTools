@@ -44,13 +44,15 @@ import sys
 
 verbose = 0
 recurse = 0
-dryrun  = 0
+dryrun = 0
 no_backup = 0
+
 
 def usage(msg=None):
     if msg is not None:
         print >> sys.stderr, msg
     print >> sys.stderr, __doc__
+
 
 def errprint(*args):
     sep = ""
@@ -58,6 +60,7 @@ def errprint(*args):
         sys.stderr.write(sep + str(arg))
         sep = " "
     sys.stderr.write("\n")
+
 
 def main():
     import getopt
@@ -89,6 +92,7 @@ def main():
         return
     for arg in args:
         check(arg)
+
 
 def check(file):
     if os.path.isdir(file) and not os.path.islink(file):
@@ -178,9 +182,9 @@ class Reindenter:
         # we see a line with *something* on it.
         i = stats[0][0]
         after.extend(lines[1:i])
-        for i in range(len(stats)-1):
+        for i in range(len(stats) - 1):
             thisstmt, thislevel = stats[i]
-            nextstmt = stats[i+1][0]
+            nextstmt = stats[i + 1][0]
             have = getlspace(lines[thisstmt])
             want = thislevel * 4
             if want < 0:
@@ -192,7 +196,7 @@ class Reindenter:
                     want = have2want.get(have, -1)
                     if want < 0:
                         # Then it probably belongs to the next real stmt.
-                        for j in xrange(i+1, len(stats)-1):
+                        for j in xrange(i + 1, len(stats) - 1):
                             jline, jlevel = stats[j]
                             if jlevel >= 0:
                                 if have == getlspace(lines[jline]):
@@ -202,10 +206,10 @@ class Reindenter:
                                            # comment like this one,
                         # in which case we should shift it like its base
                         # line got shifted.
-                        for j in xrange(i-1, -1, -1):
+                        for j in xrange(i - 1, -1, -1):
                             jline, jlevel = stats[j]
                             if jlevel >= 0:
-                                want = have + getlspace(after[jline-1]) - \
+                                want = have + getlspace(after[jline - 1]) - \
                                        getlspace(lines[jline])
                                 break
                     if want < 0:
@@ -280,6 +284,7 @@ class Reindenter:
             self.find_stmt = 0
             if line:   # not endmarker
                 self.stats.append((sline, self.level))
+
 
 # Count number of leading blanks.
 def getlspace(line):

@@ -71,7 +71,7 @@ def main(repos, revision):
 
     client = pysvn.Client()
     diff = client.diff_summarize(repos,
-             revision1=pysvn.Revision(pysvn.opt_revision_kind.number, revision-1),
+             revision1=pysvn.Revision(pysvn.opt_revision_kind.number, revision - 1),
              revision2=pysvn.Revision(pysvn.opt_revision_kind.number, revision))
 
     conn = sqlobject.connectionForURI(DATABASE_URI)

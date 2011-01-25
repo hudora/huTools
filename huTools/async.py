@@ -34,7 +34,7 @@ class Future:
         self.__Cond = threading.Condition()   # Notify on this Condition when result is ready
 
         # Run the actual function in a separate thread
-        self.__Thread = threading.Thread(target = self.Wrapper, args = ((func, ) + args), **kwargs)
+        self.__Thread = threading.Thread(target=self.Wrapper, args=((func, ) + args), **kwargs)
         self.__Thread.setName("FutureThread")
         self.__Thread.start()
 

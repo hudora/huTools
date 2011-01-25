@@ -164,7 +164,7 @@ Sie ist Voraussetzung für die Lieferscheingenerierung. Ein Kommiauftrag kann nu
 * **guid** - Unique ID (Kommiauftragsnr) des Kommiauftrags, der bei der Kommiauftrag-Nachricht übertragen wurde.
 * **positionen** - Liste der zurückzumeldenen Positionen. Muss IMMER alle Positionen beinhalten, die 
   im  Kommiauftrag mitgesendet wurden. Jede Position wird als Dictionary abgebildet. Positionen können
-  mehrfach vormommen.
+  mehrfach vorkommen. Wenn ein Artikel mit mehreren NVEs transportiert wird, müssen Sie mehrfach vorkommen. 
   Pflichtfelder in jedem Dictionary sind zur Zeit `posnr`, `menge` und `artnr`.
   Zusatzfelder ist `nve` und `referenzen` (siehe Warenzugang), insbesondere `referenzen.charge`.
 

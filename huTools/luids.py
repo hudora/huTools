@@ -24,9 +24,11 @@ import unittest
 import uuid
 
 try:
-    import thread as _thread
+    import thread
+    _thread = thread
 except ImportError:
-    import dummy_thread as _thread
+    import dummy_thread
+    _thread = dummy_thread
 
 
 _counter = 0
@@ -36,18 +38,18 @@ _counter_lock = _thread.allocate_lock()
 def unique_machine32():
     """
     Generate an ID which has a low probability of repeating on this machine.
-    
+
     What goes where::
-    
+
     #      PP ^
     #    TTtt ^
     #    c
-    
+
     So the first byte is an combination of a counter (c) and the first byte of the least significant
     (and thus fastest changing) word (TT) of the current timestamp. This is followed by the next byte of the
     least significant word of the current timestamp (TT). The next two bytes are the PID (PP) and the most
     significant word of the current timestamp (tt) XORed.
-    
+
     Assuming 16bit PIDs this should result in unique IDs on a machine even with multi-threading. But there
     are degenerated scenarios (more than 2**16 concurrent/fast spawning processes, while there are more than
     2**8 threads bussy generating unique IDs) where the IDs might not be unique.
@@ -55,7 +57,7 @@ def unique_machine32():
     """
 
     global _counter
-    try: # Entering critical section.
+    try:  # Entering critical section.
         _counter_lock.acquire()
         intnow = long(time.time())
         _counter = (_counter + 1) % 0xff
@@ -69,17 +71,17 @@ def unique_machine32():
 def unique_machine64():
     """
     Generate an ID which should never repeat on this machine.
-    
+
     This function is suggested as the base for generating filenames and the like. Processes/Threads
     running on the same machine should never be able to generate the same ID and no ID should be created
     twice.
-    
+
     What goes where::
-    
+
     #    TTTT     ^
     #        PP   ^
     #        cccc
-    
+
     The first two words are the current timestamp. The next word is the current  PID xored with the most
     significant word of a counter. The last byte is the most significant word of a counter.
     The counter is being increased by 1 in every call. This should make this function thread
@@ -87,7 +89,7 @@ def unique_machine64():
     """
 
     global _counter
-    try: # Entering critical section.
+    try:  # Entering critical section.
         _counter_lock.acquire()
         intnow = long(time.time())
         _counter = (_counter + 1) % 0xffffffff
@@ -118,10 +120,10 @@ def luid():
 
 def guid128(salt=None):
     """Generates an 26 character ID which should be globally unique.
-    
+
     >>> guid128()
     'MTB2ONDSL3YWJN3CA6XIG7O4HM'
-    
+
     """
     if salt:
         data = "%s%s%s" % (salt, uuid.uuid1(), salt)
@@ -140,7 +142,7 @@ class _uuidsTests(unittest.TestCase):
             self.assertTrue((uuid <= 0xffffffff) and (uuid >= 0))
             self.assertFalse(uuid in seen)
             seen.add(uuid)
-        time.sleep(1) # avois wrap arround of counter
+        time.sleep(1)  # avois wrap arround of counter
         for i in range(250):
             uuid = unique_machine32()
             self.assertTrue((uuid <= 0xffffffff) and (uuid >= 0))

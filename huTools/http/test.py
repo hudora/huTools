@@ -41,7 +41,7 @@ class testTests(unittest.TestCase):
         status, header, body = fetch('http://www.postbin.org/186ndf2',
                                      {'hosts': open('/etc/hosts', 'r')}, 'POST')
         status, header, body = fetch('http://www.postbin.org/186ndf2',
-                                     {'hosts': open('/etc/hosts', 'r'), 
+                                     {'hosts': open('/etc/hosts', 'r'),
                                       'unicode': u'Iñtërnâtiônàlizætiøn'}, 'POST')
         assert status == 201
 

@@ -10,16 +10,13 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
 
-import email
-import httplib
 import hujson
 import logging
-import sys
-import urllib
 import urllib2
 
 
 __POSTMARK_URL__ = 'http://api.postmarkapp.com/'
+
 
 def send_mail(message, api_key=None):
         '''
@@ -46,7 +43,7 @@ def send_mail(message, api_key=None):
         Attachments:    A list of attachments. Attachments can be either
                         a list of {name, data, content_type} dicts,
         '''
-        
+
         if 'Sender' in message and ('From' not in message):
             message['From'] = message['Sender']
         for attr in 'From To Subject'.split():
@@ -75,7 +72,7 @@ def send_mail(message, api_key=None):
                 'X-Postmark-Server-Token': api_key,
             }
         )
-        
+
         logging.debug('Accessing %semail' % __POSTMARK_URL__)
         try:
             result = urllib2.urlopen(req)
@@ -99,8 +96,11 @@ def send_mail(message, api_key=None):
                 raise RuntimeError('Internal server error at Postmark. Admins have been alerted.', err)
         except urllib2.URLError, err:
             if hasattr(err, 'reason'):
-                raise RuntimeError("URLError: Failed to reach the server: %s (See 'inner_exception' for details)" % err.reason, err)
+                raise RuntimeError(("URLError: Failed to reach the server: %s (See 'inner_exception' for"
+                                    " details)") % err.reason, err)
             elif hasattr(err, 'code'):
-                raise RuntimeError("URLError: %d: The server couldn't fufill the request. (See 'inner_exception' for details)" % err.code, err)
+                raise RuntimeError(("URLError: %d: The server couldn't fufill the request. (See"
+                                    " 'inner_exception' for details)") % err.code, err)
             else:
-                raise RuntimeError("URLError: The server couldn't fufill the request. (See 'inner_exception' for details)", err)
+                raise RuntimeError("URLError: The server couldn't fufill the request. (See 'inner_exception'"
+                                   " for details)", err)
