@@ -41,8 +41,8 @@ def build_url(endpoint, queuename, guid=None):
 def parse_xml(content):
     """Parse XML response
 
-    >>> parse_xml('<data><messages><message><url>http://example.com/q/45054/</url></message></messages></data>')
-    ['http://example.com/q/45054/']
+    >>> parse_xml('<data><messages><message><url>http://example.com/q/450/</url></message></messages></data>')
+    ['http://example.com/q/450/']
     """
 
     tree = ET.fromstring(content)
@@ -140,11 +140,11 @@ def send(endpoint, queuename, directory='.', delete=False, credentials=None):
     for fname in os.listdir(directory):
         path = os.path.join(directory, fname)
         data = open(path).read()
-        
+
         mimetype, _ = mimetypes.guess_type(fname)
         if mimetype is None:
             mimetype = 'application/octet-stream'
-        
+
         push(endpoint, queuename, fname, data, content_type=mimetype, credentials=credentials)
         if delete:
             os.unlink(path)
