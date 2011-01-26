@@ -11,6 +11,7 @@ See http://docs.python.org/lib/module-uuid.html and http://zesty.ca/python/uuid.
 uuid module.
 
 Use guid128() if you are looking for a compact, URL-save representation of uuid output.
+See [shortuuid](https://github.com/stochastic-technologies/shortuuid) for an alternative aproach.
 
 Created by Maximillian Dornseif on 2006-11-08. BSD Licensed.
 """
@@ -123,7 +124,6 @@ def guid128(salt=None):
 
     >>> guid128()
     'MTB2ONDSL3YWJN3CA6XIG7O4HM'
-
     """
     if salt:
         data = "%s%s%s" % (salt, uuid.uuid1(), salt)
