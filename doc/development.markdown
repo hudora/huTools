@@ -31,7 +31,7 @@ Here we store Information in regard to Software Development at Hudora.
 
 [refactor]: http://www.extremeprogramming.org/rules/refactor.html
 [commitmessage]: http://www.tpope.net/node/106
-[timeline]: https://github.com/
+[timeline]: https://github.com/organizations/hudora/
 
 
 ## Style
@@ -43,6 +43,7 @@ Here we store Information in regard to Software Development at Hudora.
    Use [pep8.py][pep8py] `--ignore=E501,W291 --repeat` to verify compliance.
  * Follow [PEP 257][pep257] for docstrings
  * No tabs. Not anywhere (except in Makefiles). Always indent with 4 spaces.
+ * use [pyflakes][pyflakes]. 
  * Use [pylint][pylint]. Aim for a score of at least 8. The higher the better. If you score is below 8
    be prepared to present a good reason for it.
  * Classes/Variables which reference Objects specific to our ERP/our Industry/german trade
@@ -63,11 +64,12 @@ Here we store Information in regard to Software Development at Hudora.
    Cent instead of Euro, Millimeters instead of Centimeters and so on.
  * Write doctests. Write unittests. Aim for a [test coverage][coverage]
    of at least 80%. The higher the better.
- * Provide a `Makefile` with `dependencies`, `test` and `check` (pylint/pep8) targets.
+ * Provide a `Makefile` with `dependencies`, `test` and `check` (pylint/pyflakes/pep8) targets.
 
 [pep8]: http://www.python.org/dev/peps/pep-0008/
-[pep8py]: http://svn.browsershots.org/trunk/devtools/pep8/pep8.py
+[pep8py]: https://github.com/jcrocholl/pep8
 [pep257]: http://www.python.org/dev/peps/pep-0257/
+[pyflakes]: http://pypi.python.org/pypi/pyflakes
 [pylint]: http://www.python.org/pypi/pylint 
 [zen]: http://www.python.org/dev/peps/pep-0020/
 [donts]: http://docs.python.org/howto/doanddont.html
@@ -99,7 +101,7 @@ Use global unique identifiers where ever possible. `huTools.luids.guid128()` cre
 ## Misc
 
 * you can assume that setuptools, virtualenv, and pip are installed
-* requirements have to be mentioned in `requirements.txt` and `setup.py`
+* requirements have to be mentioned in `requirements.txt` and `setup.py` - unless you work with git submodules.
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 * Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
 * use [huTools](http://hudora.github.com/huTools/) where appropriate
@@ -178,13 +180,11 @@ Alternatively use a `guid` field. `huToos.luids.guid128()` can provide you with 
 * [Refactoring: Improving the Design of Existing Code][refactoring] by Fowler, Beck, Brant, Opdyke, Roberts
 * [An Illustrated History of Failure][failure] (Video)
 * [Getting unicode right in Python][unicode]
-* [Developing reusable apps][reusable]
 
 [zen]: http://www.python.org/dev/peps/pep-0020/
 [idiomatic]: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
 [pyguide]: http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
-[refactoring]: http://www.pearsonhighered.com/academic/product/0,,0201485672,00%2Ben-USS_01DBC.html
+[refactoring]: http://martinfowler.com/books.html#refactoring
 [failure]: http://cybernetics.hudora.biz/nonpublic/Paul%20Fenwick,%20Perl%20Training%20Australia_%20_An%20Illustrated%20History%20of%20Failure_.mov
 [unicode]: http://blog.notdot.net/2010/07/Getting-unicode-right-in-Python
-[reusable]: http://www.b-list.org/weblog/2008/mar/15/slides/
 
