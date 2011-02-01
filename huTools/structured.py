@@ -99,6 +99,10 @@ class Struct(object):
         """
         return item in self.__dict__
 
+    def __nonzero__(self):
+        """Returns whether the instance evaluates to False"""
+        return bool(len(self.items()))
+
     def has_key(self, item):
         """Emulate dict.has_key() functionality.
 
