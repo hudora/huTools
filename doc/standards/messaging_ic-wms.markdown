@@ -69,7 +69,7 @@ Der Webserver antwortet mit Statuscode 204.
 
 ### Beispiel
 
-    curl -u username:password -X GET http://example.com/fmtp/lg200_zugang/
+    curl -u username:password -X GET -H 'Accept: application/xml' http://example.com/fmtp/lg200_zugang/
     <data>
      <max_retry_interval>60000</max_retry_interval>
      <messages>
@@ -125,7 +125,7 @@ Der Webserver antwortet bei erfolgreichem Empfang mit Statuscode 204 und einer l
 ### Beispiel
 #### Liste der offenen Aufträge
 
-    curl -u username:password -X GET http://example.com/fmtp/quename/
+    curl -u username:password -X GET -H 'Accept: application/xml' http://example.com/fmtp/quename/
     <data>
      <max_retry_interval>60000</max_retry_interval>
      <messages>

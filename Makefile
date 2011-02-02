@@ -81,7 +81,6 @@ examples: doc/standards/examples/warenzugang.xml doc/standards/examples/kommiauf
 	xsltproc doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/warenzugang.xml > doc/standards/examples/wms2logos_warenzugang.xml
 	xsltproc doc/standards/examples/wms2logos_kommiauftrag.xslt doc/standards/examples/kommiauftrag.xml > doc/standards/examples/wms2logos_kommiauftrag.xml
 
-
 clean:
 	rm -Rf testenv pythonenv build dist html test.db pylint.out sloccount.sc pip-log.txt
 	find . -name '*.pyc' -delete
