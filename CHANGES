@@ -2,6 +2,8 @@
 Changes
 =======
 
+* 0.62:   huTools.structured.Struct has a __nonzero__ method
+* 0.61:   huTools.structured.Struct and make_struct handle lists and get an items() method
 * 0.61:   huTools.structured.Struct and make_struct handle lists and get an items() method
 * 0.60p1: huTools.http implements authentication
 * 0.60:   huTools.http API and function-based pyJasper Interface. Dependencie Reduction
