@@ -10,9 +10,9 @@
       <Liefertermin>20091125</Liefertermin>
       <Terminart>BIS</Terminart>
       <Textcode1>8</Textcode1>
-      <Auftragstext>abholer: Abholung durch Spedition Dornseif$avisieren_unter: +49123456$hebebuehne: True$</Auftragstext>
+      <Auftragstext/>
       <Textcode2>2</Textcode2>
-      <Kommissioniertext>etiketten_speicherort: c:\desktop\Programm Data\schrecklicher windows pfad$sortenrein: True$packhoehe: 1100</Kommissioniertext>
+      <Kommissioniertext/>
       <EmpfaengerILN/>
       <Auftragsprioritaet>7</Auftragsprioritaet>
       <Versandart/>
@@ -33,21 +33,27 @@
       <Position>
         <MengeEH1>12</MengeEH1>
         <ArtikelNr>14640/XL</ArtikelNr>
-        <FremdPos1>1</FremdPos1>
+        <Positionstext/>
+        <FremdPos1/>
+        <FremdPos2/>
         <Warenbezeichnung/>
         <EAN/>
       </Position>
       <Position>
         <MengeEH1>4</MengeEH1>
         <ArtikelNr>14640/03</ArtikelNr>
-        <FremdPos1>2</FremdPos1>
+        <Positionstext/>
+        <FremdPos1/>
+        <FremdPos2/>
         <Warenbezeichnung/>
         <EAN/>
       </Position>
       <Position>
         <MengeEH1>2</MengeEH1>
         <ArtikelNr>10105</ArtikelNr>
-        <FremdPos1>3</FremdPos1>
+        <Positionstext/>
+        <FremdPos1/>
+        <FremdPos2/>
         <Warenbezeichnung/>
         <EAN/>
       </Position>
