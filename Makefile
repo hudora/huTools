@@ -54,9 +54,9 @@ upload:
 	python setup.py sdist
 	VERSION=`ls dist/ | perl -npe 's/.*-(\d+\..*?).tar.gz/$1/' | sort | tail -n 1`
 	python setup.py sdist upload
-	git tag v$VERSION
+	git tag v$(VERSION)
 	git push origin --tags
-	git commit -m "v$VERSION published on PyPi" -a
+	git commit -m "v$(VERSION) published on PyPi" -a
 	git push origin
 
 build: examples
