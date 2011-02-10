@@ -25,13 +25,32 @@
             <Textcode1>8</Textcode1>
             <Auftragstext>
                 <xsl:for-each select="descendant::versandanweisung">
-                    <xsl:value-of select="bezeichner" />
-                    <xsl:text>: </xsl:text>
-                    <xsl:value-of select="anweisung" />
-                    <xsl:if test="following-sibling::*">$</xsl:if>
+                    <xsl:if test="contains('avisierung
+                                            selbstabholer
+                                            hebebuehne',
+                                            bezeichner)">
+                        <xsl:value-of select="bezeichner" />
+                        <xsl:text>: </xsl:text>
+                        <xsl:value-of select="anweisung" />
+                        <xsl:if test="following-sibling::*">$</xsl:if>
+                    </xsl:if>
                 </xsl:for-each>
             </Auftragstext>
             <Textcode2>2</Textcode2>
+            <Kommissioniertext>
+                <xsl:for-each select="descendant::versandanweisung">
+                    <xsl:if test="contains('packhoehe
+                                            sortenrein
+                                            etiketten
+                                            etiketten_speicherort',
+                                            bezeichner)">
+                        <xsl:value-of select="bezeichner" />
+                        <xsl:text>: </xsl:text>
+                        <xsl:value-of select="anweisung" />
+                        <xsl:if test="following-sibling::*">$</xsl:if>
+                    </xsl:if>
+                </xsl:for-each>
+            </Kommissioniertext>
             <EmpfaengerILN><xsl:value-of select="descendant::iln" /></EmpfaengerILN>
             <Auftragsprioritaet><xsl:value-of select="prioritaet" /></Auftragsprioritaet>
             <Versandart>
