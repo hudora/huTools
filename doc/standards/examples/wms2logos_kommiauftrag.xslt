@@ -27,6 +27,7 @@
                 <xsl:for-each select="descendant::versandanweisung">
                     <xsl:if test="contains('avisierung
                                             selbstabholer
+                                            sonderarbeiten
                                             hebebuehne',
                                             bezeichner)">
                         <xsl:value-of select="bezeichner" />
