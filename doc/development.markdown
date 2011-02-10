@@ -22,16 +22,19 @@ Here we store Information in regard to Software Development at Hudora.
    *before* you touched it.
  * Before ending the day, always check in and push to our central repository.
  * Your commit messages should be in english, use markdown and follow general
-   [commit message best practices][commitmessage].
+   [commit message best practices][commitmessage]. Sample:
+   `[LH #4711] added abbility to print docs for Swiss customs`
  * Check the [timeline/dashboard][timeline] regulary to see what's happening.
    Skimm the changesets and ask if you don't understand something.
  * always do `make test`, `make check` or equivalent before commit.
  * add the URL of the ticket in the ticket system to the end of your commit message
  * Work in branches where appropriate. For every feature/ticket a branch may be appropriate.
-
+ * USe extensive comments as if you would be writing for [docco][docco]
+ 
 [refactor]: http://www.extremeprogramming.org/rules/refactor.html
 [commitmessage]: http://www.tpope.net/node/106
 [timeline]: https://github.com/organizations/hudora/
+[docco]: http://jashkenas.github.com/docco/
 
 
 ## Style
