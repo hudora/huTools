@@ -16,14 +16,14 @@ import email.utils
 def german_weekday_name(date):
     """ return the german weekday name for a given date """
     days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
-    return days[date.weekday()];
+    return days[date.weekday()]
 
 
 def german_month_name(date):
     """ return the german month name for a given date """
     months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September',
               'Oktober', 'November', 'Dezember']
-    return months[date.month-1];
+    return months[date.month - 1]
 
 
 def rfc3339_date(date=None):
