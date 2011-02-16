@@ -29,11 +29,9 @@ import poster_encode
 import urlparse
 
 try:
-    import engine_httplib2
-    request = engine_httplib2.request
+    from engine_appengine import request
 except ImportError:
-    import engine_appengine
-    request = engine_appengine.request
+    from engine_httplib2 import request
 
 
 def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
