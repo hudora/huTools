@@ -28,6 +28,8 @@ import cgi
 import poster_encode
 import urlparse
 
+# This is somewhat clumsy to make static code checkers happy
+request = None
 try:
     from engine_appengine import request
 except ImportError:

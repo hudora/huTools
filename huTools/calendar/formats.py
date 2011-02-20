@@ -48,15 +48,19 @@ def convert_to_date(date):
         return date.date()
     elif isinstance(date, datetime.date):
         return date
+    elif not date:
+        return None
     elif isinstance(date, basestring):
         date = date[:10]  # strip time
         try:
             return datetime.datetime.strptime(date, '%Y-%m-%d').date()
         except ValueError:
-            return datetime.datetime.strptime(date, '%Y%m%d').date()
-    elif not date:
-        return None
-    raise ValueError("Unknown value %r (%s)" % (date, type(date)))
+            try:
+                date = date[:8]  # strip time
+                return datetime.datetime.strptime(date, '%Y%m%d').date()
+            except ValueError:
+                pass  # Error will be raised later on
+    raise ValueError("Unknown date value %r (%s)" % (date, type(date)))
 
 
 def convert_to_datetime(date):
