@@ -1,4 +1,4 @@
-"""This module collects several utility funictions we found useful at HUDORA. Noting special in there.
+"""This module collects several utility funictions we found useful at HUDORA. Nothing special in there.
 Consider it BSD Licensed.
 """
 

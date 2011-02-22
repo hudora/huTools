@@ -138,7 +138,7 @@ Django Models always should come with `created_at` and `updated_at` fields. They
 called `designator` as ther primary means of reference. If the designator is meant for human consumption it
 should consist of a two letter Prefix unique for that model, a secquence number and a check digit. If the
 designator is not (or seldom) for human consumption it should be a random unique value frefixed by two
-letters. See https://cybernetics.hudora.biz/intern/trac/wiki/NummernKreise prefixes used so far.
+letters. See https://sites.google.com/a/hudora.de/intern/it-administration/nummern/nummernkreise prefixes used so far.
 
 
     class Task(models.Model):
