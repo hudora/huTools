@@ -31,9 +31,11 @@ import urlparse
 # This is somewhat clumsy to make static code checkers happy
 request = None
 try:
-    from engine_appengine import request
+    import engine_appengine
+    request = engine_appengine.request
 except ImportError:
-    from engine_httplib2 import request
+    import engine_httplib2
+    request = engine_httplib2.request
 
 
 def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
