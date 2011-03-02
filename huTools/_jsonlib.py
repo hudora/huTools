@@ -755,7 +755,7 @@ def write_impl(value, sort_keys, indent, ascii_only,
     return serializer.serialize(value)
 
 
-def write(value, sort_keys=False, indent=None, ascii_only=True,
+def write(value, sort_keys=True, indent=None, ascii_only=True,
            coerce_keys=False, encoding='utf-8', on_unknown=None):
     """Serialize a Python value to a JSON-formatted byte string.
 
