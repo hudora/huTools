@@ -77,7 +77,7 @@ Here we store Information in regard to Software Development at Hudora.
 [zen]: http://www.python.org/dev/peps/pep-0020/
 [donts]: http://docs.python.org/howto/doanddont.html
 [failfast]: http://en.wikipedia.org/wiki/Fail-fast 
-[crashearly]: https://cybernetics.hudora.biz/intern/wordpress/2008/11/offensive-programming-or-crash-early-crash-often/
+[crashearly]: https://sites.google.com/a/hudora.de/intern/doc/blog-archiv/blog-sonstige-eintraege-2/offensive-programming-or-crash-early-crash-often
 [coverage]: http://www.python.org/pypi/coverage
 [floats]: http://docs.sun.com/source/806-3568/ncg_goldberg.html
 [idempotent]: http://en.wikipedia.org/wiki/Idempotent
