@@ -9,34 +9,53 @@ Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 
 import datetime
 import unittest
+import warnings
 
 
-def date_trunc(date, trtype):
+def date_trunc(trtype, timestamp):
     """
-    Truncate date
+    Truncate date or datetime object. Truncated object of the given type.
 
     This function is inspired by date_trunc from PostgreSQL, see
     http://www.postgresql.org/docs/8.1/static/functions-datetime.html#FUNCTIONS-DATETIME-TRUNC
+
+    Supported types are year, month, week, day, hour, minute, second.
+
+    >>> date_trunc('week', datetime.datetime(1974, 8, 21))
+    datetime.datetime(1974, 8, 19, 0, 0)
+    >>> date_trunc('week', datetime.date(1973, 8, 8))
+    datetime.date(1973, 8, 6)
     """
 
-    tmp = date.timetuple()
+    if isinstance(timestamp, basestring):
+        # we are called with the old calling convention
+        warnings.warn("`date_trunc` should be called with a date/datetime object as the second parameter",
+                      DeprecationWarning, stacklevel=2)
+        timestamp, trtype = trtype, timestamp
+
+    tmp = timestamp.timetuple()
     if trtype == "year":
-        return datetime.datetime(tmp.tm_year, 1, 1)
+        ret = datetime.datetime(tmp.tm_year, 1, 1)
     elif trtype == "month":
-        return datetime.datetime(tmp.tm_year, tmp.tm_mon, 1)
+        ret = datetime.datetime(tmp.tm_year, tmp.tm_mon, 1)
     elif trtype == "week":
-        firstday = date - datetime.timedelta(days=tmp.tm_wday)
-        return datetime.datetime.combine(firstday, datetime.time(0))
+        firstday = timestamp - datetime.timedelta(days=tmp.tm_wday)
+        ret = datetime.datetime.combine(firstday, datetime.time(0))
     elif trtype == "day":
-        return datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday)
+        ret = datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday)
     elif trtype == "hour":
-        return datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday, tmp.tm_hour)
+        ret = datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday, tmp.tm_hour)
     elif trtype == "minute":
-        return datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday, tmp.tm_hour, tmp.tm_min)
+        ret = datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday, tmp.tm_hour, tmp.tm_min)
     elif trtype == "second":
-        return datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday, tmp.tm_hour, tmp.tm_min, tmp.tm_sec)
+        ret = datetime.datetime(tmp.tm_year, tmp.tm_mon, tmp.tm_mday, tmp.tm_hour, tmp.tm_min, tmp.tm_sec)
     else:
-        raise ValueError("Unknown ")
+        raise ValueError("Unknown truncation type %s" % trtype)
+    # if we where given a datetime object return it, else assume a date object and cast our return
+    # value to that
+    if isinstance(timestamp, datetime.datetime):
+        return ret
+    return ret.date()
 
 
 def get_week(date):
@@ -45,78 +64,93 @@ def get_week(date):
     and returns the year and week number.
     """
 
-    date = date_trunc(date, 'week')
+    # TODO: the API seems broken. It returns week, year not year, week as documentef
+    # why not use date.isocalendar() from the stdlib?
 
-    first_monday = date_trunc(date_trunc(date, 'year'), 'week')
+    date = date_trunc('week', date)
+
+    first_monday = date_trunc('week', date_trunc('year', date))
     if first_monday.year < date.year:
-        first_monday += datetime.timedelta(days=7)
-    diff = date_trunc(date, 'day') - first_monday
+        first_monday += datetime.timedelta(weeks=1)
+    diff = date_trunc('day', date) - first_monday
     week = 1 + (diff.days / 7)
     return week, first_monday.year
+
+
+def get_weekspan(date):
+    """Gibt den ersten und den letzten Tag der Woche, in der `date` liegt, zurück.
+
+    Dabei ist Montag der erste Tag der woche und Sonntag der letzte.
+
+    >>> get_weekspan(datetime.date(2011, 3, 23))
+    (datetime.date(2011, 3, 21), datetime.date(2011, 3, 27))
+    """
+    startdate = date_trunc('week', date)
+    enddate = startdate + datetime.timedelta(days=6)
+    return startdate, enddate
 
 
 class DateTruncTestCase(unittest.TestCase):
     """Unittests for date_trunc"""
 
     def test_truncate_year(self):
-        self.assertEqual(date_trunc(datetime.datetime(1980, 5, 4), 'year'), datetime.datetime(1980, 1, 1))
-        self.assertEqual(date_trunc(datetime.datetime(1980, 5, 4), 'year').date(), datetime.date(1980, 1, 1))
-        self.assertEqual(date_trunc(datetime.date(1980, 5, 4), 'year'),
-                         datetime.datetime(1980, 1, 1, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(1980, 5, 4), 'year').date(), datetime.date(1980, 1, 1))
+        self.assertEqual(date_trunc('year', datetime.datetime(1980, 5, 4)), datetime.datetime(1980, 1, 1))
+        self.assertEqual(date_trunc('year', datetime.datetime(1980, 5, 4)).date(), datetime.date(1980, 1, 1))
+        self.assertEqual(date_trunc('year', datetime.date(1980, 5, 4)),
+                         datetime.date(1980, 1, 1,))
+        self.assertEqual(date_trunc('year', datetime.date(1980, 5, 4)), datetime.date(1980, 1, 1))
 
     def test_truncate_month(self):
-        self.assertEqual(date_trunc(datetime.datetime(1978, 6, 12), 'month'), datetime.datetime(1978, 6, 1))
-        self.assertEqual(date_trunc(datetime.datetime(1978, 6, 12), 'month').date(),
+        self.assertEqual(date_trunc('month', datetime.datetime(1978, 6, 12)), datetime.datetime(1978, 6, 1))
+        self.assertEqual(date_trunc('month', datetime.datetime(1978, 6, 12)).date(),
                          datetime.date(1978, 6, 1))
-        self.assertEqual(date_trunc(datetime.date(1978, 6, 12), 'month'),
-                         datetime.datetime(1978, 6, 1, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(1978, 6, 12), 'month').date(), datetime.date(1978, 6, 1))
+        self.assertEqual(date_trunc('month', datetime.date(1978, 6, 12)),
+                         datetime.date(1978, 6, 1))
+        self.assertEqual(date_trunc('month', datetime.date(1978, 6, 12)), datetime.date(1978, 6, 1))
 
     def test_truncate_week(self):
-        self.assertEqual(date_trunc(datetime.datetime(2000, 1, 1), 'week'), datetime.datetime(1999, 12, 27))
-        self.assertEqual(date_trunc(datetime.datetime(2000, 1, 1), 'week').date(),
+        self.assertEqual(date_trunc('week', datetime.datetime(2000, 1, 1)), datetime.datetime(1999, 12, 27))
+        self.assertEqual(date_trunc('week', datetime.datetime(2000, 1, 1)).date(),
                          datetime.date(1999, 12, 27))
-        self.assertEqual(date_trunc(datetime.date(2000, 1, 1), 'week'),
-                         datetime.datetime(1999, 12, 27, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(2000, 1, 1), 'week').date(), datetime.date(1999, 12, 27))
+        self.assertEqual(date_trunc('week', datetime.date(2000, 1, 1)),
+                         datetime.date(1999, 12, 27))
+        self.assertEqual(date_trunc('week', datetime.date(2000, 1, 1)), datetime.date(1999, 12, 27))
 
     def test_truncate_day(self):
-        self.assertEqual(date_trunc(datetime.datetime(2006, 2, 25, 23, 17, 40), 'day'),
+        self.assertEqual(date_trunc('day', datetime.datetime(2006, 2, 25, 23, 17, 40)),
                          datetime.datetime(2006, 2, 25))
-        self.assertEqual(date_trunc(datetime.datetime(2006, 2, 25), 'day'), datetime.datetime(2006, 2, 25))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'day'),
-                         datetime.datetime(2006, 2, 25, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'day').date(), datetime.date(2006, 2, 25))
+        self.assertEqual(date_trunc('day', datetime.datetime(2006, 2, 25)), datetime.datetime(2006, 2, 25))
+        self.assertEqual(date_trunc('day', datetime.date(2006, 2, 25)),
+                         datetime.date(2006, 2, 25))
+        self.assertEqual(date_trunc('day', datetime.date(2006, 2, 25)), datetime.date(2006, 2, 25))
 
     def test_truncate_hour(self):
-        self.assertEqual(date_trunc(datetime.datetime(2006, 2, 25, 23, 17, 40), 'hour'),
+        self.assertEqual(date_trunc('hour', datetime.datetime(2006, 2, 25, 23, 17, 40), ),
                          datetime.datetime(2006, 2, 25, 23))
-        self.assertEqual(date_trunc(datetime.datetime(2006, 2, 25, 23, 17, 40), 'hour'),
+        self.assertEqual(date_trunc('hour', datetime.datetime(2006, 2, 25, 23, 17, 40)),
                          datetime.datetime(2006, 2, 25, 23, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'hour'),
-                         datetime.datetime(2006, 2, 25, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'hour').date(), datetime.date(2006, 2, 25))
+        self.assertEqual(date_trunc('hour', datetime.date(2006, 2, 25)),
+                         datetime.date(2006, 2, 25))
+        self.assertEqual(date_trunc('hour', datetime.date(2006, 2, 25)), datetime.date(2006, 2, 25))
 
     def test_truncate_minute(self):
-        self.assertEqual(date_trunc(datetime.datetime(2006, 2, 25, 23, 17, 40), 'minute'),
+        self.assertEqual(date_trunc('minute', datetime.datetime(2006, 2, 25, 23, 17, 40)),
                          datetime.datetime(2006, 2, 25, 23, 17, 0))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'minute'),
-                         datetime.datetime(2006, 2, 25, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'minute').date(),
+        self.assertEqual(date_trunc('minute', datetime.date(2006, 2, 25)),
+                         datetime.date(2006, 2, 25))
+        self.assertEqual(date_trunc('minute', datetime.date(2006, 2, 25)),
                          datetime.date(2006, 2, 25))
 
     def test_truncate_second(self):
-        self.assertEqual(date_trunc(datetime.datetime(2006, 2, 25, 23, 17, 40), 'second'),
+        self.assertEqual(date_trunc('second', datetime.datetime(2006, 2, 25, 23, 17, 40)),
                          datetime.datetime(2006, 2, 25, 23, 17, 40))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'second'),
-                         datetime.datetime(2006, 2, 25, 0, 0, 0))
-        self.assertEqual(date_trunc(datetime.date(2006, 2, 25), 'second').date(),
+        self.assertEqual(date_trunc('second', datetime.date(2006, 2, 25)),
+                         datetime.date(2006, 2, 25))
+        self.assertEqual(date_trunc('second', datetime.date(2006, 2, 25)),
                          datetime.date(2006, 2, 25))
 
     def test_invalid(self):
-        self.assertRaises(ValueError, date_trunc, datetime.datetime.now(), 'alex')
-        self.assertRaises(AttributeError, date_trunc, 'alex', 'day')
+        self.assertRaises(ValueError, date_trunc, 'alex', datetime.datetime.now())
 
 
 class WeekTestCase(unittest.TestCase):
@@ -132,5 +166,76 @@ class WeekTestCase(unittest.TestCase):
         self.assertEqual(get_week(datetime.datetime(1989, 12, 31)), (52, 1989))
 
 
+class WeekspanTestCase(unittest.TestCase):
+    """Unittests for get_weekspan"""
+
+    def test_monday(self):
+        """get_weekspan for a monday"""
+        date = datetime.date(1981, 5, 4)
+        self.assertEqual(date.isoweekday(), 1)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+    def test_tuesday(self):
+        """get_weekspan for a tuesday"""
+        date = datetime.date(1982, 5, 4)
+        self.assertEqual(date.isoweekday(), 2)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+    def test_wednesday(self):
+        """get_weekspan for a wednesday"""
+        date = datetime.date(1988, 5, 4)
+        self.assertEqual(date.isoweekday(), 3)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+    def test_thursday(self):
+        """get_weekspan for a thursday"""
+        date = datetime.date(1989, 5, 4)
+        self.assertEqual(date.isoweekday(), 4)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+    def test_friday(self):
+        """get_weekspan for a friday"""
+        date = datetime.date(1984, 5, 4)
+        self.assertEqual(date.isoweekday(), 5)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+    def test_saturday(self):
+        """get_weekspan for a saturday"""
+        date = datetime.date(1985, 5, 4)
+        self.assertEqual(date.isoweekday(), 6)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+    def test_sunday(self):
+        """get_weekspan for a sunday"""
+        date = datetime.date(1980, 5, 4)
+        self.assertEqual(date.isoweekday(), 7)
+        start_date, end_date = get_weekspan(date)
+        self.assertEqual(start_date.isoweekday(), 1)
+        self.assertEqual(end_date.isoweekday(), 7)
+        self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+
 if __name__ == "__main__":
+    import doctest
+    import sys
+    failure_count, test_count = doctest.testmod()
     unittest.main()
+    sys.exit(failure_count)
