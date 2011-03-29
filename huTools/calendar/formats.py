@@ -15,14 +15,14 @@ import email.utils
 
 def german_weekday_name(date):
     """ return the german weekday name for a given date """
-    days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
+    days = [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag', u'Freitag', u'Samstag', u'Sonntag']
     return days[date.weekday()]
 
 
 def german_month_name(date):
     """ return the german month name for a given date """
-    months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September',
-              'Oktober', 'November', 'Dezember']
+    months = [u'Januar', u'Februar', u'März', u'April', u'Mai', u'Juni', u'Juli', u'August',
+              u'September', u'Oktober', u'November', u'Dezember']
     return months[date.month - 1]
 
 
