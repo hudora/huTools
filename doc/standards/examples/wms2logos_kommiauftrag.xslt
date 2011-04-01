@@ -8,7 +8,7 @@
     <Auftrag>
         <Auftragskopf>
             <EinlagererNr>10056</EinlagererNr>
-            <FremdlieferscheinNr><xsl:value-of select="descendant::kommiauftragsnr" /></FremdlieferscheinNr>
+            <FremdlieferscheinNr><xsl:value-of select="descendant::komminr" /></FremdlieferscheinNr>
             <KundenauftragsNr><xsl:value-of select="descendant::auftragsnr" /></KundenauftragsNr>
         </Auftragskopf>
         <Auftragsinformationen>
