@@ -18,11 +18,14 @@ File Upload just works::
     >>> status, header, body = fetch('http://www.postbin.org/o0ds54',
                                      {'hosts': open('/etc/hosts', 'r')}, 'POST')
 
+`fetch2xx()` throws a `WrongStatusCode` if the server returns a status code outside the 200-299 range.
+`fetch_json2xx()` in addition decodes a JSON reply and returns that.
 """
 
 # Created by Maximillian Dornseif on 2010-10-24.
-# Copyright (c) 2010 HUDORA. All rights reserved.
+# Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 
+from huTools import hujson
 from huTools.http import tools
 import cgi
 import poster_encode
@@ -36,6 +39,11 @@ try:
 except ImportError:
     import engine_httplib2
     request = engine_httplib2.request
+
+
+class WrongStatusCode(RuntimeError):
+    """Thrown if the Server returns a unexpected status code."""
+    pass
 
 
 def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
@@ -96,3 +104,21 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
         myheaders["Authorization"] = authheader
 
     return request(url, method, content, myheaders, timeout)
+
+
+def fetch2xx(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
+             timeout=25):
+    """Like `fetch()` but throws a RuntimeError if the status code is < 200 or >= 300."""
+    status, rheaders, rcontent = fetch(url, content, method, credentials, headers, multipart, ua, timeout)
+    if (status < 200) or (status >= 300):
+        raise WrongStatusCode("%s: Fehler: %s" % (status, rcontent))
+    return status, rheaders, rcontent
+
+
+def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
+             timeout=25):
+    """Like `fetch2xx()` but JSON-decodes the returned content and returns only that."""
+    status, rheaders, rcontent = fetch2xx(url, content, method, credentials, headers, multipart, ua, timeout)
+    if not headers.get('content-type', '').startswith('application/json'):
+        raise TypeError("Ungueltiger Content-Type '%s': %s" % (headers.get('content-type', ''), rcontent))
+    return hujson.loads(rcontent)
