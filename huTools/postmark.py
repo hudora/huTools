@@ -8,14 +8,29 @@ Based on pytohn-postmark (C) 2009-2010 David Martorana, Wildbit LLC, Python Soft
 Created by Maximillian Dornseif on 2010-09-27.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
-
-
+import email.utils
 import hujson
 import logging
+import unittest
 import urllib2
 
 
 __POSTMARK_URL__ = 'http://api.postmarkapp.com/'
+
+
+def format_addr(address, encoding='utf-8'):
+    """Format an email adress
+
+    If the domainname contains non-ASCII characters an IDNA encoded address will be returned.
+    """
+
+    if isinstance(address, str):
+        address = address.decode(encoding)
+
+    realname, address = email.utils.parseaddr(address)
+    localpart, domain = address.split('@', 1)
+    address = u'@'.join((localpart, domain.encode('idna')))
+    return email.utils.formataddr((realname, address))
 
 
 def send_mail(message, api_key=None):
@@ -51,6 +66,14 @@ def send_mail(message, api_key=None):
                 raise RuntimeError('missing Parameter %s' % attr)
         if ('TextBody' not in message) and ('HtmlBody' not in message):
             raise RuntimeError('missing Body %r' % message)
+
+        # Do IDNA encoding of domainnames if necessary
+        message['From'] = format_addr(message['From'])
+        message['To'] = format_addr(message['To'])
+        if message['Cc']:
+            message['Cc'] = [format_addr(address) for address in message['Cc'].split('')]
+        if message['Bcc']:
+            message['Bcc'] = [format_addr(address) for address in message['Bcc'].split('')]
 
         attachments = []
         for attachment in message.get('Attachments', []):
@@ -104,3 +127,57 @@ def send_mail(message, api_key=None):
             else:
                 raise RuntimeError("URLError: The server couldn't fufill the request. (See 'inner_exception'"
                                    " for details)", err)
+
+
+class EncodingTest(unittest.TestCase):
+    """Unittest for fomat_addr"""
+
+    def test_simple(self):
+        """Test simple address without realname"""
+        self.assertEqual(format_addr('info@example.com'), u'info@example.com')
+
+    def test_simple_unicode(self):
+        """Test simple address without realname (given as unicode)"""
+        self.assertEqual(format_addr(u'info@example.com'), u'info@example.com')
+
+    def test_realname(self):
+        """Test address with a realname"""
+        self.assertEqual(format_addr('Info Board <info@example.com'), u'Info Board <info@example.com>')
+
+    def test_realname_unicode(self):
+        """Test address with a realname"""
+        self.assertEqual(format_addr(u'Info Board <info@example.com'), u'Info Board <info@example.com>')
+
+    def test_idna_simple(self):
+        """Test simple address with non-ASCII characters without realname"""
+        self.assertEqual(format_addr('info@smör.de'), u'info@xn--smr-tna.de')
+
+    def test_idna_simple_unicode(self):
+        """Test simple address with non-ASCII characters without realname (given as unicode)"""
+        self.assertEqual(format_addr(u'info@smör.de'), u'info@xn--smr-tna.de')
+
+    def test_idna_realname(self):
+        """Test address with an non-ASCII characters and a realname"""
+        self.assertEqual(format_addr('Info <info@smör.de>'), u'Info <info@xn--smr-tna.de>')
+
+    def test_idna_realname_unicode(self):
+        """Test address with an non-ASCII characters and a realname (given as unicode)"""
+        self.assertEqual(format_addr(u'Info <info@smör.de>'), u'Info <info@xn--smr-tna.de>')
+
+    def test_idna_realname2(self):
+        """Test address with an non-ASCII characters and a realname"""
+        self.assertEqual(format_addr('iñfø <info@smör.de>'), u'iñfø <info@xn--smr-tna.de>')
+
+    def test_idna_realname2_unicode(self):
+        """Test address with an non-ASCII characters and a realname (given as unicode)"""
+        self.assertEqual(format_addr(u'iñfø <info@smör.de>'), u'iñfø <info@xn--smr-tna.de>')
+
+    def test_idna_latin1(self):
+        """Test IDNA encoding for latin1 encoded strings"""
+
+        email_address = u'info@smör.de'.encode('latin1')
+        self.assertEqual(format_addr(email_address, encoding='latin1'), u'info@xn--smr-tna.de')
+
+
+if __name__ == "__main__":
+    unittest.main()

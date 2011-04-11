@@ -21,6 +21,7 @@ test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/postmark.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/structured.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
 	#PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
