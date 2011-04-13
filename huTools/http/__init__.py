@@ -119,6 +119,6 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
              timeout=25):
     """Like `fetch2xx()` but JSON-decodes the returned content and returns only that."""
     status, rheaders, rcontent = fetch2xx(url, content, method, credentials, headers, multipart, ua, timeout)
-    if not headers.get('content-type', '').startswith('application/json'):
-        raise TypeError("Ungueltiger Content-Type '%s': %s" % (headers.get('content-type', ''), rcontent))
+    if not rheaders.get('content-type', '').startswith('application/json'):
+        raise TypeError("Ungueltiger Content-Type '%s': %s" % (rheaders.get('content-type', ''), rcontent))
     return hujson.loads(rcontent)
