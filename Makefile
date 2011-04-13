@@ -60,7 +60,7 @@ upload:
 	git commit -m "v$(VERSION) published on PyPi" -a
 	git push origin
 
-build: examples
+build:
 	python setup.py build
 
 dependencies: pythonenv/bin/python
@@ -74,13 +74,6 @@ doc: examples
 
 install: build
 	sudo python setup.py install
-
-doc/standards/examples/%.xml: doc/standards/examples/%.json
-	python huTools/protocols.py $<  | xmllint --encode utf-8 --format - > $@
-
-examples: doc/standards/examples/warenzugang.xml doc/standards/examples/kommiauftrag.xml doc/standards/examples/rueckmeldung.xml doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/wms2logos_kommiauftrag.xslt
-	xsltproc doc/standards/examples/wms2logos_warenzugang.xslt doc/standards/examples/warenzugang.xml > doc/standards/examples/wms2logos_warenzugang.xml
-	xsltproc doc/standards/examples/wms2logos_kommiauftrag.xslt doc/standards/examples/kommiauftrag.xml > doc/standards/examples/wms2logos_kommiauftrag.xml
 
 clean:
 	rm -Rf testenv pythonenv build dist html test.db pylint.out sloccount.sc pip-log.txt

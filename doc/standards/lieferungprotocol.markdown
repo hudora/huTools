@@ -67,53 +67,88 @@ Datumsfelder sollen im [ISO 8601 Format](http://en.wikipedia.org/wiki/ISO_8601) 
 
 ### XML
 
-This example encodes the address protocol as [Plain Old XML (POX)](http://en.wikipedia.org/wiki/Plain_Old_XML):
+Die ist ein minimales Beispiel in [Plain Old XML (POX)](http://en.wikipedia.org/wiki/Plain_Old_XML): Als umgebener Container wird hier "kommiauftrag" verwendet.
 
-    <lieferung> 
-      <name1>HUDORA GmbH</name1>
-      <name2>Abt. Cybernetics</name2>
-      <name3>Anlieferung: Tor 2</name3>
-      <strasse>Jägerwald 13</strasse>
-      <land>DE</land>
-      <plz>42897</plz>
-      <ort>Remscheid</ort>
-      <tel>+49 2191 60912 0</tel>
-      <fax>+49 2191 60912 50</fax>
-      <mobil>+49 175 00000xx</mobil>
-      <email>nobody@hudora.de</email>
-      <iln>4005998000007</iln>
-      <anlieferdatum>2007-09-23</anlieferdatum>
-      <kundennr>4711</kundennr>
-      <paletten>2.6</paletten>
-      <positionen>
-          <menge>234</menge>
-          <artnr>08/15</artnr>
-          <name>Nasenschoner</name>
-      </positionen>
-    </lieferung >
+    <kommiauftrag>
+     <guid>93655290_65aaL11e0_ac31Q6fca6bf812354</guid>
+     <name1>Mega-Sport</name1>
+     <name2>GmbH &amp; Co KG</name2>
+     <strasse>Zusestraße 6</strasse>
+     <land>BE</land>
+     <plz>5613</plz>
+     <ort>Eupen</ort>
+     <positionen>
+      <position>
+       <menge>4</menge>
+       <artnr>10800</artnr>
+       <guid>916008efc09116e7a0a2e237dd64c709</guid>
+      </position>
+     </positionen>
+    </kommiauftrag>
 
+Ein etwas umfangreicheres Beispiel:
 
-### JSON
-
-    {"iln": "4005998000007",
-     "name1": "HUDORA GmbH",
-     "name2": "Abt. Cybernetics",
-     "name3": "Anlieferung: Tor 2",
-     "strasse": "J\\u00e4gerwald 13", 
-     "ort": "Remscheid",
-     "plz": "42897",
-     "land": "DE",
-     "tel": "+49 2191 60912 0",
-     "fax": "+49 2191 60912 50",
-     "mobil": "+49 175 00000xx",
-     "email": "nobody@hudora.de",
-     "anlieferdatum": "2007-09-23",
-     "kundennr": "4711",
-     "paletten": 2.6,
-     "positionen": {
-        "menge: 234,
-        "artnr": "08/15",
-        "name": "Nasenschoner"}}
+    <kommiauftrag>
+     <guid>KA3185120</guid>
+     <name1>Mega-Sport</name1>
+     <name2>GmbH &amp; Co KG</name2>
+     <strasse>Zusestraße 6</strasse>
+     <land>BE</land>
+     <plz>5613</plz>
+     <ort>Eupen</ort>
+     <anliefertermin>2011-02-21</anliefertermin>
+     <anliefertermin_ab>2011-02-21</anliefertermin_ab>
+     <auftragsnr>SO1173959</auftragsnr>
+     <info_kunde />
+     <kommiauftragsnr>KA3185120</kommiauftragsnr>
+     <kundennr>SC0350</kundennr>
+     <palettenzahl>1.0476190476190477</palettenzahl>
+     <gewicht>190000</gewicht>
+     <volumen>235<volumen>
+     <prioritaet>7</prioritaet>
+     <kostenrechnung>
+      <einzelstueck>0</einzelstueck>
+      <gewichtszuschlaege>0</gewichtszuschlaege>
+      <paletten>0</paletten>
+      <ve1>0</ve1>
+      <ve2>18</ve2>
+     </kostenrechnung>
+     <packanweisungen>
+      <buendelungsvorgaenge>7</buendelungsvorgaenge>
+      <originalkartons>0</originalkartons>
+      <palettenversand>False</palettenversand>
+      <sammelkartons>0</sammelkartons>
+     </packanweisungen>
+     <positionen>
+      <position>
+       <artnr>12566</artnr>
+       <guid>3185120-001-001</guid>
+       <menge>16</menge>
+       </position>
+      <position>
+       <artnr>14910</artnr>
+       <guid>3185120-002-002</guid>
+       <menge>3</menge>
+       </position>
+      <position>
+       <artnr>76999</artnr>
+       <guid>3185120-003-004</guid>
+       <menge>12</menge>
+       </position>
+      <position>
+       <artnr>71653</artnr>
+       <guid>3185120-004-003</guid>
+       <menge>5</menge>
+       </position>
+     </positionen>
+     <versandanweisungen>
+      <versandanweisung>
+       <anweisung>Versand unfrei</anweisung>
+       <bezeichner>unfrei</bezeichner>
+       <guid>KA3185120-unfrei</guid>
+      </versandanweisung>
+    </versandanweisungen>
+   </kommiauftrag>
 
 
 ## Referenzen

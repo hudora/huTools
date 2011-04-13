@@ -1,1 +1,0 @@
-Dieses Protokoll wird durch das [LieferungProtocol](https://github.com/hudora/huTools/blob/master/doc/standards/lieferungprotocol.markdown) abgelöst.

@@ -138,23 +138,7 @@ Das Element `url` gibt den URL des Kommissionierauftrags an, unter dem der Auftr
 #### Abruf eines Kommissionierauftrag
 
    $ curl -u username:password -X GET http://example.com/fmtp/lg123/770d2fefb043507dbeffdadbe42db4eb1cf/
-   <kommiauftrag>
-    <guid>93655290_65aaL11e0_ac31Q6fca6bf812354</guid>
-    <name1>Mega-Sport</name1>
-    <name2>GmbH &amp; Co KG</name2>
-    <strasse>Zusestraße 6</strasse>
-    <land>BE</land>
-    <plz>5613</plz>
-    <ort>Eupen</ort>
-    <positionen>
-     <position>
-      <menge>4</menge>
-      <artnr>10800</artnr>
-      <guid>916008efc09116e7a0a2e237dd64c709</guid>
-     </position>
-    </positionen>
-   </kommiauftrag>
-
+   
 Details zum Format im [LieferungProtocol](https://github.com/hudora/huTools/blob/master/doc/standards/lieferungprotocol.markdown).
 
 
@@ -187,8 +171,8 @@ Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet
 
 ### Beispiel
 
-    curl -u username:password -X POST -H "Content-Type: application/json" http://example.com/fmtp/lg200_rueckmeldung/
-    
+*rueckmeldung.xml:*
+
     <rueckmeldung>
      <guid>93655290_65aaL11e0_ac31Q6fca6bf88d08</guid>
      <nves>
@@ -210,6 +194,8 @@ Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet
         </position>
      </positionen>
     </rueckmeldung>
+
+    curl -u username:password -X POST -H "Content-Type: application/xml" -d@rueckmeldung.xml http://example.com/fmtp/lg200_rueckmeldung/
 
 
 ## Lieferschein
