@@ -155,12 +155,13 @@ XSLT stylesheet:
 
  * [vCard][13] and [hCard][12].
  * EDIFACT [NAD][14], [LOC][15] or [ADR][16] Segments.
+ * [ammazon Fulfillment Web Service Address data type][16a]
 
 [13]: http://www.imc.org/pdi/vcardoverview.html
 [14]: http://www.glimbh.eu/edifact/m_1002/m_A/trsd/trsdnad.htm
 [15]: http://www.edifactory.de/seglist.D09A?s=LOC
 [16]: http://www.edifactory.de/seglist.D09A?s=ADR
-
+[16a]: http://docs.amazonwebservices.com/fws/1.1/APIReference/index.html?datatypes-o.html
 
 ## See Also
 
