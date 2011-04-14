@@ -29,7 +29,9 @@ from huTools import hujson
 from huTools.http import tools
 import cgi
 import poster_encode
+import urllib
 import urlparse
+
 
 # This is somewhat clumsy to make static code checkers happy
 request = None
@@ -122,3 +124,20 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
     if not rheaders.get('content-type', '').startswith('application/json'):
         raise TypeError("Ungueltiger Content-Type '%s': %s" % (rheaders.get('content-type', ''), rcontent))
     return hujson.loads(rcontent)
+
+
+def add_query(url, params):
+    """
+    Add GET parameters to a given URL
+
+    >>> add_query('/sicrit/', {'passphrase': 'fiftyseveneleven'})
+    '/sicrit/?passphrase=fiftyseveneleven'
+    >>> add_query('/sicrit/test.html?hello=world', {'passphrase': 'fiftyseveneleven'})
+    '/sicrit/test.html?hello=world&passphrase=fiftyseveneleven'
+    """
+
+    url_parts = list(urlparse.urlparse(url))
+    query = dict(cgi.parse_qsl(url_parts[4]))
+    query.update(params)
+    url_parts[4] = urllib.urlencode(query)
+    return urlparse.urlunparse(url_parts)
