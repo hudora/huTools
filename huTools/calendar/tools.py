@@ -7,6 +7,7 @@ Created by Christian Klein on 2010-04-22.
 Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 """
 
+import calendar
 import datetime
 import unittest
 import warnings
@@ -87,6 +88,18 @@ def get_weekspan(date):
     """
     startdate = date_trunc('week', date)
     enddate = startdate + datetime.timedelta(days=6)
+    return startdate, enddate
+
+
+def get_monthspan(date):
+    """Gibt den ersten und letzten Tag des Monats zurück in dem `date` liegt
+
+    >>> get_monthspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 5, 1), datetime.date(1980, 5, 31))
+    """
+    startdate = date_trunc('month', date)
+    _, days = calendar.monthrange(startdate.year, startdate.month)
+    enddate = type(startdate)(startdate.year, startdate.month, days)
     return startdate, enddate
 
 
@@ -231,6 +244,66 @@ class WeekspanTestCase(unittest.TestCase):
         self.assertEqual(start_date.isoweekday(), 1)
         self.assertEqual(end_date.isoweekday(), 7)
         self.assertTrue(start_date.toordinal() <= date.toordinal() <= end_date.toordinal())
+
+
+class MonthSpanTestCase(unittest.TestCase):
+    """Unittests for get_monthspan"""
+
+    def test_january(self):
+        date = datetime.date(1980, 1, 1)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.date))
+        self.assertTrue(isinstance(end_date, datetime.date))
+        self.assertEqual(start_date, datetime.date(1980, 1, 1))
+        self.assertEqual(end_date, datetime.date(1980, 1, 31))
+        date = datetime.datetime(1980, 1, 31)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.datetime))
+        self.assertTrue(isinstance(end_date, datetime.datetime))
+        self.assertEqual(start_date, datetime.datetime(1980, 1, 1))
+        self.assertEqual(end_date, datetime.datetime(1980, 1, 31))
+
+    def test_february(self):
+        date = datetime.date(1945, 2, 19)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.date))
+        self.assertTrue(isinstance(end_date, datetime.date))
+        self.assertEqual(start_date, datetime.date(1945, 2, 1))
+        self.assertEqual(end_date, datetime.date(1945, 2, 28))
+        date = datetime.datetime(1945, 2, 1)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.datetime))
+        self.assertTrue(isinstance(end_date, datetime.datetime))
+        self.assertEqual(start_date, datetime.datetime(1945, 2, 1))
+        self.assertEqual(end_date, datetime.datetime(1945, 2, 28))
+
+    def test_february_leap(self):
+        date = datetime.date(1980, 2, 19)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.date))
+        self.assertTrue(isinstance(end_date, datetime.date))
+        self.assertEqual(start_date, datetime.date(1980, 2, 1))
+        self.assertEqual(end_date, datetime.date(1980, 2, 29))
+        date = datetime.datetime(1980, 2, 19)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.datetime))
+        self.assertTrue(isinstance(end_date, datetime.datetime))
+        self.assertEqual(start_date, datetime.datetime(1980, 2, 1))
+        self.assertEqual(end_date, datetime.datetime(1980, 2, 29))
+
+    def test_june(self):
+        date = datetime.date(1978, 6, 12)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.date))
+        self.assertTrue(isinstance(end_date, datetime.date))
+        self.assertEqual(start_date, datetime.date(1978, 6, 1))
+        self.assertEqual(end_date, datetime.date(1978, 6, 30))
+        date = datetime.datetime(1978, 6, 12)
+        start_date, end_date = get_monthspan(date)
+        self.assertTrue(isinstance(start_date, datetime.datetime))
+        self.assertTrue(isinstance(end_date, datetime.datetime))
+        self.assertEqual(start_date, datetime.datetime(1978, 6, 1))
+        self.assertEqual(end_date, datetime.datetime(1978, 6, 30))
 
 
 if __name__ == "__main__":
