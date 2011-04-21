@@ -144,9 +144,9 @@ def is_workday_german(day):
     """
     if day.isoweekday() > 5:
         return False  # weekend
-    if day in holidays_german(day, day):
-        return False
-    return True
+    if isinstance(day, datetime.datetime):
+        day = day.date()
+    return day not in holidays_german(day, day)
 
 
 @memoize
@@ -298,6 +298,13 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(24, workdayhours_german(date(2007, 2, 2), date(2007, 2, 5)))
         self.assertAlmostEqual(30.2, workdayhours_german(date(2007, 2, 2, 10, 47),
                                                          date(2007, 2, 5, 16, 59)))
+
+    def test_is_workday_german(self):
+        self.assertTrue(is_workday_german(datetime.date(2011, 4, 21)))  # Gründonnerstag
+        self.assertFalse(is_workday_german(datetime.date(2011, 4, 22)))   # karfreitag
+
+        self.assertTrue(is_workday_german(datetime.datetime(2011, 4, 21, 0, 0)))
+        self.assertFalse(is_workday_german(datetime.datetime(2011, 4, 22, 0, 0)))
 
     def test_next_workday_german(self):
         """Simple minded tests for next_workday_german()."""
