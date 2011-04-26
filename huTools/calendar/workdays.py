@@ -25,7 +25,7 @@ STATIC_GERMAN_HOLIDAYS = ((1, 1),    # Neujahr
 
 def add_to_day(day, offset):
     "Returns the date n days before or after day"
-    return datetime.date.fromordinal(day.toordinal() + offset)
+    return day + datetime.timedelta(days=offset)
 
 
 def easter(year):
@@ -88,20 +88,16 @@ def workdays(start, end):
     0
     """
 
-    def day_after(day):
-        """Returns the day after 'day'."""
-        return datetime.date.fromordinal(day.toordinal() + 1)
-
     if start > end:
         raise ValueError("can't handle  negative timespan! %r > %r" % (start, end))
 
     # Wenn Anfangstag auf Wochenende liegt, addiere Tage bis Montag
     while start.isoweekday() > 5:
-        start = day_after(start)
+        start = add_to_day(start, 1)
 
     # Wenn Endtag auf Wochenende liegt, substrahiere Tage bis Freitag
     while end.isoweekday() > 5:
-        end = day_after(end)
+        end = add_to_day(end, 1)
 
     days = (end - start).days
 
@@ -120,6 +116,12 @@ def workdays(start, end):
 @memoize
 def workdays_german(start, end):
     """Calculates the number of working days between two given dates while considering german holidays."""
+    
+    if isinstance(start, datetime.datetime):
+        start = start.date()
+    if isinstance(end, datetime.datetime):
+        end = end.date()
+
     days = workdays(start, end)
     # Deduct Holidays (but only the ones not on weekends)
     holid = [x for x in holidays_german(start, end) if (x >= start) and (x < end) and (x.isoweekday() < 6)]
@@ -157,10 +159,10 @@ def next_workday_german(startday):
     datetime.date(2007, 1, 2)
     """
 
-    day_ordinal = startday.toordinal() + 1
-    while not is_workday_german(datetime.date.fromordinal(day_ordinal)):
-        day_ordinal += 1
-    return datetime.date.fromordinal(day_ordinal)
+    next_day = add_to_day(startday, 1)
+    while not is_workday_german(next_day):
+        next_day = add_to_day(next_day, 1)
+    return next_day
 
 
 @memoize
@@ -171,10 +173,10 @@ def previous_workday_german(startday):
     datetime.date(2006, 12, 29)
     """
 
-    day_ordinal = startday.toordinal() - 1
-    while not is_workday_german(datetime.date.fromordinal(day_ordinal)):
-        day_ordinal -= 1
-    return datetime.date.fromordinal(day_ordinal)
+    prev_day = add_to_day(startday, -1)
+    while not is_workday_german(prev_day):
+        prev_day = add_to_day(prev_day, -1)
+    return prev_day
 
 
 def add_workdays_german(startday, count):
@@ -249,6 +251,8 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(261, workdays(date(2008, 1, 1), date(2008, 12, 31)))
         self.assertEqual(260 + 260, workdays(date(2005, 1, 1), date(2006, 12, 31)))
         self.assertEqual(260 + 260 + 260, workdays(date(2005, 1, 1), date(2007, 12, 31)))
+        self.assertEqual(260 + 260 + 260, workdays(datetime.datetime(2005, 1, 1),
+                                                   datetime.datetime(2007, 12, 31)))
 
     def test_workdays_german(self):
         """Simple minded tests for workdays_german()."""
@@ -279,6 +283,7 @@ class _WorkdayTests(unittest.TestCase):
         # Christi Himmelfahrt
         self.assertEqual(1, workdays_german(date(2007, 5, 16), date(2007, 5, 17)))
         self.assertEqual(1, workdays_german(date(2007, 5, 16), date(2007, 5, 18)))
+        self.assertEqual(1, workdays_german(datetime.datetime(2007, 5, 16), datetime.datetime(2007, 5, 18)))
         # Pfingsten
         self.assertEqual(1, workdays_german(date(2007, 5, 24), date(2007, 5, 25)))  # Th - Fr
         self.assertEqual(1, workdays_german(date(2007, 5, 25), date(2007, 5, 26)))  # Fr - Sa
@@ -291,6 +296,9 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(252 + 250, workdays_german(date(2005, 1, 1), date(2006, 12, 31)))
         self.assertEqual(252 + 250 + 249, workdays_german(date(2005, 1, 1), date(2007, 12, 31)))
 
+        self.assertEqual(252 + 250 + 249, workdays_german(datetime.datetime(2005, 1, 1),
+                                                          datetime.datetime(2007, 12, 31)))
+
     def test_workdayhours_german(self):
         """Simple minded tests for workdays_german()."""
         date = datetime.datetime
@@ -298,6 +306,8 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(24, workdayhours_german(date(2007, 2, 2), date(2007, 2, 5)))
         self.assertAlmostEqual(30.2, workdayhours_german(date(2007, 2, 2, 10, 47),
                                                          date(2007, 2, 5, 16, 59)))
+        self.assertAlmostEqual(30.2, workdayhours_german(datetime.datetime(2007, 2, 2, 10, 47),
+                                                         datetime.datetime(2007, 2, 5, 16, 59)))
 
     def test_is_workday_german(self):
         self.assertTrue(is_workday_german(datetime.date(2011, 4, 21)))  # Gründonnerstag
@@ -318,6 +328,7 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(date(2007, 5, 29), next_workday_german(date(2007, 5, 27)))  # Su
         self.assertEqual(date(2007, 5, 29), next_workday_german(date(2007, 5, 28)))  # Mo ( Holiday)
         self.assertEqual(date(2007, 5, 31), next_workday_german(date(2007, 5, 30)))
+        self.assertEqual(datetime.datetime(2007, 5, 31), next_workday_german(datetime.datetime(2007, 5, 30)))
 
     def test_add_workdays_german(self):
         """Simple minded tests for add_workdays_german,"""
@@ -327,6 +338,8 @@ class _WorkdayTests(unittest.TestCase):
         self.assertEqual(date(2008, 12, 1), add_workdays_german(date(2008, 11, 24), 5))
         self.assertEqual(date(2008, 11, 21), add_workdays_german(date(2008, 11, 24), -1))
         self.assertEqual(date(2008, 11, 14), add_workdays_german(date(2008, 11, 24), -6))
+        self.assertEqual(datetime.datetime(2008, 11, 14),
+                         add_workdays_german(datetime.datetime(2008, 11, 24), -6))
 
 
 if __name__ == '__main__':
