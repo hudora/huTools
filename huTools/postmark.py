@@ -70,10 +70,10 @@ def send_mail(message, api_key=None):
         # Do IDNA encoding of domainnames if necessary
         message['From'] = format_addr(message['From'])
         message['To'] = format_addr(message['To'])
-        if message['Cc']:
-            message['Cc'] = [format_addr(address) for address in message['Cc'].split('')]
-        if message['Bcc']:
-            message['Bcc'] = [format_addr(address) for address in message['Bcc'].split('')]
+        if message.get('Cc'):
+            message['Cc'] = ','.join([format_addr(address) for address in message['Cc'].split(',')])
+        if message.get('Bcc'):
+            message['Bcc'] = ','.join([format_addr(address) for address in message['Bcc'].split(',')])
 
         attachments = []
         for attachment in message.get('Attachments', []):
