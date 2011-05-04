@@ -69,7 +69,10 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
        enforced.
     """
 
-    myheaders = {'Accept-Encoding': 'gzip;q=1.0, *;q=0',
+    myheaders = {
+                 # Für [LH#1003] als Hotfix erstmal abgeschaltet
+                 # urlfetch.fetch erkennt den Response Header "content-encoding: gzip" scheinbar nicht
+                 #'Accept-Encoding': 'gzip;q=1.0, *;q=0',
                  'User-Agent': '%s/huTools.http (gzip)' % ua}
     if headers:
         myheaders.update(headers)
