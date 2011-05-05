@@ -8,6 +8,12 @@ The *Lieferung Protocol* ist designed to be easy to encode in a wide range of fo
 
 The following description is in German.
 
+## Grundsätzliches
+
+Für alle Nachrichten gilt, das unbekannte Felder (also alle hier nicht spezifizierten XML-Tags) ignoriert
+werden müssen. So kann es bspw. vorkommen, das sich Felder zu statistischen Zwecken in der Nachricht
+befinden. Diese haben jedoch keine Auswirkung auf die Funktion und dürfen deshalb nicht behandelt werden.
+
 
 ## pro Lieferung 
 
@@ -100,7 +106,7 @@ Ein etwas umfangreicheres Beispiel:
      <anliefertermin_ab>2011-02-21</anliefertermin_ab>
      <auftragsnr>SO1173959</auftragsnr>
      <info_kunde />
-     <kommiauftragsnr>KA3185120</kommiauftragsnr>
+     <komminr>KA3185120</komminr>
      <kundennr>SC0350</kundennr>
      <palettenzahl>1.0476190476190477</palettenzahl>
      <gewicht>190000</gewicht>
