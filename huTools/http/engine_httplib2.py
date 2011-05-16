@@ -7,20 +7,29 @@ Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
-
+import socket
+from huTools.http import exceptions
 _http = None
 
 
 def request(url, method, content, headers, timeout=15):
-    """Does a HTTP Request via httplib2 Service."""
+    """Does a HTTP Request via httplib2 service."""
 
     global _http
     if not _http:
         import huTools.http._httplib2
-        _http = huTools.http._httplib2.Http()
+        _http = huTools.http._httplib2.Http(timeout=timeout)
 
     headers['User-Agent'] = headers.get('User-Agent', '') + ' (httplib2)'
-    resp, content = _http.request(url, method, content, headers=headers)
+
+    # Do not re-use the global Http object after a timeout.
+    # To achieve this, it is set to None.
+    try:
+        resp, content = _http.request(url, method, content, headers=headers)
+    except socket.timeout:
+        _http = None
+        raise exceptions.Timeout
+
     replyheaders = {}
     replyheaders.update(resp)
     return int(resp.status), replyheaders, content

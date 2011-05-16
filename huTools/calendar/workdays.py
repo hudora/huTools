@@ -116,7 +116,7 @@ def workdays(start, end):
 @memoize
 def workdays_german(start, end):
     """Calculates the number of working days between two given dates while considering german holidays."""
-    
+
     if isinstance(start, datetime.datetime):
         start = start.date()
     if isinstance(end, datetime.datetime):

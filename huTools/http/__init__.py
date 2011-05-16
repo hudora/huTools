@@ -26,6 +26,7 @@ File Upload just works::
 # Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 
 from huTools import hujson
+from huTools.http import exceptions
 from huTools.http import tools
 import cgi
 import poster_encode
@@ -41,11 +42,6 @@ try:
 except ImportError:
     import engine_httplib2
     request = engine_httplib2.request
-
-
-class WrongStatusCode(RuntimeError):
-    """Thrown if the Server returns a unexpected status code."""
-    pass
 
 
 def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
@@ -116,7 +112,7 @@ def fetch2xx(url, content='', method='GET', credentials=None, headers=None, mult
     """Like `fetch()` but throws a RuntimeError if the status code is < 200 or >= 300."""
     status, rheaders, rcontent = fetch(url, content, method, credentials, headers, multipart, ua, timeout)
     if (status < 200) or (status >= 300):
-        raise WrongStatusCode("%s: Fehler: %s" % (status, rcontent))
+        raise exceptions.WrongStatusCode("%s: Fehler: %s" % (status, rcontent))
     return status, rheaders, rcontent
 
 
