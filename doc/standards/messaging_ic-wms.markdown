@@ -163,8 +163,9 @@ Sie ist Voraussetzung für die Lieferscheingenerierung. Ein Kommiauftrag kann nu
   Zusatzfelder ist `nve` und `referenzen` (siehe Warenzugang), insbesondere `referenzen.charge`.
 
 #### Zusatzfelder pro Rückmeldung
-* **nves** - Liste der Versandeinheiten. Enthält pro Versandeiheit ein Dictionary mit Gewicht in Gramm
-  und der Art der Versandeinheit. 
+* **nves** - Liste der Versandeinheiten. Enthält pro Versandeiheit ein Dictionary mit Gewicht in Gramm,
+  der Art der Versandeinheit, der NVE sowie der von der Spedition verwendeten Sendungsnummer.
+
 
 ### Transport
 Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet der Server mit Statuscode 201. Wird eine Rückmeldenachricht für eine Kommiauftragsnr doppelt geschickt, antwortet der Server mit Statuscode 409. Bei einer ungültigen Rückmeldenachricht antwortet der Server mit Statuscode 406.
@@ -180,6 +181,7 @@ Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet
        <art>Flachpalette</art>
        <nve>00340406919300289725</nve>
        <gewicht>17430</gewicht>
+       <sendungsnr>TS12345</sendungsnr>
       </nve>
      </nves>
      <positionen>
