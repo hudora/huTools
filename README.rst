@@ -53,3 +53,8 @@ Distributed under a MIT-like License.
 This distribution contains `poster_encode.py <http://atlee.ca/software/poster/>`_ 
 Copyright (c) 2008-2010 Chris AtLee <chris@atlee.ca>
 Distributed under a MIT-like License.
+
+This distribution contains `cache.py <https://raw.github.com/mitsuhiko/werkzeug/b1f382c4eac19338c57526fa609a23034ba5055b/werkzeug/contrib/cache.py
+>`_
+copyright (c) 2010 by the Werkzeug Team, BSD licensed
+

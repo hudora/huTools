@@ -2,6 +2,7 @@
 Changes
 =======
 
+* 0.63:   huTools.cache added
 * 0.62:   huTools.structured.Struct has a __nonzero__ method
 * 0.61:   huTools.structured.Struct and make_struct handle lists and get an items() method
 * 0.61:   huTools.structured.Struct and make_struct handle lists and get an items() method

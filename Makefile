@@ -4,8 +4,8 @@ PATH := ./pythonenv/bin:$(PATH)
 default: check test examples
 
 check:
-	pyflakes huTools
 	pep8 -r --ignore=E501 huTools/
+	pyflakes huTools
 	# Zeilen laenger als 110 Zeichen
 	find huTools/ -name '*.py' -exec awk 'length > 110' {} \;
 	test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
