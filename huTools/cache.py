@@ -57,6 +57,8 @@
     :copyright: (c) 2010 by the Werkzeug Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
+
+import os
 import re
 from itertools import izip
 from time import time
@@ -270,7 +272,7 @@ class MemcachedCache(BaseCache):
                        different prefix.
     """
 
-    def __init__(self, servers, default_timeout=300, key_prefix=None):
+    def __init__(self, servers=None, default_timeout=300, key_prefix=None):
         BaseCache.__init__(self, default_timeout)
         if isinstance(servers, (list, tuple)):
             try:
@@ -443,3 +445,45 @@ class GAEMemcachedCache(MemcachedCache):
 
 
 # removed class FileSystemCache(BaseCache):
+
+### Additional Code from huTools
+
+# Return a cache object whatever is available: AppEngine, memcache or a simple in-memory cache. We use
+# the environment variable `CURRENT_VERSION_ID` to allow using different cache entries by different
+# program versions. On AppEngine `CURRENT_VERSION_ID` is set automatically by the runtime.
+
+def get_cache(default_timeout=300):
+    """Gets the best available cache object"""
+    version = os.environ.get('CURRENT_VERSION_ID', '')
+    try:
+        cache = GAEMemcachedCache(default_timeout=default_timeout, key_prefix=version)
+    except ImportError:
+        try:
+            cache = MemcachedCache(['localhost:11211'], default_timeout=default_timeout, key_prefix=version)
+        except ImportError:
+            cache = SimpleCache(default_timeout=default_timeout)
+    return cache
+
+
+# We provide a global, zero configuration cache object which uses whatever is available for caching.
+# This is the recormended way to use this module
+
+global_cache = None
+
+
+def get_global_cache(default_timeout=300):
+    """Return a global cache instance created via `get_cache()`.
+
+    Usage:
+    cache = huTools.cache.get_global_cache()
+    cachekey= "kostenschaetzung_%s_%s" % (artnr, datum)
+    value = cache.get(cachekey)
+    if value is None:
+        [...]
+        cache.set(cachekey, value)
+    return value
+    """
+    global global_cache
+    if not global_cache:
+        global_cache = get_cache(default_timeout)
+    return global_cache
