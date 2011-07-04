@@ -60,6 +60,8 @@
 
 import os
 import re
+import hashlib
+import pickle
 from itertools import izip
 from time import time
 from cPickle import loads, dumps, HIGHEST_PROTOCOL
@@ -460,7 +462,7 @@ def get_cache(default_timeout=300):
     except ImportError:
         try:
             cache = MemcachedCache(['localhost:11211'], default_timeout=default_timeout, key_prefix=version)
-        except ImportError:
+        except (ImportError, RuntimeError):
             cache = SimpleCache(default_timeout=default_timeout)
     return cache
 
@@ -487,3 +489,48 @@ def get_global_cache(default_timeout=300):
     if not global_cache:
         global_cache = get_cache(default_timeout)
     return global_cache
+
+
+def cache_function(seconds):
+    """
+    A variant of the snippet posted by Jeff Wheeler at
+    http://www.djangosnippets.org/snippets/109/
+
+    Caches a function, using the function and its arguments as the key, and the return
+    value as the value saved. It passes all arguments on to the function, as
+    it should.
+
+    The decorator itself takes a length argument, which is the number of
+    seconds the cache will keep the result around.
+
+    Can be used as decorator or as "factory":
+
+    >>> @cache_function(600)
+    >>> def my_cached_func():
+    ... pass
+
+    To allow caching of existing functions use something like this:
+
+    >>> get_erloesschmaelerungssatz = cache_function(3600)(masterdata.get_erloesschmaelerungssatz)
+    >>> get_erloesschmaelerungssatz('14600')
+    1234
+    """
+
+    def decorator(func):
+        "Decorate a function with caching."
+
+        def inner_func(*args, **kwargs):
+            "Function decorated with caching."
+
+            raw = [func.__name__, func.__module__, args, kwargs]
+            pickled = pickle.dumps(raw, protocol=pickle.HIGHEST_PROTOCOL)
+            key = hashlib.md5(pickled).hexdigest()
+            value = get_global_cache().get(key)
+            if value:
+                return value
+            else:
+                result = func(*args, **kwargs)
+                get_cache().set(key, result, seconds)
+                return result
+        return inner_func
+    return decorator

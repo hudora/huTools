@@ -37,7 +37,7 @@ def request(url, method, content, headers, timeout=25):
     hooks.Append('urlfetch_timeout_hook', urlfetch_timeout_hook, 'urlfetch')
 
     # on appengine debuging is always post mortem, so better log what we arde doing
-    logging.debug('fetching %s %s', method, url)
+    logging.debug('fetching %r %r', method, url)
     if method == 'GET':
         method = urlfetch.GET
     elif method == 'POST':

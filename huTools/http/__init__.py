@@ -112,7 +112,7 @@ def fetch2xx(url, content='', method='GET', credentials=None, headers=None, mult
     """Like `fetch()` but throws a RuntimeError if the status code is < 200 or >= 300."""
     status, rheaders, rcontent = fetch(url, content, method, credentials, headers, multipart, ua, timeout)
     if (status < 200) or (status >= 300):
-        raise exceptions.WrongStatusCode("%s: Fehler: %s" % (status, rcontent))
+        raise exceptions.WrongStatusCode(u"%s: Fehler: %r" % (status, rcontent))
     return status, rheaders, rcontent
 
 
@@ -121,7 +121,7 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
     """Like `fetch2xx()` but JSON-decodes the returned content and returns only that."""
     status, rheaders, rcontent = fetch2xx(url, content, method, credentials, headers, multipart, ua, timeout)
     if not rheaders.get('content-type', '').startswith('application/json'):
-        raise TypeError("Ungueltiger Content-Type '%s': %s" % (rheaders.get('content-type', ''), rcontent))
+        raise TypeError(u"Ungueltiger Content-Type %r: %r" % (rheaders.get('content-type', ''), rcontent))
     return hujson.loads(rcontent)
 
 
