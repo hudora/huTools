@@ -4,13 +4,13 @@ PATH := ./pythonenv/bin:$(PATH)
 default: check test examples
 
 check:
-	pep8 -r --ignore=E501 huTools/
-	pyflakes huTools
+	pep8 -r --ignore=E501,E111 huTools/
+	-pyflakes huTools
 	# Zeilen laenger als 110 Zeichen
 	find huTools/ -name '*.py' -exec awk 'length > 110' {} \;
 	test 0 = `find huTools/ -name '*.py' -exec awk 'length > 110' {} \; | wc -l`
 	# pyLint
-	-pylint -iy --max-line-length=110 huTools/
+	-pylint -iy --max-line-length=110 --ignore=_httplib2 huTools
 
 test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py

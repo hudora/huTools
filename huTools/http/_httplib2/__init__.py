@@ -9,7 +9,6 @@ Requires Python 2.3 or later
 
 Changelog:
 2007-08-18, Rick: Modified so it's able to use a socks proxy if needed.
-
 """
 
 __author__ = "Joe Gregorio (joe@bitworking.org)"
@@ -22,7 +21,7 @@ __contributors__ = ["Thomas Broyer (t.broyer@ltgt.net)",
     "Sam Ruby",
     "Louis Nyffenegger"]
 __license__ = "MIT"
-__version__ = "$Rev$"
+__version__ = "0.7.0"
 
 import re
 import sys
@@ -41,19 +40,59 @@ import copy
 import calendar
 import time
 import random
-from hashlib import sha1 as _sha, md5 as _md5
+import errno
+# remove depracated warning in python2.6
+try:
+    from hashlib import sha1 as _sha, md5 as _md5
+except ImportError:
+    import sha
+    import md5
+    _sha = sha.new
+    _md5 = md5.new
 import hmac
 from gettext import gettext as _
 import socket
-from iri2uri import iri2uri
 
-socks = None
-
+try:
+    from httplib2 import socks
+except ImportError:
+    socks = None
 
 # Build the appropriate socket wrapper for ssl
-def _ssl_wrap_socket(sock, key_file, cert_file):
-    ssl_sock = socket.ssl(sock, key_file, cert_file)
-    return httplib.FakeSocket(sock, ssl_sock)
+try:
+    import ssl  # python 2.6
+    ssl_SSLError = ssl.SSLError
+
+    def _ssl_wrap_socket(sock, key_file, cert_file,
+                         disable_validation, ca_certs):
+        if disable_validation:
+            cert_reqs = ssl.CERT_NONE
+        else:
+            cert_reqs = ssl.CERT_REQUIRED
+        # We should be specifying SSL version 3 or TLS v1, but the ssl module
+        # doesn't expose the necessary knobs. So we need to go with the default
+        # of SSLv23.
+        return ssl.wrap_socket(sock, keyfile=key_file, certfile=cert_file,
+                               cert_reqs=cert_reqs, ca_certs=ca_certs)
+except (AttributeError, ImportError):
+    ssl_SSLError = None
+
+    def _ssl_wrap_socket(sock, key_file, cert_file,
+                         disable_validation, ca_certs):
+        if not disable_validation:
+            raise CertificateValidationUnsupported(
+                    "SSL certificate validation is not supported without "
+                    "the ssl module installed. To avoid this error, install "
+                    "the ssl module, or explicity disable validation.")
+        ssl_sock = socket.ssl(sock, key_file, cert_file)
+        return httplib.FakeSocket(sock, ssl_sock)
+
+
+if sys.version_info >= (2, 3):
+    from iri2uri import iri2uri
+else:
+    def iri2uri(uri):
+        return uri
 
 
 def has_timeout(timeout):  # python 2.6
@@ -61,11 +100,10 @@ def has_timeout(timeout):  # python 2.6
         return (timeout is not None and timeout is not socket._GLOBAL_DEFAULT_TIMEOUT)
     return (timeout is not None)
 
-
 __all__ = ['Http', 'Response', 'ProxyInfo', 'HttpLib2Error',
   'RedirectMissingLocation', 'RedirectLimit', 'FailedToDecompressContent',
   'UnimplementedDigestAuthOptionError', 'UnimplementedHmacDigestAuthOptionError',
-  'debuglevel']
+  'debuglevel', 'ProxiesUnavailableError']
 
 
 # The httplib debug level, set to a non-zero value to get debug output
@@ -85,7 +123,6 @@ def HTTPResponse__getheaders(self):
     if self.msg is None:
         raise httplib.ResponseNotReady()
     return self.msg.items()
-
 
 if not hasattr(httplib.HTTPResponse, 'getheaders'):
     httplib.HTTPResponse.getheaders = HTTPResponse__getheaders
@@ -125,6 +162,10 @@ class UnimplementedHmacDigestAuthOptionError(HttpLib2ErrorWithResponse):
     pass
 
 
+class MalformedHeader(HttpLib2Error):
+    pass
+
+
 class RelativeURIError(HttpLib2Error):
     pass
 
@@ -132,6 +173,28 @@ class RelativeURIError(HttpLib2Error):
 class ServerNotFoundError(HttpLib2Error):
     pass
 
+
+class ProxiesUnavailableError(HttpLib2Error):
+    pass
+
+
+class CertificateValidationUnsupported(HttpLib2Error):
+    pass
+
+
+class SSLHandshakeError(HttpLib2Error):
+    pass
+
+
+class NotSupportedOnThisPlatform(HttpLib2Error):
+    pass
+
+
+class CertificateHostnameMismatch(SSLHandshakeError):
+    def __init__(self, desc, host, cert):
+        HttpLib2Error.__init__(self, desc)
+        self.host = host
+        self.cert = cert
 
 # Open Items:
 # -----------
@@ -147,15 +210,21 @@ class ServerNotFoundError(HttpLib2Error):
 # Does not handle a resource that uses conneg and Last-Modified but no ETag as a cache validator.
 # Does not handle Cache-Control: max-stale
 # Does not use Age: headers when calculating cache freshness.
+
+
 # The number of redirections to follow before giving up.
 # Note that only GET redirects are automatically followed.
 # Will also honor 301 requests by saving that info and never
 # requesting that URI again.
 DEFAULT_MAX_REDIRECTS = 5
 
+# Default CA certificates file bundled with httplib2.
+CA_CERTS = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "cacerts.txt")
+
 # Which headers are hop-by-hop headers by default
-HOP_BY_HOP = ['connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailers',
-              'transfer-encoding', 'upgrade']
+HOP_BY_HOP = ['connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
+              'te', 'trailers', 'transfer-encoding', 'upgrade']
 
 
 def _get_end2end_headers(response):
@@ -228,19 +297,20 @@ NORMALIZE_SPACE = re.compile(r'(?:\r\n)?[ \t]+')
 
 def _normalize_headers(headers):
     return dict([(key.lower(), NORMALIZE_SPACE.sub(value, ' ').strip())
-                 for (key, value) in headers.iteritems()])
+                 for (key, value)
+                 in headers.iteritems()])
 
 
 def _parse_cache_control(headers):
     retval = {}
     if 'cache-control' in headers:
         parts = headers['cache-control'].split(',')
-        parts_with_args = [tuple([x.strip().lower() for x in part.split("=", 1)])
+        parts_with_args = [tuple([x.strip().lower()
+                                  for x in part.split("=", 1)])
                            for part in parts if -1 != part.find("=")]
         parts_wo_args = [(name.strip().lower(), 1) for name in parts if -1 == name.find("=")]
         retval = dict(parts_with_args + parts_wo_args)
     return retval
-
 
 # Whether to use a strict mode to parse WWW-Authenticate headers
 # Might lead to bad results in case of ill-formed header value,
@@ -251,16 +321,19 @@ USE_WWW_AUTH_STRICT_PARSING = 0
 # In regex below:
 #    [^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+             matches a "token" as defined by HTTP
 #    "(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?"    matches a "quoted-string" as defined by HTTP,
-#                                                   when LWS have already been replaced by a single space
-# Actually, as an auth-param value can be either a token or a quoted-string, they are combined in a single
-# pattern which matches both:
-#    \"?((?<=\")(?:[^\0-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")[^\0-\x08\x0A-\x1f\x7f-\xff()<>@,;
-#    :\\\"/[\]?={} \t]+(?!\"))\"?
-WWW_AUTH_STRICT = re.compile(r"^(?:\s*(?:,\s*)?([^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+)\s*=\s*\"?"
-                             r"((?<=\")(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")"
-                             r"[^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+(?!\"))\"?)(.*)$")
-WWW_AUTH_RELAXED = re.compile(r"^(?:\s*(?:,\s*)?([^ \t\r\n=]+)\s*=\s*\"?((?<=\")(?:[^\\\"]|\\.)*?(?=\")"
-                              r"|(?<!\")[^ \t\r\n,]+(?!\"))\"?)(.*)$")
+#                                                            when LWS have already been replaced by a
+#                                                            single space
+# Actually, as an auth-param value can be either a token or a quoted-string, they
+# are combined in a single pattern which matches both:
+#    \"?((?<=\")(?:[^\0-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")[^\0-\x08\x0A-\x1f
+#      \x7f-\xff()<>@,;:\\\"/[\]?={} \t]+(?!\"))\"?
+WWW_AUTH_STRICT = re.compile(
+    r"^(?:\s*(?:,\s*)?([^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={} \t]+)\s*=\s*\"?((?<=\")" +
+    r"(?:[^\0-\x08\x0A-\x1f\x7f-\xff\\\"]|\\[\0-\x7f])*?(?=\")|(?<!\")[^\0-\x1f\x7f-\xff()<>@,;:\\\"/[\]?={" +
+    r"} \t]+(?!\"))\"?)(.*)$")
+WWW_AUTH_RELAXED = re.compile(
+    r"^(?:\s*(?:,\s*)?([^ \t\r\n=]+)\s*=\s*\"?((?<=\")(?:[^\\\"]|\\.)*?(?=\")|(?<!\")" +
+    r"[^ \t\r\n,]+(?!\"))\"?)(.*)$")
 UNQUOTE_PAIRS = re.compile(r'\\(.)')
 
 
@@ -269,25 +342,28 @@ def _parse_www_authenticate(headers, headername='www-authenticate'):
     per auth_scheme."""
     retval = {}
     if headername in headers:
-        authenticate = headers[headername].strip()
-        www_auth = USE_WWW_AUTH_STRICT_PARSING and WWW_AUTH_STRICT or WWW_AUTH_RELAXED
-        while authenticate:
-            # Break off the scheme at the beginning of the line
-            if headername == 'authentication-info':
-                (auth_scheme, the_rest) = ('digest', authenticate)
-            else:
-                (auth_scheme, the_rest) = authenticate.split(" ", 1)
-            # Now loop over all the key value pairs that come after the scheme,
-            # being careful not to roll into the next scheme
-            match = www_auth.search(the_rest)
-            auth_params = {}
-            while match:
-                if match and len(match.groups()) == 3:
-                    (key, value, the_rest) = match.groups()
-                    auth_params[key.lower()] = UNQUOTE_PAIRS.sub(r'\1', value)
+        try:
+            authenticate = headers[headername].strip()
+            www_auth = USE_WWW_AUTH_STRICT_PARSING and WWW_AUTH_STRICT or WWW_AUTH_RELAXED
+            while authenticate:
+                # Break off the scheme at the beginning of the line
+                if headername == 'authentication-info':
+                    (auth_scheme, the_rest) = ('digest', authenticate)
+                else:
+                    (auth_scheme, the_rest) = authenticate.split(" ", 1)
+                # Now loop over all the key value pairs that come after the scheme,
+                # being careful not to roll into the next scheme
                 match = www_auth.search(the_rest)
-            retval[auth_scheme.lower()] = auth_params
-            authenticate = the_rest.strip()
+                auth_params = {}
+                while match:
+                    if match and len(match.groups()) == 3:
+                        (key, value, the_rest) = match.groups()
+                        auth_params[key.lower()] = UNQUOTE_PAIRS.sub(r'\1', value)
+                    match = www_auth.search(the_rest)
+                retval[auth_scheme.lower()] = auth_params
+                authenticate = the_rest.strip()
+        except ValueError:
+            raise MalformedHeader("WWW-Authenticate")
     return retval
 
 
@@ -381,8 +457,9 @@ def _decompressContent(response, new_content):
             del response['content-encoding']
     except IOError:
         content = ""
-        raise FailedToDecompressContent(_("Content purported to be compressed with %s but failed to"
-                " decompress.") % response.get('content-encoding'), response, content)
+        raise FailedToDecompressContent(
+            _("Content purported to be compressed with %s but failed to decompress.") % response.get(
+                'content-encoding'), response, content)
     return content
 
 
@@ -414,7 +491,7 @@ def _updateCache(request_headers, response_headers, content, cache, cachekey):
             if status == 304:
                 status = 200
 
-            status_header = 'status: %d\r\n' % response_headers.status
+            status_header = 'status: %d\r\n' % status
 
             header_str = info.as_string()
 
@@ -425,8 +502,8 @@ def _updateCache(request_headers, response_headers, content, cache, cachekey):
 
 
 def _cnonce():
-    dig = _md5("%s:%s" % (time.ctime(),
-                          ["0123456789"[random.randrange(0, 9)] for i in range(20)])).hexdigest()
+    dig = _md5("%s:%s" % (time.ctime(), ["0123456789"[random.randrange(0, 9)]
+                                         for i in range(20)])).hexdigest()
     return dig[:16]
 
 
@@ -498,8 +575,8 @@ class DigestAuthentication(Authentication):
             raise UnimplementedDigestAuthOptionError(_("Unsupported value for qop: %s." % qop))
         self.challenge['algorithm'] = self.challenge.get('algorithm', 'MD5').upper()
         if self.challenge['algorithm'] != 'MD5':
-            raise UnimplementedDigestAuthOptionError(_("Unsupported value for algorithm: %s."
-                                                       % self.challenge['algorithm']))
+            raise UnimplementedDigestAuthOptionError(
+                _("Unsupported value for algorithm: %s." % self.challenge['algorithm']))
         self.A1 = "".join([self.credentials[0], ":", self.challenge['realm'], ":", self.credentials[1]])
         self.challenge['nc'] = 1
 
@@ -514,8 +591,8 @@ class DigestAuthentication(Authentication):
                     self.challenge['cnonce'],
                     self.challenge['qop'], H(A2)
                     ))
-        headers['Authorization'] = ('Digest username="%s", realm="%s", nonce="%s", uri="%s",'
-                                    ' algorithm=%s, response=%s, qop=%s, nc=%08x, cnonce="%s"' % (
+        headers['authorization'] = ('Digest username="%s", realm="%s", nonce="%s", uri="%s", algorithm=%s, ' +
+                                    'response=%s, qop=%s, nc=%08x, cnonce="%s"' % (
                 self.credentials[0],
                 self.challenge['realm'],
                 self.challenge['nonce'],
@@ -526,10 +603,12 @@ class DigestAuthentication(Authentication):
                 self.challenge['nc'],
                 self.challenge['cnonce'],
                 ))
+        if self.challenge.get('opaque'):
+            headers['authorization'] += ', opaque="%s"' % self.challenge['opaque']
         self.challenge['nc'] += 1
 
     def response(self, response, content):
-        if not 'authentication-info' in response:
+        if 'authentication-info' not in response:
             challenge = _parse_www_authenticate(response, 'www-authenticate').get('digest', {})
             if 'true' == challenge.get('stale'):
                 self.challenge['nonce'] = challenge['nonce']
@@ -558,16 +637,16 @@ class HmacDigestAuthentication(Authentication):
             self.challenge['reason'] = 'unauthorized'
         self.challenge['salt'] = self.challenge.get('salt', '')
         if not self.challenge.get('snonce'):
-            raise UnimplementedHmacDigestAuthOptionError(_("The challenge doesn't contain a server nonce,"
-                                                           " or this one is empty."))
+            raise UnimplementedHmacDigestAuthOptionError(
+                _("The challenge doesn't contain a server nonce, or this one is empty."))
         self.challenge['algorithm'] = self.challenge.get('algorithm', 'HMAC-SHA-1')
         if self.challenge['algorithm'] not in ['HMAC-SHA-1', 'HMAC-MD5']:
-            raise UnimplementedHmacDigestAuthOptionError(_("Unsupported value for algorithm: %s."
-                                                           % self.challenge['algorithm']))
+            raise UnimplementedHmacDigestAuthOptionError(
+                _("Unsupported value for algorithm: %s." % self.challenge['algorithm']))
         self.challenge['pw-algorithm'] = self.challenge.get('pw-algorithm', 'SHA-1')
         if self.challenge['pw-algorithm'] not in ['SHA-1', 'MD5']:
-            raise UnimplementedHmacDigestAuthOptionError(_("Unsupported value for pw-algorithm: %s."
-                                                            % self.challenge['pw-algorithm']))
+            raise UnimplementedHmacDigestAuthOptionError(
+                _("Unsupported value for pw-algorithm: %s." % self.challenge['pw-algorithm']))
         if self.challenge['algorithm'] == 'HMAC-MD5':
             self.hashmod = _md5
         else:
@@ -577,8 +656,8 @@ class HmacDigestAuthentication(Authentication):
         else:
             self.pwhashmod = _sha
         self.key = "".join([self.credentials[0], ":",
-                    self.pwhashmod.new("".join([self.credentials[1], self.challenge['salt']])
-                                       ).hexdigest().lower(),
+                    self.pwhashmod.new("".join([self.credentials[1],
+                                                self.challenge['salt']])).hexdigest().lower(),
                     ":", self.challenge['realm']
                     ])
         self.key = self.pwhashmod.new(self.key).hexdigest().lower()
@@ -590,11 +669,11 @@ class HmacDigestAuthentication(Authentication):
         headers_val = "".join([headers[k] for k in keys])
         created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         cnonce = _cnonce()
-        request_digest = "%s:%s:%s:%s:%s" % (method, request_uri, cnonce, self.challenge['snonce'],
-                                             headers_val)
+        request_digest = "%s:%s:%s:%s:%s" % (method, request_uri, cnonce,
+                                             self.challenge['snonce'], headers_val)
         request_digest = hmac.new(self.key, request_digest, self.hashmod).hexdigest().lower()
-        headers['Authorization'] = ('HMACDigest username="'
-        '%s", realm="%s", snonce="%s", cnonce="%s", uri="%s", created="%s", response="%s", headers="%s"' % (
+        headers['authorization'] = ('HMACDigest username="%s", realm="%s", snonce="%s", cnonce="%s", ' +
+                                    'uri="%s", created="%s", response="%s", headers="%s"' % (
                 self.credentials[0],
                 self.challenge['realm'],
                 self.challenge['snonce'],
@@ -626,7 +705,7 @@ class WsseAuthentication(Authentication):
     def request(self, method, request_uri, headers, content):
         """Modify the request headers to add the appropriate
         Authorization header."""
-        headers['Authorization'] = 'WSSE profile="UsernameToken"'
+        headers['authorization'] = 'WSSE profile="UsernameToken"'
         iso_now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         cnonce = _cnonce()
         password_digest = _wsse_username_token(cnonce, iso_now, self.credentials[1])
@@ -651,10 +730,11 @@ class GoogleLoginAuthentication(Authentication):
         #elif request_uri.find("spreadsheets") > 0:
         #    service = "wise"
 
-        auth = dict(Email=credentials[0], Passwd=credentials[1], service=service,
-                    source=headers['user-agent'])
-        resp, content = self.http.request("https://www.google.com/accounts/ClientLogin", method="POST",
-                        body=urlencode(auth), headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        auth = dict(Email=credentials[0], Passwd=credentials[1],
+                    service=service, source=headers['user-agent'])
+        resp, content = self.http.request("https://www.google.com/accounts/ClientLogin",
+                                          method="POST", body=urlencode(auth),
+                                          headers={'Content-Type': 'application/x-www-form-urlencoded'})
         lines = content.split('\n')
         d = dict([tuple(line.split("=", 1)) for line in lines if line])
         if resp.status == 403:
@@ -676,7 +756,6 @@ AUTH_SCHEME_CLASSES = {
     "googlelogin": GoogleLoginAuthentication
 }
 
-
 AUTH_SCHEME_ORDER = ["hmacdigest", "googlelogin", "digest", "wsse", "basic"]
 
 
@@ -685,7 +764,7 @@ class FileCache(object):
     Not really safe to use if multiple threads or processes are going to
     be running on the same cache.
     """
-    def __init__(self, cache, safe=safename):
+    def __init__(self, cache, safe=safename):  # use safe=lambda x: md5.new(x).hexdigest() for old behavior
         self.cache = cache
         self.safe = safe
         if not os.path.exists(cache):
@@ -741,22 +820,32 @@ class ProxyInfo(object):
     def __init__(self, proxy_type, proxy_host, proxy_port, proxy_rdns=None, proxy_user=None, proxy_pass=None):
         """The parameter proxy_type must be set to one of socks.PROXY_TYPE_XXX
         constants. For example:
-
-  p = ProxyInfo(proxy_type=socks.PROXY_TYPE_HTTP, proxy_host='localhost', proxy_port=8000)
+        p = ProxyInfo(proxy_type=socks.PROXY_TYPE_HTTP, proxy_host='localhost', proxy_port=8000)
         """
-        self.proxy_type, self.proxy_host, self.proxy_port, self.proxy_rdns, self.proxy_user, \
-            self.proxy_pass = proxy_type, proxy_host, proxy_port, proxy_rdns, proxy_user, proxy_pass
+        self.proxy_type = proxy_type
+        self.proxy_host = proxy_host
+        self.proxy_port = proxy_port
+        self.proxy_rdns = proxy_rdns
+        self.proxy_user = proxy_user
+        self.proxy_pass = proxy_pass
 
     def astuple(self):
         return (self.proxy_type, self.proxy_host, self.proxy_port, self.proxy_rdns,
-            self.proxy_user, self.proxy_pass)
+                self.proxy_user, self.proxy_pass)
 
     def isgood(self):
-        return socks and (self.proxy_host != None) and (self.proxy_port != None)
+        return (self.proxy_host != None) and (self.proxy_port != None)
 
 
 class HTTPConnectionWithTimeout(httplib.HTTPConnection):
-    """HTTPConnection subclass that supports timeouts"""
+    """
+    HTTPConnection subclass that supports timeouts
+
+    All timeouts are in seconds. If None is passed for timeout then
+    Python's default timeout for sockets will be used. See for example
+    the docs of socket.setdefaulttimeout():
+    http://docs.python.org/library/socket.html#socket.setdefaulttimeout
+    """
 
     def __init__(self, host, port=None, strict=None, timeout=None, proxy_info=None):
         httplib.HTTPConnection.__init__(self, host, port, strict)
@@ -766,6 +855,9 @@ class HTTPConnectionWithTimeout(httplib.HTTPConnection):
     def connect(self):
         """Connect to the host and port specified in __init__."""
         # Mostly verbatim from httplib.py.
+        if self.proxy_info and socks is None:
+            raise ProxiesUnavailableError(
+                'Proxy support missing but proxy use was requested!')
         msg = "getaddrinfo returns an empty list"
         for res in socket.getaddrinfo(self.host, self.port, 0,
                 socket.SOCK_STREAM):
@@ -776,6 +868,7 @@ class HTTPConnectionWithTimeout(httplib.HTTPConnection):
                     self.sock.setproxy(*self.proxy_info.astuple())
                 else:
                     self.sock = socket.socket(af, socktype, proto)
+                    self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 # Different from httplib: support timeouts.
                 if has_timeout(self.timeout):
                     self.sock.settimeout(self.timeout)
@@ -797,28 +890,223 @@ class HTTPConnectionWithTimeout(httplib.HTTPConnection):
 
 
 class HTTPSConnectionWithTimeout(httplib.HTTPSConnection):
-    "This class allows communication via SSL."
+    """
+    This class allows communication via SSL.
 
+    All timeouts are in seconds. If None is passed for timeout then
+    Python's default timeout for sockets will be used. See for example
+    the docs of socket.setdefaulttimeout():
+    http://docs.python.org/library/socket.html#socket.setdefaulttimeout
+    """
     def __init__(self, host, port=None, key_file=None, cert_file=None,
-                 strict=None, timeout=None, proxy_info=None):
+                 strict=None, timeout=None, proxy_info=None,
+                 ca_certs=None, disable_ssl_certificate_validation=False):
         httplib.HTTPSConnection.__init__(self, host, port=port, key_file=key_file,
                 cert_file=cert_file, strict=strict)
         self.timeout = timeout
         self.proxy_info = proxy_info
+        if ca_certs is None:
+            ca_certs = CA_CERTS
+        self.ca_certs = ca_certs
+        self.disable_ssl_certificate_validation = \
+            disable_ssl_certificate_validation
+
+    # The following two methods were adapted from https_wrapper.py, released
+    # with the Google Appengine SDK at
+    # http://googleappengine.googlecode.com/svn-history/r136/trunk/
+    #    python/google/appengine/tools/https_wrapper.py
+    # under the following license:
+    #
+    # Copyright 2007 Google Inc.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+    #
+
+    def _GetValidHostsForCert(self, cert):
+        """Returns a list of valid host globs for an SSL certificate.
+
+        Args:
+          cert: A dictionary representing an SSL certificate.
+        Returns:
+          list: A list of valid host globs.
+        """
+        if 'subjectAltName' in cert:
+            return [x[1] for x in cert['subjectAltName']
+                    if x[0].lower() == 'dns']
+        else:
+            return [x[0][1] for x in cert['subject']
+                    if x[0][0].lower() == 'commonname']
+
+    def _ValidateCertificateHostname(self, cert, hostname):
+        """Validates that a given hostname is valid for an SSL certificate.
+
+        Args:
+          cert: A dictionary representing an SSL certificate.
+          hostname: The hostname to test.
+        Returns:
+          bool: Whether or not the hostname is valid for this certificate.
+        """
+        hosts = self._GetValidHostsForCert(cert)
+        for host in hosts:
+            host_re = host.replace('.', '\.').replace('*', '[^.]*')
+            if re.search('^%s$' % (host_re,), hostname, re.I):
+                return True
+        return False
 
     def connect(self):
         "Connect to a host on a given (SSL) port."
 
-        if self.proxy_info and self.proxy_info.isgood():
-            sock = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.setproxy(*self.proxy_info.astuple())
-        else:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        msg = "getaddrinfo returns an empty list"
+        for family, socktype, proto, canonname, sockaddr in socket.getaddrinfo(
+            self.host, self.port, 0, socket.SOCK_STREAM):
+            try:
+                if self.proxy_info and self.proxy_info.isgood():
+                    sock = socks.socksocket(family, socktype, proto)
+                    sock.setproxy(*self.proxy_info.astuple())
+                else:
+                    sock = socket.socket(family, socktype, proto)
+                    sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
-        if has_timeout(self.timeout):
-            sock.settimeout(self.timeout)
-        sock.connect((self.host, self.port))
-        self.sock = _ssl_wrap_socket(sock, self.key_file, self.cert_file)
+                if has_timeout(self.timeout):
+                    sock.settimeout(self.timeout)
+                sock.connect((self.host, self.port))
+                self.sock = _ssl_wrap_socket(
+                    sock, self.key_file, self.cert_file,
+                    self.disable_ssl_certificate_validation, self.ca_certs)
+                if self.debuglevel > 0:
+                    print "connect: (%s, %s)" % (self.host, self.port)
+                if not self.disable_ssl_certificate_validation:
+                    cert = self.sock.getpeercert()
+                    hostname = self.host.split(':', 0)[0]
+                    if not self._ValidateCertificateHostname(cert, hostname):
+                        raise CertificateHostnameMismatch(
+                            'Server presented certificate that does not match '
+                            'host %s: %s' % (hostname, cert), hostname, cert)
+            except ssl_SSLError, e:
+                if sock:
+                    sock.close()
+                if self.sock:
+                    self.sock.close()
+                self.sock = None
+                # Unfortunately the ssl module doesn't seem to provide any way
+                # to get at more detailed error information, in particular
+                # whether the error is due to certificate validation or
+                # something else (such as SSL protocol mismatch).
+                if e.errno == ssl.SSL_ERROR_SSL:
+                    raise SSLHandshakeError(e)
+                else:
+                    raise
+            except (socket.timeout, socket.gaierror):
+                raise
+            except socket.error, msg:
+                if self.debuglevel > 0:
+                    print 'connect fail:', (self.host, self.port)
+                if self.sock:
+                    self.sock.close()
+                self.sock = None
+                continue
+            break
+        if not self.sock:
+            raise socket.error, msg
+
+SCHEME_TO_CONNECTION = {
+    'http': HTTPConnectionWithTimeout,
+    'https': HTTPSConnectionWithTimeout
+    }
+
+# Use a different connection object for Google App Engine
+try:
+    from google.appengine.api.urlfetch import fetch
+    from google.appengine.api.urlfetch import InvalidURLError
+    from google.appengine.api.urlfetch import DownloadError
+    from google.appengine.api.urlfetch import ResponseTooLargeError
+    from google.appengine.api.urlfetch import SSLCertificateError
+
+    class ResponseDict(dict):
+        """Is a dictionary that also has a read() method, so
+        that it can pass itself off as an httlib.HTTPResponse()."""
+        def read(self):
+            pass
+
+    class AppEngineHttpConnection(object):
+        """Emulates an httplib.HTTPConnection object, but actually uses the Google
+        App Engine urlfetch library. This allows the timeout to be properly used on
+        Google App Engine, and avoids using httplib, which on Google App Engine is
+        just another wrapper around urlfetch.
+        """
+        def __init__(self, host, port=None, key_file=None, cert_file=None,
+                     strict=None, timeout=None, proxy_info=None, ca_certs=None,
+                     disable_certificate_validation=False):
+            self.host = host
+            self.port = port
+            self.timeout = timeout
+            if key_file or cert_file or proxy_info or ca_certs:
+                raise NotSupportedOnThisPlatform()
+            self.response = None
+            self.scheme = 'http'
+            self.validate_certificate = not disable_certificate_validation
+            self.sock = True
+
+        def request(self, method, url, body, headers):
+            # Calculate the absolute URI, which fetch requires
+            netloc = self.host
+            if self.port:
+                netloc = '%s:%s' % (self.host, self.port)
+            absolute_uri = '%s://%s%s' % (self.scheme, netloc, url)
+            try:
+                response = fetch(absolute_uri, payload=body, method=method,
+                                 headers=headers, allow_truncated=False, follow_redirects=False,
+                                 deadline=self.timeout,
+                                 validate_certificate=self.validate_certificate)
+                self.response = ResponseDict(response.headers)
+                self.response['status'] = str(response.status_code)
+                self.response.status = response.status_code
+                setattr(self.response, 'read', lambda: response.content)
+
+            # Make sure the exceptions raised match the exceptions expected.
+            except InvalidURLError:
+                raise socket.gaierror('')
+            except (DownloadError, ResponseTooLargeError, SSLCertificateError):
+                raise httplib.HTTPException()
+
+        def getresponse(self):
+            return self.response
+
+        def set_debuglevel(self, level):
+            pass
+
+        def connect(self):
+            pass
+
+        def close(self):
+            pass
+
+    class AppEngineHttpsConnection(AppEngineHttpConnection):
+        """Same as AppEngineHttpConnection, but for HTTPS URIs."""
+        def __init__(self, host, port=None, key_file=None, cert_file=None,
+                     strict=None, timeout=None, proxy_info=None):
+            AppEngineHttpConnection.__init__(self, host, port, key_file, cert_file,
+                                             strict, timeout, proxy_info)
+            self.scheme = 'https'
+
+    # Update the connection classes to use the Googel App Engine specific ones.
+    SCHEME_TO_CONNECTION = {
+        'http': AppEngineHttpConnection,
+        'https': AppEngineHttpsConnection
+        }
+
+except ImportError:
+    pass
 
 
 class Http(object):
@@ -834,18 +1122,37 @@ class Http(object):
 
 and more.
     """
-    def __init__(self, cache=None, timeout=None, proxy_info=None):
-        """The value of proxy_info is a ProxyInfo instance.
+    def __init__(self, cache=None, timeout=None, proxy_info=None,
+                 ca_certs=None, disable_ssl_certificate_validation=False):
+        """
+        The value of proxy_info is a ProxyInfo instance.
 
-If 'cache' is a string then it is used as a directory name
-for a disk cache. Otherwise it must be an object that supports
-the same interface as FileCache."""
+        If 'cache' is a string then it is used as a directory name for
+        a disk cache. Otherwise it must be an object that supports the
+        same interface as FileCache.
+
+        All timeouts are in seconds. If None is passed for timeout
+        then Python's default timeout for sockets will be used. See
+        for example the docs of socket.setdefaulttimeout():
+        http://docs.python.org/library/socket.html#socket.setdefaulttimeout
+
+        ca_certs is the path of a file containing root CA certificates for SSL
+        server certificate validation.  By default, a CA cert file bundled with
+        httplib2 is used.
+
+        If disable_ssl_certificate_validation is true, SSL cert validation will
+        not be performed.
+        """
         self.proxy_info = proxy_info
+        self.ca_certs = ca_certs
+        self.disable_ssl_certificate_validation = \
+                disable_ssl_certificate_validation
+
         # Map domain name to an httplib connection
         self.connections = {}
         # The location of the cache, for now a directory
         # where cached responses are held.
-        if cache and isinstance(cache, str):
+        if cache and isinstance(cache, basestring):
             self.cache = FileCache(cache)
         else:
             self.cache = cache
@@ -864,7 +1171,7 @@ the same interface as FileCache."""
 
         # Which HTTP methods do we apply optimistic concurrency to, i.e.
         # which methods get an "if-match:" etag header added to them.
-        self.optimistic_concurrency_methods = ["PUT"]
+        self.optimistic_concurrency_methods = ["PUT", "PATCH"]
 
         # If 'follow_redirects' is True, and this is set to True then
         # all redirecs are followed, including unsafe ones.
@@ -884,8 +1191,8 @@ the same interface as FileCache."""
         for cred in self.credentials.iter(host):
             for scheme in AUTH_SCHEME_ORDER:
                 if scheme in challenges:
-                    yield AUTH_SCHEME_CLASSES[scheme](cred, host, request_uri, headers, response,
-                                                      content, self)
+                    yield AUTH_SCHEME_CLASSES[scheme](cred, host, request_uri,
+                                                      headers, response, content, self)
 
     def add_credentials(self, name, password, domain=""):
         """Add a name and password that will be used
@@ -906,13 +1213,40 @@ the same interface as FileCache."""
     def _conn_request(self, conn, request_uri, method, body, headers):
         for i in range(2):
             try:
+                if conn.sock is None:
+                    conn.connect()
                 conn.request(method, request_uri, body, headers)
+            except socket.timeout:
+                raise
             except socket.gaierror:
                 conn.close()
                 raise ServerNotFoundError("Unable to find the server at %s" % conn.host)
-            except (socket.error, httplib.HTTPException):
+            except ssl_SSLError:
+                conn.close()
+                raise
+            except socket.error, e:
+                err = 0
+                if hasattr(e, 'args'):
+                    err = getattr(e, 'args')[0]
+                else:
+                    err = e.errno
+                if err == errno.ECONNREFUSED:  # Connection refused
+                    raise
+            except httplib.HTTPException:
                 # Just because the server closed the connection doesn't apparently mean
                 # that the server didn't send a response.
+                if conn.sock is None:
+                    if i == 0:
+                        conn.close()
+                        conn.connect()
+                        continue
+                    else:
+                        conn.close()
+                        raise
+                if i == 0:
+                    conn.close()
+                    conn.connect()
+                    continue
                 pass
             try:
                 response = conn.getresponse()
@@ -939,8 +1273,9 @@ the same interface as FileCache."""
         """Do the actual request using the connection object
         and also follow one level of redirects if necessary"""
 
-        auths = [(auth.depth(request_uri), auth) for auth in self.authorizations if auth.inscope(host,
-                                                                                                 request_uri)]
+        auths = [(auth.depth(request_uri), auth)
+                 for auth in self.authorizations
+                 if auth.inscope(host, request_uri)]
         auth = auths and sorted(auths)[0][1] or None
         if auth:
             auth.request(method, request_uri, headers, body)
@@ -956,7 +1291,7 @@ the same interface as FileCache."""
         if response.status == 401:
             for authorization in self._auth_from_challenge(host, request_uri, headers, response, content):
                 authorization.request(method, request_uri, headers, body)
-                (response, content) = self._conn_request(conn, request_uri, method, body, headers)
+                (response, content) = self._conn_request(conn, request_uri, method, body, headers, )
                 if response.status != 401:
                     self.authorizations.append(authorization)
                     authorization.response(response, body)
@@ -967,9 +1302,10 @@ the same interface as FileCache."""
                 # Pick out the location header and basically start from the beginning
                 # remembering first to strip the ETag header and decrement our 'depth'
                 if redirections:
-                    if not 'location' in response and response.status != 300:
-                        raise RedirectMissingLocation(_("Redirected but the response is missing a Location:"
-                                                        " header."), response, content)
+                    if 'location' not in response and response.status != 300:
+                        raise RedirectMissingLocation(
+                            _("Redirected but the response is missing a Location: header."),
+                            response, content)
                     # Fix-up relative redirects (which violate an RFC 2616 MUST)
                     if 'location' in response:
                         location = response['location']
@@ -978,7 +1314,7 @@ the same interface as FileCache."""
                             response['location'] = urlparse.urljoin(absolute_uri, location)
                     if response.status == 301 and method in ["GET", "HEAD"]:
                         response['-x-permanent-redirect-url'] = response['location']
-                        if not 'content-location' in response:
+                        if 'content-location' not in response:
                             response['content-location'] = absolute_uri
                         _updateCache(headers, response, content, self.cache, cachekey)
                     if 'if-none-match' in headers:
@@ -988,19 +1324,21 @@ the same interface as FileCache."""
                     if 'location' in response:
                         location = response['location']
                         old_response = copy.deepcopy(response)
-                        if not 'content-location' in old_response:
+                        if 'content-location' not in old_response:
                             old_response['content-location'] = absolute_uri
-                        redirect_method = ((response.status == 303) and
-                                           (method not in ["GET", "HEAD"])) and "GET" or method
+                        redirect_method = method
+                        if response.status in [302, 303]:
+                            redirect_method = "GET"
+                            body = None
                         (response, content) = self.request(location, redirect_method, body=body,
                                                            headers=headers, redirections=redirections - 1)
                         response.previous = old_response
                 else:
-                    raise RedirectLimit(_("Redirected more times than rediection_limit allows."),
+                    raise RedirectLimit("Redirected more times than rediection_limit allows.",
                                         response, content)
-            elif response.status in [200, 203] and method == "GET":
+            elif response.status in [200, 203] and method in ["GET", "HEAD"]:
                 # Don't cache 206's since we aren't going to handle byte range requests
-                if not 'content-location' in response:
+                if 'content-location' not in response:
                     response['content-location'] = absolute_uri
                 _updateCache(headers, response, content, self.cache, cachekey)
 
@@ -1013,8 +1351,8 @@ the same interface as FileCache."""
 # Then need to optionally turn all exceptions into status codes
 # including all socket.* and httplib.* exceptions.
 
-    def request(self, uri, method="GET", body=None, headers=None, redirections=DEFAULT_MAX_REDIRECTS,
-                connection_type=None):
+    def request(self, uri, method="GET", body=None, headers=None,
+                redirections=DEFAULT_MAX_REDIRECTS, connection_type=None):
         """ Performs a single HTTP request.
 The 'uri' is the URI of the HTTP resource and can begin
 with either 'http' or 'https'. The value of 'uri' must be an absolute URI.
@@ -1042,7 +1380,7 @@ a string that contains the response entity body.
                 headers = self._normalize_headers(headers)
 
             if not 'user-agent' in headers:
-                headers['user-agent'] = "Python-httplib2/%s" % __version__
+                headers['user-agent'] = "Python-httplib2/%s (gzip)" % __version__
 
             uri = iri2uri(uri)
 
@@ -1057,18 +1395,29 @@ a string that contains the response entity body.
                 conn = self.connections[conn_key]
             else:
                 if not connection_type:
-                    connection_type = ((scheme == 'https') and HTTPSConnectionWithTimeout
-                                       or HTTPConnectionWithTimeout)
+                    connection_type = SCHEME_TO_CONNECTION[scheme]
                 certs = list(self.certificates.iter(authority))
-                if scheme == 'https' and certs:
-                    conn = self.connections[conn_key] = connection_type(authority, key_file=certs[0][0],
-                        cert_file=certs[0][1], timeout=self.timeout, proxy_info=self.proxy_info)
+                if issubclass(connection_type, HTTPSConnectionWithTimeout):
+                    if certs:
+                        conn = self.connections[conn_key] = connection_type(
+                                authority, key_file=certs[0][0],
+                                cert_file=certs[0][1], timeout=self.timeout,
+                                proxy_info=self.proxy_info,
+                                ca_certs=self.ca_certs,
+                                disable_ssl_certificate_validation=self.disable_ssl_certificate_validation)
+                    else:
+                        conn = self.connections[conn_key] = connection_type(
+                                authority, timeout=self.timeout,
+                                proxy_info=self.proxy_info,
+                                ca_certs=self.ca_certs,
+                                disable_ssl_certificate_validation=self.disable_ssl_certificate_validation)
                 else:
-                    conn = self.connections[conn_key] = connection_type(authority, timeout=self.timeout,
-                                                                        proxy_info=self.proxy_info)
+                    conn = self.connections[conn_key] = connection_type(
+                            authority, timeout=self.timeout,
+                            proxy_info=self.proxy_info)
                 conn.set_debuglevel(debuglevel)
 
-            if method in ["GET", "HEAD"] and 'range' not in headers and 'accept-encoding' not in headers:
+            if 'range' not in headers and 'accept-encoding' not in headers:
                 headers['accept-encoding'] = 'gzip, deflate'
 
             info = email.Message.Message()
@@ -1081,7 +1430,7 @@ a string that contains the response entity body.
                     #
                     # Need to replace the line above with the kludge below
                     # to fix the non-existent bug not fixed in this
-                    # bug report:http://mail.python.org/pipermail/python-bugs-list/2005-September/030289.html
+                    # bug report: http://mail.python.org/pipermail/python-bugs-list/2005-September/030289.html
                     try:
                         info, content = cached_value.split('\r\n\r\n', 1)
                         feedparser = email.FeedParser.FeedParser()
@@ -1095,8 +1444,10 @@ a string that contains the response entity body.
             else:
                 cachekey = None
 
-            if (method in self.optimistic_concurrency_methods and self.cache and 'etag' in info
-                and not self.ignore_etag and 'if-match' not in headers):
+            if (method in self.optimistic_concurrency_methods and
+                self.cache and 'etag' in info and
+                not self.ignore_etag and
+                'if-match' not in headers):
                 # http://www.w3.org/1999/04/Editing/
                 headers['if-match'] = info['etag']
 
@@ -1112,15 +1463,18 @@ a string that contains the response entity body.
                 for header in vary_headers:
                     key = '-varied-%s' % header
                     value = info[key]
-                    if headers.get(header, '') != value:
+                    if headers.get(header, None) != value:
                         cached_value = None
                         break
 
             if cached_value and method in ["GET", "HEAD"] and self.cache and 'range' not in headers:
                 if '-x-permanent-redirect-url' in info:
                     # Should cached permanent redirects be counted in our redirection count? For now, yes.
-                    (response, new_content) = self.request(info['-x-permanent-redirect-url'], "GET",
-                                                           headers=headers, redirections=redirections - 1)
+                    if redirections <= 0:
+                      raise RedirectLimit("Redirected more times than rediection_limit allows.", {}, "")
+                    (response, new_content) = self.request(
+                        info['-x-permanent-redirect-url'], "GET",
+                        headers=headers, redirections=redirections - 1)
                     response.previous = Response(info)
                     response.previous.fromcache = True
                 else:
@@ -1132,7 +1486,7 @@ a string that contains the response entity body.
                     # 1. [FRESH] Return the cache entry w/o doing a GET
                     # 2. [STALE] Do the GET (but add in cache validators if available)
                     # 3. [TRANSPARENT] Do a GET w/o any cache validators (Cache-Control: no-cache)
-                    #    on the request
+                    #                  on the request
                     entry_disposition = _entry_disposition(info, headers)
 
                     if entry_disposition == "FRESH":
@@ -1152,8 +1506,8 @@ a string that contains the response entity body.
                     elif entry_disposition == "TRANSPARENT":
                         pass
 
-                    (response, new_content) = self._request(conn, authority, uri, request_uri, method, body,
-                                                            headers, redirections, cachekey)
+                    (response, new_content) = self._request(conn, authority, uri, request_uri,
+                                                            method, body, headers, redirections, cachekey)
 
                 if response.status == 304 and method == "GET":
                     # Rewrite the cache entry with the new end-to-end headers
@@ -1183,8 +1537,8 @@ a string that contains the response entity body.
                     response = Response(info)
                     content = ""
                 else:
-                    (response, content) = self._request(conn, authority, uri, request_uri, method, body,
-                                                        headers, redirections, cachekey)
+                    (response, content) = self._request(conn, authority, uri, request_uri,
+                                                        method, body, headers, redirections, cachekey)
         except Exception, e:
             if self.force_exception_to_status_code:
                 if isinstance(e, HttpLib2ErrorWithResponse):
