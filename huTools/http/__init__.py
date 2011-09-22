@@ -44,26 +44,9 @@ except ImportError:
     request = engine_httplib2.request
 
 
-def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
-    """Does a HTTP request with method `method` to `url`.
-
-    Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
-    containing the headers sent by the server and `content` is the body of the http response.
-
-    Parameters to fetch are::
-
-    * `url` is the fully qualified request URL. It may contain query prameters.
-    * `content` is the request body to be sent. It may be a dict which for all requests expect POST
-      is converted to query parameters. If there are query parameters already in the `url` they are merged
-      with `content`. For POST requests the data is encoded as application/x-www-form-urlencoded
-      or multipart/form-data and encoded. If the parameter `multipart` is `True` or if one of the values
-      in content has a `name` attribute (which is the case for file objects) multipart encoding is choosen.
-    * `headers` is a dict of header values
-    * `credentials` can be a user:password combination
-    * `ua` should be an additional User Agent string
-    * `timeout` is the maximum number of seconds the request might take. This is advisory and may not be
-       enforced.
-    """
+def prepare_headers(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
+                    timeout=25):
+    """Prepares a request, returns (url, method, content, headers, timeout)"""
 
     myheaders = {'Accept-Encoding': 'gzip',
                  'User-Agent': '%s/huTools.http (gzip)' % ua}
@@ -100,8 +83,31 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
     if credentials and not 'Authorization' in myheaders.keys():
         authheader = "Basic %s" % credentials.encode('base64').strip()
         myheaders["Authorization"] = authheader
+    return url, method, content, myheaders, timeout
 
-    return request(url, method, content, myheaders, timeout)
+
+def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
+    """Does a HTTP request with method `method` to `url`.
+
+    Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
+    containing the headers sent by the server and `content` is the body of the http response.
+
+    Parameters to fetch are::
+
+    * `url` is the fully qualified request URL. It may contain query prameters.
+    * `content` is the request body to be sent. It may be a dict which for all requests expect POST
+      is converted to query parameters. If there are query parameters already in the `url` they are merged
+      with `content`. For POST requests the data is encoded as application/x-www-form-urlencoded
+      or multipart/form-data and encoded. If the parameter `multipart` is `True` or if one of the values
+      in content has a `name` attribute (which is the case for file objects) multipart encoding is choosen.
+    * `headers` is a dict of header values
+    * `credentials` can be a user:password combination
+    * `ua` should be an additional User Agent string
+    * `timeout` is the maximum number of seconds the request might take. This is advisory and may not be
+       enforced.
+    """
+
+    return request(*prepare_headers(url, content, method, credentials, headers, multipart, ua, timeout))
 
 
 def fetch2xx(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
