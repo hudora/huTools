@@ -81,7 +81,12 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
         myheaders[key] = str(val)
     # add authentication
     if credentials and not 'Authorization' in myheaders.keys():
-        authheader = "Basic %s" % credentials.encode('base64').strip()
+        # ''.encode('b64') zerbricht lange Strings (also bei langen Credentials)
+        # in mehrere Zeilen, was einer Verwendung als Wert im HTTP-Header extrem
+        # abtraeglich ist. Aufgetaucht ist das Problem bei den Login-Daten fuer
+        # den Import der Shopify-Auftraege aus dem hySkate-Shop. Zur Loesung werden
+        # deshalb alle moeglichen Einzelzeilen wieder zu einer Zeile zusammengezogen.
+        authheader = 'Basic %s' % ''.join(credentials.encode('base64').strip().split())
         myheaders["Authorization"] = authheader
     return url, method, content, myheaders, timeout
 
