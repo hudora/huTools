@@ -4,10 +4,11 @@
 engine_httplib2.py implements httplib2 based queries for huTools.http
 
 Created by Maximillian Dornseif on 2010-10-24.
-Copyright (c) 2010 HUDORA. All rights reserved.
+Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
 
 import socket
+import huTools.http.tools
 from huTools.http import exceptions
 _http = None
 
@@ -33,3 +34,31 @@ def request(url, method, content, headers, timeout=15):
     replyheaders = {}
     replyheaders.update(resp)
     return int(resp.status), replyheaders, content
+
+
+class AsyncHttpResult(object):
+    """Syncronous emulation for plain Python.
+
+    See `engine_appengine.AsyncHttpResult()` for the thinking behind it.
+    `huTools.http.fetch_async()` is a somewhat more high-level interface.
+    """
+
+    def __init__(self):
+        self.url, self.method, self.content, self.headers, self.timeout = None, None, None, None, None
+        self._result = None
+
+    def fetch(self, url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
+              timeout=25, returnhandler=lambda x, y, z: (x, y, z)):
+        """Save parameters but delay request execution until get_result() is called."""
+        self.url, self.method, self.content, self.headers, self.timeout = \
+            huTools.http.tools.prepare_headers(url, content, method, credentials, headers, multipart,
+                                               ua, timeout)
+        self.returnhandler = returnhandler
+
+    def get_result(self):
+        """Execute request pass it to returnhandler and return."""
+        # Cache the result because we mght get called more than once
+        if not self._result:
+            self._result = self.returnhandler(*request(self.url, self.method, self.content,
+                                                       self.headers, self.timeout))
+        return self._result
