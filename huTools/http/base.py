@@ -48,7 +48,7 @@ except ImportError:
 logging.info("using %s", request.__module__)
 
 
-def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=25):
+def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=50):
     """Does a HTTP request with method `method` to `url`.
 
     Returns (status, headers, content) whereas `status` is an integer status code, `headers` is a dict
@@ -74,7 +74,7 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
 
 
 def fetch2xx(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
-             timeout=25):
+             timeout=50):
     """Like `fetch()` but throws a RuntimeError if the status code is < 200 or >= 300."""
     status, rheaders, rcontent = fetch(url, content, method, credentials, headers, multipart, ua, timeout)
     if (status < 200) or (status >= 300):
@@ -83,7 +83,7 @@ def fetch2xx(url, content='', method='GET', credentials=None, headers=None, mult
 
 
 def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
-             timeout=25):
+             timeout=50):
     """Like `fetch2xx()` but JSON-decodes the returned content and returns only that."""
     status, rheaders, rcontent = fetch2xx(url, content, method, credentials, headers, multipart, ua, timeout)
     if not rheaders.get('content-type', '').startswith('application/json'):
@@ -92,7 +92,7 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
 
 
 def fetch_async(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
-                timeout=25, returnhandler=lambda x, y, z: (x, y, z)):
+                timeout=50, returnhandler=lambda x, y, z: (x, y, z)):
     """Initiate a asyncrounus HTTP Request and return a result object.
 
     `fetch_async(...).get_result()` can be used to emulate `fetch(...)`.
@@ -116,11 +116,10 @@ def fetch_async(url, content='', method='GET', credentials=None, headers=None, m
 
 
 def fetch_json2xx_async(url, content='', method='GET', credentials=None, headers=None, multipart=False,
-             ua='', timeout=25, returnhandler=lambda x: x):
+             ua='', timeout=50, returnhandler=lambda x: x):
     """Like `fetch_async()` but returnhandler is called with decoded jsondata."""
     def decodingreturnhandler(status, rheaders, rcontent):
         """Closure to do the json decoding and then call the provided returnhandler"""
-        logging.error("calling decodingreturnhandler()")
         if (status < 200) or (status >= 300):
             raise exceptions.WrongStatusCode(u"%s: Fehler: %r" % (status, rcontent))
         # Warnig! httplib2 ist case sensitive for header field names.
@@ -136,7 +135,6 @@ def fetch_json2xx_async(url, content='', method='GET', credentials=None, headers
                                     rheaders.get('Content-Type', ''), rcontent))
         return returnhandler(hujson.loads(rcontent))
 
-    logging.error("calling fetch_async()")
     return fetch_async(url, content, method, credentials, headers, multipart, ua, timeout,
                        decodingreturnhandler)
 
