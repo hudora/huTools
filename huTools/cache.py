@@ -61,7 +61,6 @@
 import os
 import re
 import hashlib
-import pickle
 from itertools import izip
 from time import time
 from cPickle import loads, dumps, HIGHEST_PROTOCOL
@@ -523,7 +522,7 @@ def cache_function(seconds):
             "Function decorated with caching."
 
             raw = [func.__name__, func.__module__, args, kwargs]
-            pickled = pickle.dumps(raw, protocol=pickle.HIGHEST_PROTOCOL)
+            pickled = dumps(raw, protocol=HIGHEST_PROTOCOL)
             key = hashlib.md5(pickled).hexdigest()
             value = get_global_cache().get(key)
             if value:
