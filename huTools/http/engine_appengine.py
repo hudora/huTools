@@ -11,10 +11,11 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
 
 
-import logging
 import huTools.http.tools
+import logging
+import os
 from google.appengine.api.urlfetch import create_rpc, make_fetch_call
-from google.appengine.api import urlfetch, urlfetch_errors
+from google.appengine.api import memcache, urlfetch, urlfetch_errors
 from huTools.http import exceptions
 
 
@@ -22,13 +23,21 @@ from huTools.http import exceptions
 urlfetch.set_default_fetch_deadline(50)
 
 
-def request(url, method, content, headers, timeout=50):
+def request(url, method, content, headers, timeout=50, caching=None):
     """Does a HTTP Request via Google Appengine urlfetch Service.
 
-    Incereases the default appengine timeout from 5 seconds to 50.
-    (For Web-Requests this is reduced to 10s by the GAE Infrastructure)"""
+    If you give an integer value as `caching` parameter, the results are cached for that time and
+    subsequent fetches will be served from the cache.
+    """
 
-    # on appengine debuging is always post mortem, so better log what we arde doing
+    cachekey = "_hutools%s.http_%s_%s_%s_%s" % (os.environ.get('CURRENT_VERSION_ID', ''), method, url,
+                                                hash(content), hash(tuple(headers.items())))
+    if caching:
+        # try to read result from memcache
+        ret = memcache.get(cachekey)
+        if ret:
+            return ret  # cache hit we are done
+
     logging.debug('fetching %r %r', method, url)
     if method == 'GET':
         method = urlfetch.GET
@@ -52,7 +61,10 @@ def request(url, method, content, headers, timeout=50):
             raise exceptions.Timeout
         else:
             raise
-    return int(result.status_code), result.headers, result.content
+    ret = (int(result.status_code), result.headers, result.content)
+    if caching:
+        memcache.set(cachekey, ret, caching)
+    return ret
 
 
 # Es folgt  Implementierung eines Asyncronen Interfaces zu `huTools.http.fetch()` [LH#1181]
@@ -89,25 +101,54 @@ class AsyncHttpResult(object):
         >>> get_eap_async(artnr).get_result()
 
     `huTools.http.fetch_async()` is a somewhat more high-level interface.
+
+    If you give an integer value as `caching` parameter, the results are cached for that time and
+    subsequent fetches will be served from the cache.
     """
 
-    def __init__(self):
+    def __init__(self, caching=None):
         # _resultcache is used so get_result() can be called more than once.
         self._resultcache = None
+        self._caching = caching
 
     def fetch(self, url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
               timeout=50, returnhandler=lambda x, y, z: (x, y, z)):
         """Initiate fetch call."""
-        url, method, content, headers, timeout = huTools.http.tools.prepare_headers(url,
+        url, method, content, headers, timeout, _dummy = huTools.http.tools.prepare_headers(url,
             content, method, credentials, headers, multipart, ua, timeout)
+        self._cachekey = "_hutools%s.http.async_%s_%s_%s_%s" % (os.environ.get('CURRENT_VERSION_ID', ''),
+                                                                method, url, hash(content),
+                                                                hash(tuple(headers.items())))
         self.returnhandler = returnhandler
+
+        if self._caching:
+            # try to read result from memcache
+            self._resultcache = memcache.get(self._cachekey)
+            if self._resultcache:
+                logging.info("resultcache for during fetch %s:", self._cachekey)
+                return  # cache hit we are done
+
+        # Cache miss or no cache wanted, do wait for the real http fetch
         self.rpc = create_rpc(deadline=timeout)
         logging.info('fetching (async) %r %r', method, url)
         make_fetch_call(self.rpc, url, content, method, headers)
 
     def get_result(self):
         """Wait until request is done, pass results to returnhandler and return to caller."""
+        # we cache the result in place to ensure, that calling `get_result()` twice does not mix thing up
         if not self._resultcache:
+            if self._caching:
+                # try to read result from memcache
+                self._resultcache = memcache.get(self._cachekey)
+                if self._resultcache:
+                    logging.info("resultcache for %s:", self._cachekey)
+                    logging.info(self._resultcache)
+                    return self._resultcache
+            # Cache miss or no cache wanted, do wait for the real http fetch
             result = self.rpc.get_result()
             self._resultcache = self.returnhandler(result.status_code, result.headers, result.content)
+            if self._caching:
+                memcache.set(self._cachekey, self._resultcache, self._caching)
+        logging.info("final resultcache for %s:", self._cachekey)
+        logging.info(self._resultcache)
         return self._resultcache

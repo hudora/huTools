@@ -130,7 +130,7 @@ def add_query(url, params):
 
 
 def prepare_headers(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
-                    timeout=25):
+                    timeout=50, caching=None):
     """Prepares a request, returns (url, method, content, headers, timeout)"""
 
     myheaders = {'Accept-Encoding': 'gzip',
@@ -173,4 +173,4 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
         # deshalb alle moeglichen Einzelzeilen wieder zu einer Zeile zusammengezogen.
         authheader = 'Basic %s' % ''.join(credentials.encode('base64').strip().split())
         myheaders["Authorization"] = authheader
-    return url, method, content, myheaders, timeout
+    return url, method, content, myheaders, timeout, caching
