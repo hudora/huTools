@@ -43,12 +43,12 @@ class Struct(object):
         >>> hasattr(obj, 'foobar')
         True
         """
-        if self.__nodefault:
-            raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         if name.startswith('_'):
             # copy expects __deepcopy__, __getnewargs__ to raise AttributeError
             # see http://groups.google.com/group/comp.lang.python/browse_thread/thread/6ac8a11de4e2526f/
             # e76b9fbb1b2ee171?#e76b9fbb1b2ee171
+            raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
+        if self.__nodefault:
             raise AttributeError("'<Struct>' object has no attribute '%s'" % name)
         return self.__default
 
@@ -188,6 +188,8 @@ def make_struct(obj, default=None, nodefault=False):
     >>> obj.items()
     [('foo', [<Struct: {'bar': 'baz'}>])]
     """
+    if type(obj) == type(Struct):
+        return obj
     if (not hasattr(obj, '__dict__')) and hasattr(obj, 'iterkeys'):
         # this should be a dict
         struc = Struct(obj, default, nodefault)
