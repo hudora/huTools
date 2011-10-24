@@ -45,9 +45,6 @@ except ImportError:
     AsyncHttpResult = engine_httplib2.AsyncHttpResult
 
 
-# logging.info("using %s", request.__module__)
-
-
 def fetch(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='', timeout=50,
           caching=None):
     """Does a HTTP request with method `method` to `url`.
