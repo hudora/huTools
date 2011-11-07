@@ -14,16 +14,25 @@ import email.utils
 
 
 def german_weekday_name(date):
-    """ return the german weekday name for a given date """
+    """Return the german weekday name for a given date."""
     days = [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag', u'Freitag', u'Samstag', u'Sonntag']
     return days[date.weekday()]
 
 
 def german_month_name(date):
-    """ return the german month name for a given date """
+    """Return the german month name for a given date."""
     months = [u'Januar', u'Februar', u'März', u'April', u'Mai', u'Juni', u'Juli', u'August',
               u'September', u'Oktober', u'November', u'Dezember']
     return months[date.month - 1]
+
+
+def tertial(date):
+    """Wandelt ein Date oder Datetime-Objekt in einen Tertial-String"""
+    ret = date.strftime('%Y-%m')
+    ret = ret[:-2] + {'01': 'A', '02': 'A', '03': 'A', '04': 'A',
+                      '05': 'B', '06': 'B', '07': 'B', '08': 'B',
+                      '09': 'C', '10': 'C', '11': 'C', '12': 'C'}[ret[-2:]]
+    return ret
 
 
 def rfc3339_date(date=None):

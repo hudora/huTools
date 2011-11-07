@@ -38,6 +38,9 @@ def date_trunc(trtype, timestamp):
     tmp = timestamp.timetuple()
     if trtype == "year":
         ret = datetime.datetime(tmp.tm_year, 1, 1)
+    elif trtype == "tertial":
+        tertial = int(math.ceil(tmp.tm_mon / 4.0))
+        ret = datetime.datetime(tmp.tm_year, 1 + (tertial - 1) * 4, 1)
     elif trtype == "quarter":
         quarter = int(math.ceil(tmp.tm_mon / 3.0))
         ret = datetime.datetime(tmp.tm_year, 1 + (quarter - 1) * 3, 1)
@@ -130,6 +133,15 @@ class DateTruncTestCase(unittest.TestCase):
         self.assertEqual(date_trunc('year', datetime.date(1980, 5, 4)),
                          datetime.date(1980, 1, 1,))
         self.assertEqual(date_trunc('year', datetime.date(1980, 5, 4)), datetime.date(1980, 1, 1))
+
+    def test_truncate_tertial(self):
+        self.assertEqual(date_trunc('tertial', datetime.datetime(2011, 4, 30)), datetime.datetime(2011, 1, 1))
+        self.assertEqual(date_trunc('tertial', datetime.datetime(2011, 4, 30)).date(),
+                         datetime.date(2011, 1, 1))
+        self.assertEqual(date_trunc('tertial', datetime.date(2011, 5, 1)),
+                         datetime.date(2011, 5, 1))
+        self.assertEqual(date_trunc('tertial', datetime.date(2011, 8, 31)), datetime.date(2011, 5, 1))
+        self.assertEqual(date_trunc('tertial', datetime.date(2011, 9, 1)), datetime.date(2011, 9, 1))
 
     def test_truncate_quarter(self):
         self.assertEqual(date_trunc('quarter', datetime.datetime(1945, 2, 19)), datetime.datetime(1945, 1, 1))

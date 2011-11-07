@@ -12,6 +12,7 @@ test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/tools.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/workdays.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/checksumming.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
