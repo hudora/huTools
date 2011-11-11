@@ -141,14 +141,10 @@ class AsyncHttpResult(object):
                 # try to read result from memcache
                 self._resultcache = memcache.get(self._cachekey)
                 if self._resultcache:
-                    logging.info("resultcache for %s:", self._cachekey)
-                    logging.info(self._resultcache)
                     return self._resultcache
             # Cache miss or no cache wanted, do wait for the real http fetch
             result = self.rpc.get_result()
             self._resultcache = self.returnhandler(result.status_code, result.headers, result.content)
             if self._caching:
                 memcache.set(self._cachekey, self._resultcache, self._caching)
-        logging.info("final resultcache for %s:", self._cachekey)
-        logging.info(self._resultcache)
         return self._resultcache
