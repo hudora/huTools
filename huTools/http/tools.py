@@ -120,12 +120,14 @@ def add_query(url, params):
     '/sicrit/?passphrase=fiftyseveneleven'
     >>> add_query('/sicrit/test.html?hello=world', {'passphrase': 'fiftyseveneleven'})
     '/sicrit/test.html?hello=world&passphrase=fiftyseveneleven'
+    >>> add_query('/sicrit/test.html?hello=world', {'passphrase': ['fiftyseven', 'eleven']})
+    '/sicrit/test.html?hello=world&passphrase=fiftyseven&passphrase=eleven'
     """
 
     url_parts = list(urlparse.urlparse(url))
     query = dict(cgi.parse_qsl(url_parts[4]))
     query.update(params)
-    url_parts[4] = urllib.urlencode(query)
+    url_parts[4] = urllib.urlencode(query, doseq=1)
     return urlparse.urlunparse(url_parts)
 
 
