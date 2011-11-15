@@ -1,15 +1,12 @@
 # encoding: utf-8
-
 """
 structured.py - handle structured data/dicts/objects
+
+Created by Maximillian Dornseif on 2009-12-27.
+Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
 """
-
-# Created by Maximillian Dornseif on 2009-12-27.
-# Created by Maximillian Dornseif on 2010-06-04.
-# Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
-
-
 import xml.etree.cElementTree as ET
+from StringIO import StringIO
 
 
 # Basic conversation goal here is converting a dict to an object allowing
@@ -229,7 +226,7 @@ def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
 
 
 def dict2et(xmldict, roottag='data', listnames=None):
-    """Converts a dict to an Elementtree.
+    """Converts a dict to an ElementTree.
 
     Converts a dictionary to an XML ElementTree Element::
 
@@ -291,7 +288,7 @@ def dict2et(xmldict, roottag='data', listnames=None):
 
 
 def list2et(xmllist, root, elementname):
-    """Converts a list to an Elementtree.
+    """Converts a list to an ElementTree.
 
         See also dict2et()
     """
@@ -305,21 +302,32 @@ def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
 
     See also dict2et()
     """
-    tree = dict2et(datadict, roottag, listnames)
-    if pretty:
-        indent(tree)
-    return ET.tostring(tree, 'utf-8')
+    root = dict2et(datadict, roottag, listnames)
+    return to_string(root, pretty=pretty)
 
 
-def list2xml(datalist, root, elementname, pretty=False):
+def list2xml(datalist, roottag, elementname, pretty=False):
     """Converts a list to an UTF-8 encoded XML string.
 
     See also dict2et()
     """
-    tree = list2et(datalist, root, elementname)
+    root = list2et(datalist, roottag, elementname)
+    return to_string(root, pretty=pretty)
+
+
+def to_string(root, encoding='utf-8', pretty=False):
+    """Converts an ElementTree to a string"""
+
     if pretty:
-        indent(tree)
-    return ET.tostring(tree, 'utf-8')
+        indent(root)
+
+    tree = ET.ElementTree(root)
+    fileobj = StringIO()
+    fileobj.write('<?xml version="1.0" encoding="%s"?>' % encoding)
+    if pretty:
+        fileobj.write('\n')
+    tree.write(fileobj, 'utf-8')
+    return fileobj.getvalue()
 
 
 # From http://effbot.org/zone/element-lib.htm
@@ -350,15 +358,14 @@ def indent(elem, level=0):
 
 def test():
     """Simple selftest."""
-    # warenzugang
+
     data = {"guid": "3104247-7",
             "menge": 7,
             "artnr": "14695",
             "batchnr": "3104247"}
     xmlstr = dict2xml(data, roottag='warenzugang')
-    #print xmlstr
-    assert xmlstr == ('<warenzugang><artnr>14695</artnr><batchnr>3104247</batchnr><guid>3104247-7</guid>'
-                      '<menge>7</menge></warenzugang>')
+    assert xmlstr == ('<?xml version="1.0" encoding="utf-8"?><warenzugang><artnr>14695</artnr>'
+                      '<batchnr>3104247</batchnr><guid>3104247-7</guid><menge>7</menge></warenzugang>')
 
     data = {"kommiauftragsnr": 2103839,
      "anliefertermin": "2009-11-25",
@@ -393,9 +400,7 @@ def test():
     }
 
     xmlstr = dict2xml(data, roottag='kommiauftrag')
-    # print xmlstr
 
-    # Rückmeldung
     data = {"kommiauftragsnr": 2103839,
      "positionen": [{"menge": 4,
                      "artnr": "14640/XL",
@@ -421,7 +426,6 @@ def test():
                 "art": "paket"}]}
 
     xmlstr = dict2xml(data, roottag='rueckmeldung')
-    #print xmlstr
 
 
 if __name__ == '__main__':
