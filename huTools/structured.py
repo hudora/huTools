@@ -141,6 +141,10 @@ class Struct(object):
     def __repr__(self):
         return "<Struct: %r>" % dict(self.items())
 
+    def as_dict(self):
+        """Return a dict representing the content of this struct."""
+        return self.__dict__
+
 
 def make_struct(obj, default=None, nodefault=False):
     """Converts a dict to an object, leaves objects untouched.
