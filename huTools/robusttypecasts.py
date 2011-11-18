@@ -50,7 +50,7 @@ def int_or_0(data, default=0):
     try:
         if type(data) in (ListType, TupleType):
             return int(data[0])
-        return int(data)
+        return int(float(data))
     except TypeError:
         return default
 
