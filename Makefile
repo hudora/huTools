@@ -9,6 +9,7 @@ check:
 	-pylint -iy --max-line-length=110 --ignore=_httplib2 huTools
 
 test: dependencies
+	PYTHONPATH=. ./pythonenv/bin/python huTools/aggregation.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py

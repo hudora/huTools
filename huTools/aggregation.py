@@ -9,6 +9,7 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 
 
 import datetime
+from huTools.calendar.tools import date_trunc
 
 
 def avg(data):
@@ -51,7 +52,7 @@ def median(data):
     return 0.0
 
 
-def _group_by_x(values, aggregationfunc, keyfunc, reversefunc):
+def _group_by_x(values, aggregationfunc, keyfunc):
     """input should be [(datetime, stuff), ...]"""
 
     groupings = {}
@@ -63,53 +64,69 @@ def _group_by_x(values, aggregationfunc, keyfunc, reversefunc):
             groupings[key].append(value)
     ret = []
     for key, values in groupings.items():
-        ret.append((reversefunc(key), aggregationfunc(values)))
+        ret.append((key, aggregationfunc(values)))
     ret.sort()
     return ret
 
 
-def _month_key(date):
-    return (date.year, date.month)
+def group_by_week(values, aggregationfunc):
+    """input should be [(datetime, stuff), ...]
 
-
-def _month_to_date(tup):
-    """Reverse of _month_key()"""
-    (year, month) = tup
-    return datetime.date(year, month, 1)
-
-
-def _quarter_key(date):
-    return (date.year, int(((date.month + 1) / 3) + 1))
-
-
-def _quarter_to_date(tup):
-    """Reverse of _quarter_key()"""
-    (year, month) = tup
-    return datetime.date(year, month, 1)
-
-
-def _year_key(date):
-    return date.year
-
-
-def _year_to_date(tup):
-    """Reverse of _year_key()"""
-    return datetime.date(tup, 1, 1)
+    >>> indata = [(datetime.date(2012, 1, 31), 1154), (datetime.date(2012, 2, 20), 3466),
+    ...           (datetime.date(2012, 2, 22), 3440), (datetime.date(2012, 3, 13), 3402),
+    ...           (datetime.date(2012, 1, 29), -2), (datetime.date(2012, 2, 27), 3436)]
+    >>> group_by_week(indata, min)
+    [(datetime.date(2012, 1, 23), -2), (datetime.date(2012, 1, 30), 1154), (datetime.date(2012, 2, 20), 3440), (datetime.date(2012, 2, 27), 3436), (datetime.date(2012, 3, 12), 3402)]
+    """
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('week', x))
 
 
 def group_by_month(values, aggregationfunc):
-    """input should be [(datetime, stuff), ...]"""
-    return _group_by_x(values, aggregationfunc, _month_key, _month_to_date)
+    """input should be [(datetime, stuff), ...]
+
+    >>> indata = [(datetime.date(2012, 1, 30), 1), (datetime.date(2012, 1, 31), 3),
+    ...           (datetime.date(2012, 1, 1), -1), (datetime.date(2012, 1, 1), 0)]
+    >>> group_by_month(indata, min)
+    [(datetime.date(2012, 1, 1), -1)]
+    >>> group_by_month(indata, max)
+    [(datetime.date(2012, 1, 1), 3)]
+    >>> group_by_month(indata, avg)
+    [(datetime.date(2012, 1, 1), 0.75)]
+    """
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('month', x))
 
 
 def group_by_quarter(values, aggregationfunc):
-    """input should be [(datetime, stuff), ...]"""
-    return _group_by_x(values, aggregationfunc, _quarter_key, _quarter_to_date)
+    """input should be [(datetime, stuff), ...]
+
+    >>> indata = [(datetime.date(2012, 1, 30), 1), (datetime.date(2012, 1, 31), 3),
+    ...           (datetime.date(2012, 1, 1), -1), (datetime.date(2011, 12, 12), 0)]
+    >>> group_by_quarter(indata, min)
+    [(datetime.date(2011, 10, 1), 0), (datetime.date(2012, 1, 1), -1)]
+    """
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('quarter', x))
+
+
+def group_by_tertial(values, aggregationfunc):
+    """input should be [(datetime, stuff), ...]
+
+    >>> indata = [(datetime.date(2012, 1, 31), 1), (datetime.date(2012, 4, 30), 3),
+    ...           (datetime.date(2012, 1, 1), -1), (datetime.date(2011, 12, 12), 0)]
+    >>> group_by_tertial(indata, avg)
+    [(datetime.date(2011, 9, 1), 0.0), (datetime.date(2012, 1, 1), 1.0)]
+    """
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('tertial', x))
 
 
 def group_by_year(values, aggregationfunc):
-    """input should be [(datetime, stuff), ...]"""
-    return _group_by_x(values, aggregationfunc, _year_key, _year_to_date)
+    """input should be [(datetime, stuff), ...]
+
+    >>> indata = [(datetime.date(2012, 1, 31), 1), (datetime.date(2012, 4, 30), 3),
+    ...           (datetime.date(2012, 1, 1), -1), (datetime.date(2011, 12, 12), 0)]
+    >>> group_by_year(indata, max)
+    [(datetime.date(2011, 1, 1), 0), (datetime.date(2012, 1, 1), 3)]
+    """
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('year', x))
 
 
 if __name__ == "__main__":
