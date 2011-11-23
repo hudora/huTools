@@ -56,9 +56,14 @@ def netto(amount, tax=19):
 
     >>> netto(decimal.Decimal('1.19'))
     Decimal('1.00')
+    >>> netto(decimal.Decimal('1.08'), tax=8)
+    Decimal('1.00')
     """
 
-    amount /= decimal.Decimal("1.%d" % tax)
+    if tax >= 100:
+        raise ValueError("tax must not be greater than 100%")
+
+    amount /= decimal.Decimal("1.%02d" % tax)
     return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
 
 
@@ -68,9 +73,14 @@ def brutto(amount, tax=19):
 
     >>> brutto(decimal.Decimal('1.00'))
     Decimal('1.19')
+    >>> brutto(decimal.Decimal('1.00'), tax=8)
+    Decimal('1.08')
     """
 
-    amount *= decimal.Decimal("1.%d" % tax)
+    if tax >= 100:
+        raise ValueError("tax must not be greater than 100%")
+
+    amount = decimal.Decimal("1.%02d" % tax)
     return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
 
 
@@ -80,8 +90,14 @@ def tara(amount, tax=19):
 
     >>> tara(decimal.Decimal('1.19'))
     Decimal('0.19')
+    >>> tara(decimal.Decimal('1.05'), tax=5)
+    Decimal('0.05')
     """
-    return amount - netto(amount)
+
+    if tax >= 100:
+        raise ValueError("tax must not be greater than 100%")
+
+    return amount - netto(amount, tax=tax)
 
 
 if __name__ == "__main__":
