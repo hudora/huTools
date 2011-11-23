@@ -27,7 +27,7 @@ def cent_to_euro(amount):
     """
 
     value = decimal.Decimal(amount) / 100
-    return value.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
+    return value.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
 
 def euro_to_cent(amount):
@@ -47,7 +47,7 @@ def euro_to_cent(amount):
     """
 
     value = decimal.Decimal(amount) * 100
-    return value.quantize(decimal.Decimal("1"), rounding=decimal.ROUND_HALF_DOWN)
+    return value.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_DOWN)
 
 
 def netto(amount, tax=19):
@@ -58,13 +58,16 @@ def netto(amount, tax=19):
     Decimal('1.00')
     >>> netto(decimal.Decimal('1.08'), tax=8)
     Decimal('1.00')
+    >>> netto(decimal.Decimal('1812'), tax=3)
+    Decimal('1759.22')
     """
 
     if tax >= 100:
-        raise ValueError("tax must not be greater than 100%")
+        raise ValueError('tax must not be greater than 100%')
 
-    amount /= decimal.Decimal("1.%02d" % tax)
-    return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
+    percent = amount / (decimal.Decimal(100) + tax)
+    amount = percent * 100
+    return amount.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
 
 def brutto(amount, tax=19):
@@ -75,13 +78,16 @@ def brutto(amount, tax=19):
     Decimal('1.19')
     >>> brutto(decimal.Decimal('1.00'), tax=8)
     Decimal('1.08')
+    >>> brutto(decimal.Decimal('5711'), tax=23)
+    Decimal('7024.53')
     """
 
     if tax >= 100:
         raise ValueError("tax must not be greater than 100%")
 
-    amount = decimal.Decimal("1.%02d" % tax)
-    return amount.quantize(decimal.Decimal("0.01"), rounding=decimal.ROUND_HALF_DOWN)
+    percent = amount / decimal.Decimal(100)
+    amount = percent * (100 + tax)
+    return amount.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
 
 def tara(amount, tax=19):
@@ -95,7 +101,7 @@ def tara(amount, tax=19):
     """
 
     if tax >= 100:
-        raise ValueError("tax must not be greater than 100%")
+        raise ValueError('tax must not be greater than 100%')
 
     return amount - netto(amount, tax=tax)
 
