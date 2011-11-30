@@ -85,6 +85,17 @@ def get_week(date):
     return week, first_monday.year
 
 
+def get_tertialspan(date):
+    """Gibt den ersten und den letzten Tag des Tertials zurück in dem `date` liegt
+
+    >>> get_tertialspan(datetime.date(1978, 9, 23))
+    (datetime.date(1978, 9, 1), datetime.date(1978, 12, 31))
+    """
+    startdate = date_trunc('tertial', date)
+    enddate = date_trunc('tertial', startdate + datetime.timedelta(days=130)) - datetime.timedelta(days=1)
+    return startdate, enddate
+
+
 def get_quarterspan(date):
     """Gibt den ersten und den letzten Tag des Quartals zurück in dem `date` liegt
 
@@ -94,8 +105,7 @@ def get_quarterspan(date):
 
     startdate = date_trunc('quarter', date)
     # The date 100 days after the beginning of a quarter is always right inside the next quarter
-    tmp = date_trunc('quarter', startdate + datetime.timedelta(days=100))
-    enddate = date_trunc('quarter', tmp) - datetime.timedelta(days=1)
+    enddate = date_trunc('quarter', startdate + datetime.timedelta(days=100)) - datetime.timedelta(days=1)
     return startdate, enddate
 
 
@@ -436,6 +446,54 @@ class QuarterspanTestCase(unittest.TestCase):
         self.assertTrue(start_date < end_date)
         self.assertEqual(start_date, datetime.date(1980, 10, 1))
         self.assertEqual(end_date, datetime.date(1980, 12, 31))
+
+    def test_all(self):
+        """Tests the whole year"""
+
+        year = 1980
+        date = datetime.date(1980, 1, 1)
+        while date < datetime.date(1981, 1, 1):
+            if date.month <= 3:
+                mindate, maxdate = datetime.date(1980, 1, 1), datetime.date(1980, 3, 31)
+            elif date.month <= 6:
+                mindate, maxdate = datetime.date(1980, 4, 1), datetime.date(1980, 6, 30)
+            elif date.month <= 9:
+                mindate, maxdate = datetime.date(1980, 7, 1), datetime.date(1980, 9, 30)
+            else:
+                mindate, maxdate = datetime.date(1980, 10, 1), datetime.date(1980, 12, 31)
+
+            startdate, enddate = get_quarterspan(date)
+            self.assertTrue(startdate >= mindate)
+            self.assertTrue(startdate <= maxdate)
+            self.assertTrue(enddate >= mindate)
+            self.assertTrue(enddate <= maxdate)
+
+            date += datetime.timedelta(days=1)
+
+
+class TertialspanTestCase(unittest.TestCase):
+    """Unittests for get_tertialspan"""
+
+    def test_all(self):
+        """Tests the whole year"""
+
+        year = 1980
+        date = datetime.date(1980, 1, 1)
+        while date < datetime.date(1981, 1, 1):
+            if date.month <= 4:
+                mindate, maxdate = datetime.date(1980, 1, 1), datetime.date(1980, 4, 30)
+            elif date.month <= 8:
+                mindate, maxdate = datetime.date(1980, 5, 1), datetime.date(1980, 8, 31)
+            else:
+                mindate, maxdate = datetime.date(1980, 9, 1), datetime.date(1980, 12, 31)
+
+            startdate, enddate = get_tertialspan(date)
+            self.assertTrue(startdate >= mindate)
+            self.assertTrue(startdate <= maxdate)
+            self.assertTrue(enddate >= mindate)
+            self.assertTrue(enddate <= maxdate)
+
+            date += datetime.timedelta(days=1)
 
 
 if __name__ == "__main__":
