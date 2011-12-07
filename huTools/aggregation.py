@@ -4,7 +4,7 @@
 aggregation.py - implement things similar to "group by" in SQL.
 
 Created by Maximillian Dornseif on 2010-03-07.
-Copyright (c) 2010 HUDORA. All rights reserved.
+Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
 
 
@@ -127,6 +127,41 @@ def group_by_year(values, aggregationfunc):
     [(datetime.date(2011, 1, 1), 0), (datetime.date(2012, 1, 1), 3)]
     """
     return _group_by_x(values, aggregationfunc, lambda x: date_trunc('year', x))
+
+
+def objectsum(objektliste, feldliste):
+    """Fuer jedes property in `feldliste` der objekte in `objektliste` die Summe ermitteln."""
+
+    sumdir = {}
+    if hasattr(feldliste, 'split'):
+        feldliste = feldliste.split()
+    for feldname in feldliste:
+        if objektliste:
+            sumdir[feldname] = sum([getattr(x, feldname, 0) for x in objektliste])
+        else:
+            sumdir[feldname] = 0.0
+    return sumdir
+
+
+def percentages(sumdir, basis, feldliste):
+    """Fügt zu `sumdir` die prozentsaetze der keys in `feldliste` zur basis `basis` zu.
+    
+    >>> sumdir = dict(gesammt=10, dieter=5, klaus=3)
+    >>> prozentsaetze_ermitteln(sumdir, 'gesammt', 'dieter klaus')
+    >>> sumdir
+    {'gesammt': 10, 
+     'dieter': 5,
+     'dieterp': 50.0,
+     'klaus': 3,
+     'klausp': 30.0}
+    """
+    if hasattr(feldliste, 'split'):
+        feldliste = feldliste.split()
+    for feldname in feldliste:
+        if sumdir.get(basis, 0):
+            sumdir["%sp" % feldname] = float(sumdir[feldname]) / sumdir[basis] * 100
+        else:
+            sumdir["%sp" % feldname] = None
 
 
 if __name__ == "__main__":
