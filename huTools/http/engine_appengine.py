@@ -12,8 +12,12 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 
 
 import huTools.http.tools
+import gzip
 import logging
 import os
+import zlib
+import StringIO
+
 from google.appengine.api.urlfetch import create_rpc, make_fetch_call
 from google.appengine.api import memcache, urlfetch, urlfetch_errors
 from huTools.http import exceptions
@@ -61,6 +65,7 @@ def request(url, method, content, headers, timeout=50, caching=None):
             raise exceptions.Timeout
         else:
             raise
+    handle_compression(result)
     ret = (int(result.status_code), result.headers, result.content)
     if caching:
         memcache.set(cachekey, ret, caching)
@@ -144,7 +149,22 @@ class AsyncHttpResult(object):
                     return self._resultcache
             # Cache miss or no cache wanted, do wait for the real http fetch
             result = self.rpc.get_result()
+            handle_compression(result)
             self._resultcache = self.returnhandler(result.status_code, result.headers, result.content)
             if self._caching:
                 memcache.set(self._cachekey, self._resultcache, self._caching)
         return self._resultcache
+
+
+def handle_compression(result):
+    """Sometimes AppEngine does the decompression for us, sometimes not."""
+    encoding = result.headers.get('content-encoding', None)
+    if encoding in ['gzip', 'deflate']:
+        if encoding == 'gzip':
+            result.content = gzip.GzipFile(fileobj=StringIO.StringIO(result.content)).read()
+        if encoding == 'deflate':
+            result.content = zlib.decompress(result.content)
+        result.headers['content-length'] = str(len(result.content))
+        # Record the historical presence of the encoding in a way the won't interfere.
+        result.headers['-content-encoding'] = result.headers['content-encoding']
+        del result.headers['content-encoding']

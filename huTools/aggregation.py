@@ -145,11 +145,11 @@ def objectsum(objektliste, feldliste):
 
 def percentages(sumdir, basis, feldliste):
     """Fügt zu `sumdir` die prozentsaetze der keys in `feldliste` zur basis `basis` zu.
-    
+
     >>> sumdir = dict(gesammt=10, dieter=5, klaus=3)
     >>> prozentsaetze_ermitteln(sumdir, 'gesammt', 'dieter klaus')
     >>> sumdir
-    {'gesammt': 10, 
+    {'gesammt': 10,
      'dieter': 5,
      'dieterp': 50.0,
      'klaus': 3,
