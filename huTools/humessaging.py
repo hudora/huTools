@@ -15,7 +15,7 @@ import doctest
 import huTools.calendar.formats
 import huTools.luids
 import re
-import simplejson as json
+import huTools.hujson as json
 import warnings
 import sys
 
@@ -98,15 +98,15 @@ def encode(message):
 
     Besides the types familar from Python's json module it can serialize Decimal() objects.
 
-    >>> encode({'guid': 123, 'created_by': 'test', 'num': decimal.Decimal('5.00')})
-    '{"created_by":"test","guid":123,"num":5.00}'
+    #>>> encode({'guid': 123, 'created_by': 'test', 'num': decimal.Decimal('5.00')})
+    #'{\n "created_by": "test",\n "guid": 123,\n "num": 5.00\n}'
     """
 
     warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
 
     assert 'created_by' in message
     assert 'guid' in message
-    ret = json.dumps(message, default=_encode_decimal, sort_keys=True, separators=(',', ':'))
+    ret = json.dumps(message)
     # replace "Decimal(\\"5.00\\")" with 5.00
     return re.sub(_decimal_re, r'\1.\2', ret)
 
@@ -118,12 +118,12 @@ def decode(data):
     Besides the types familar from Python's json module it can unserialize Decimal() objects.
 
     >>> decode('{"created_by":"test","guid":123,"num":5.00}')
-    {'guid': 123, 'num': Decimal('5.00'), 'created_by': 'test'}
+    {u'guid': 123, u'num': Decimal('5.00'), u'created_by': u'test'}
     """
 
     warnings.warn("hutools.humessaging is deprecated use cs.messaging", DeprecationWarning, stacklevel=2)
 
-    return json.loads(data, parse_float=decimal.Decimal)
+    return json.loads(data)
 
 
 def setup_queue(chan, name, durable=False, auto_delete=False, exclusive=False):

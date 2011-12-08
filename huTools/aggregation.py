@@ -8,7 +8,6 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
 
 
-import datetime
 from huTools.calendar.tools import date_trunc
 
 
@@ -147,13 +146,9 @@ def percentages(sumdir, basis, feldliste):
     """Fügt zu `sumdir` die prozentsaetze der keys in `feldliste` zur basis `basis` zu.
 
     >>> sumdir = dict(gesammt=10, dieter=5, klaus=3)
-    >>> prozentsaetze_ermitteln(sumdir, 'gesammt', 'dieter klaus')
-    >>> sumdir
-    {'gesammt': 10,
-     'dieter': 5,
-     'dieterp': 50.0,
-     'klaus': 3,
-     'klausp': 30.0}
+    >>> percentages(sumdir, 'gesammt', 'dieter klaus')
+    >>> sorted(sumdir.items())
+    [('dieter', 5), ('dieterp', 50.0), ('gesammt', 10), ('klaus', 3), ('klausp', 30.0)]
     """
     if hasattr(feldliste, 'split'):
         feldliste = feldliste.split()
@@ -166,4 +161,5 @@ def percentages(sumdir, basis, feldliste):
 
 if __name__ == "__main__":
     import doctest
+    import datetime
     doctest.testmod()

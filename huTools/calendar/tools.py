@@ -450,7 +450,7 @@ class QuarterspanTestCase(unittest.TestCase):
     def test_all(self):
         """Tests the whole year"""
 
-        year = 1980
+        # year = 1980  #unused
         date = datetime.date(1980, 1, 1)
         while date < datetime.date(1981, 1, 1):
             if date.month <= 3:
@@ -477,7 +477,7 @@ class TertialspanTestCase(unittest.TestCase):
     def test_all(self):
         """Tests the whole year"""
 
-        year = 1980
+        # year = 1980  #unused
         date = datetime.date(1980, 1, 1)
         while date < datetime.date(1981, 1, 1):
             if date.month <= 4:
