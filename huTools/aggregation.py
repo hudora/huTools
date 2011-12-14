@@ -51,6 +51,20 @@ def median(data):
     return 0.0
 
 
+def robustmin(data):
+    """Like min() but handles empty Lists."""
+    if data:
+        return min(data)
+    return None
+
+
+def robustmax(data):
+    """Like max() but handles empty Lists."""
+    if data:
+        return max(data)
+    return None
+
+
 def _group_by_x(values, aggregationfunc, keyfunc):
     """input should be [(datetime, stuff), ...]"""
 
@@ -128,18 +142,33 @@ def group_by_year(values, aggregationfunc):
     return _group_by_x(values, aggregationfunc, lambda x: date_trunc('year', x))
 
 
-def objectsum(objektliste, feldliste):
-    """Fuer jedes property in `feldliste` der objekte in `objektliste` die Summe ermitteln."""
+def objectfunc(func, objektliste, feldliste, ignore_empty=False):
+    """Für jedes Property in `feldliste` der Objekte in `objektliste` func ueber alle properties ausführen.
+
+    Wenn `ignore_empty` übergeben wird, werden leere werte / lull werte nicht an `func` üebrgeben.
+    """
 
     sumdir = {}
     if hasattr(feldliste, 'split'):
         feldliste = feldliste.split()
     for feldname in feldliste:
         if objektliste:
-            sumdir[feldname] = sum([getattr(x, feldname, 0) for x in objektliste])
+            if ignore_empty:
+                sumdir[feldname] = func([getattr(x, feldname, 0)
+                                         for x in objektliste
+                                         if getattr(x, feldname, 0)])
+            else:
+                sumdir[feldname] = func([getattr(x, feldname, 0)
+                                         for x in objektliste])
         else:
             sumdir[feldname] = 0.0
     return sumdir
+
+
+def objectsum(objektliste, feldliste):
+    """Für jedes property in `feldliste` der Objekte in `objektliste` die Summe ermitteln."""
+
+    return objectfunc(sum, objektliste, feldliste)
 
 
 def percentages(sumdir, basis, feldliste):
