@@ -58,3 +58,5 @@ This distribution contains `cache.py <https://raw.github.com/mitsuhiko/werkzeug/
 >`_
 copyright (c) 2010 by the Werkzeug Team, BSD licensed
 
+This distribution conatins markdown2.py
+Copyright (c) 2007-2008 ActiveState Corp. under a MIT License.
