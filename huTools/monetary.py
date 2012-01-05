@@ -62,6 +62,8 @@ def netto(amount, tax=19):
     Decimal('1759.22')
     """
 
+    tax = decimal.Decimal(str(tax))
+
     if tax >= 100:
         raise ValueError('tax must not be greater than 100%')
 
@@ -82,6 +84,8 @@ def brutto(amount, tax=19):
     Decimal('7024.53')
     """
 
+    tax = decimal.Decimal(str(tax))
+
     if tax >= 100:
         raise ValueError("tax must not be greater than 100%")
 
@@ -99,6 +103,8 @@ def tara(amount, tax=19):
     >>> tara(decimal.Decimal('1.05'), tax=5)
     Decimal('0.05')
     """
+
+    tax = decimal.Decimal(str(tax))
 
     if tax >= 100:
         raise ValueError('tax must not be greater than 100%')
