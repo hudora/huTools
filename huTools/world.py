@@ -53,6 +53,7 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('RO', u'Rumänien'),
                    ('MT', 'Malta'),
                    ('CY', 'Zypern'),
+                   ('CH', u'Schweiz'),
                   ])
 
 
