@@ -30,6 +30,7 @@ __all__ = [
 
 import codecs
 from decimal import Decimal
+import logging
 import re
 import sys
 from UserString import UserString
@@ -145,7 +146,11 @@ def unicode_autodetect_encoding(bytestring):
             return bytestring.decode(encoding)
 
     # Default to UTF-8
-    return bytestring.decode('utf-8')
+    try:
+        return bytestring.decode('utf-8')
+    except UnicodeDecodeError:
+        logging.info('Codierungsproblem: %r', bytestring)
+        raise
 
 
 class ParseErrorHelper(object):
