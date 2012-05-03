@@ -53,6 +53,8 @@ def add_fields(root, source, fieldnames):
     """
     Add a number of fields to a XML Tree.
     """
+    # TODO: better documentation or removal
+    warnings.warn("hutools.xmltools.add_fields is deprecated", DeprecationWarning, stacklevel=2)
     for fieldname in fieldnames:
         elem = ET.SubElement(root, fieldname)
         if hasattr(source, fieldname):

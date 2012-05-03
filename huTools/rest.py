@@ -12,6 +12,7 @@ import os
 import urllib
 import urlparse
 import simplejson as json
+import warnings
 
 
 def build_url(base, *args):
@@ -83,6 +84,7 @@ class Client(object):
     def __call__(self, fnc, *args, **kwargs):
         """Do a remote procedure call via HTTP"""
 
+        warnings.warn("hutools.rest is deprecated", DeprecationWarning, stacklevel=2)
         headers = {'content-type': 'application/json'}
         path = os.path.join(self.endpoint, build_url(fnc, *args), '')
         if 'params' in kwargs:
