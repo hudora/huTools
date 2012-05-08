@@ -125,13 +125,6 @@ protocols
    :members:
 
 
-pyjasper
-========
-
-.. automodule:: huTools.pyjasper
-   :members:
-
-
 ReReadingConfigParser
 =====================
 

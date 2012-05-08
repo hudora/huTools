@@ -22,7 +22,6 @@ test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/postmark.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/structured.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
-	#PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
 
 coverage: dependencies
 	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
