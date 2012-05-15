@@ -181,7 +181,6 @@ def prozent(prozentwert, grundwert):
     >>> prozent(0, 6)
     0
     """
-    logging.info("%r %r", prozentwert, grundwert)
     if not (prozentwert and grundwert):
         return 0
     return (float(prozentwert) / grundwert) * 100.0
