@@ -4,7 +4,7 @@
 tools.py - Functions for date manipulation
 
 Created by Christian Klein on 2010-04-22.
-Copyright (c) 2010 HUDORA GmbH. All rights reserved.
+Copyright (c) 2010, 2012 HUDORA GmbH. All rights reserved.
 """
 
 import calendar
@@ -85,6 +85,17 @@ def get_week(date):
     return week, first_monday.year
 
 
+def get_yearspan(date):
+    """Gibt den ersten und letzten Tag des Jahres zurück in dem `date` liegt
+
+    >>> get_yearspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 1, 1), datetime.date(1980, 12, 31))
+    """
+    startdate = date_trunc('year', date)
+    enddate = type(startdate)(startdate.year, 12, 31)
+    return startdate, enddate
+
+
 def get_tertialspan(date):
     """Gibt den ersten und den letzten Tag des Tertials zurück in dem `date` liegt
 
@@ -109,6 +120,18 @@ def get_quarterspan(date):
     return startdate, enddate
 
 
+def get_monthspan(date):
+    """Gibt den ersten und letzten Tag des Monats zurück in dem `date` liegt
+
+    >>> get_monthspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 5, 1), datetime.date(1980, 5, 31))
+    """
+    startdate = date_trunc('month', date)
+    _, days = calendar.monthrange(startdate.year, startdate.month)
+    enddate = type(startdate)(startdate.year, startdate.month, days)
+    return startdate, enddate
+
+
 def get_weekspan(date):
     """Gibt den ersten und den letzten Tag der Woche, in der `date` liegt, zurück.
 
@@ -119,18 +142,6 @@ def get_weekspan(date):
     """
     startdate = date_trunc('week', date)
     enddate = startdate + datetime.timedelta(days=6)
-    return startdate, enddate
-
-
-def get_monthspan(date):
-    """Gibt den ersten und letzten Tag des Monats zurück in dem `date` liegt
-
-    >>> get_monthspan(datetime.date(1980, 5, 4))
-    (datetime.date(1980, 5, 1), datetime.date(1980, 5, 31))
-    """
-    startdate = date_trunc('month', date)
-    _, days = calendar.monthrange(startdate.year, startdate.month)
-    enddate = type(startdate)(startdate.year, startdate.month, days)
     return startdate, enddate
 
 

@@ -8,25 +8,20 @@ Here we store Information in regard to Software Development at Hudora.
 * We use [github.com/hudora][github] for version control
   ([Introduction][githubintro]) - you should create an account there
 * We use [gerrit][gerrithudora] as a review system - you should create an account there
-* [Textmate][textmatetips] is the offical editor at Hudora Cybernetics. Use the `PyBicicle Repair Man`
-  and `Python PEP8` Plugins.
+* [Sublime Text 2][sublime] is the offical editor at Hudora Cybernetics.
 
 [github]: http://github.com/hudora
 [githubintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/github-it-is/
 [gerrithudora]: http://gerrit.hudora.de/
-[textmatetips]: http://al3x.net/2008/12/03/how-i-use-textmate.html
+[sublime]: http://www.sublimetext.com/
 
 
 ##  Coding
 
  * [Refactor Mercilessly][refactor] - your own code and others.
- * If you touch a file you are responsible that it is in decent shape afterwards. Even if it was messy 
-   *before* you touched it.
- * Your commit messages should be in german or english, use markdown and follow general
-   [commit message best practices][commitmessage]. Sample:
-   `[LH #4711] added abbility to print docs for Swiss customs`
- * Check the [timeline/dashboard][timeline] regulary to see what's happening.
-   Skimm the changesets and ask if you don't understand something.
+ * If you touch a file you are responsible that it is in decent shape afterwards. Even if it was messy *before* you touched it.
+ * Your commit messages should be in german or english, use markdown and follow general [commit message best practices][commitmessage]. Sample: `[LH #4711] added abbility to print docs for Swiss customs`
+ * Check the [timeline/dashboard][timeline] regulary to see what's happening. Skimm the changesets and ask if you don't understand something.
  * always do `make test`, `make check` or equivalent before commit.
  * add the URL of the ticket in the ticket system to the end of your commit message
  * Work in branches where appropriate. For every feature/ticket a branch may be appropriate.
@@ -44,32 +39,24 @@ Here we store Information in regard to Software Development at Hudora.
    `defaults write com.macromates.textmate OakWrapColumns '( 40, 72, 78, 109 )'` to make wraping
    more comfortable.
  * Follow [PEP 8][pep8].
-   Use [pep8.py][pep8py] `--ignore=E501,W291 --repeat` to verify compliance.
+   Use [pep8.py][pep8py] `--max-line-length=110 --repeat` to verify compliance.
  * Follow [PEP 257][pep257] for docstrings
  * No tabs. Not anywhere (except in Makefiles). Always indent with 4 spaces.
  * use [pyflakes][pyflakes]. 
- * Use [pylint][pylint]. Aim for a score of at least 8. The higher the better. If you score is below 8
-   be prepared to present a good reason for it.
- * Classes/Variables which reference Objects specific to our ERP/our Industry/german trade
-   should be in german as technical terms. Generic Objects should be named in english: "Lieferscheinnummer",
-   "Kundenauftragsnumer", "Rechnung" but "TransportEndpoint" and "DataStore". This line is very blurry.
-   Comments in the code should be in english. See the "Protokolle" at SoftwareEntwicklung for further
-   guidelines on naming.
- * Variable Names should not be abbreviated. The only exceptions are "nummer" -> "nr" and
-   "kommissionier" -> "kommi".
- * Code should be targeted at Python 2.5 on FreeBSD / Ubuntu Linux
+ * Use [pylint][pylint]. Aim for a score of at least 8. The higher the better. If you score is below 8 be prepared to present a good reason for it.
+ * Classes/Variables which reference Objects specific to our ERP/our Industry/german trade should be in german as technical terms. Generic Objects should be named in english: "Lieferscheinnummer", "Kundenauftragsnumer", "Rechnung" but "TransportEndpoint" and "DataStore". This line is very blurry. See the "Protokolle" at SoftwareEntwicklung for further guidelines on naming.
+ * Variable Names should not be abbreviated. The only exceptions are "nummer" -> "nr" and "kommissionier" -> "kommi".
+ * Code should be targeted at Python 2.7 on FreeBSD / Ubuntu Linux or Google AppEngine
  * Functions should be no longer than a screen.
  * Helper functions should appear below their parent functions.
  * `__underscore_methods__()` and inner classes should always be defined first within a class.
  * Let [the Zen of Python][zen] guide you and avoid [Anti-Idioms][donts].
  * [Fail Fast][failfast] and [crash early][crashearly]!
  * Make your stuff [Idempotent][idempotent].
- * Alvais provide audit logs.
- * avoid float values where possible. They [probably don't work as you think they work][floats]. Store
-   Cent instead of Euro, Millimeters instead of Centimeters and so on.
+ * Alwais provide audit logs.
+ * avoid float values where possible. They [probably don't work as you think they work][floats]. Store Cent instead of Euro, Millimeters instead of Centimeters and so on.
  * Provide a `Makefile` with `dependencies`, `test` and `check` (pylint/pyflakes/pep8) targets.
- * Write doctests. Write unittests. Aim for a [test coverage][coverage]
-   of at least 80% for all non networked code. The higher the better.
+ * Write doctests. Write unittests. Aim for a [test coverage][coverage] of at least 80% for all non-networked code. The higher the better.
 
 [pep8]: http://www.python.org/dev/peps/pep-0008/
 [pep8py]: https://github.com/jcrocholl/pep8
@@ -86,8 +73,7 @@ Here we store Information in regard to Software Development at Hudora.
 
 ## Conventions
 
-Use our naming conventions for [Adresses][adressprot], [Orders][orderprotocol] and
-[Warehouse related stuff][icwmsprot] (more to come).
+Use our naming conventions for [Adresses][adressprot], [Orders][orderprotocol] and [Warehouse related stuff][icwmsprot] (more to come).
 
 [adressprot]: http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown
 [orderprotocol]: http://github.com/hudora/huTools/blob/master/doc/standards/verysimpleorderprotocol.markdown
@@ -109,7 +95,7 @@ Use global unique identifiers where ever possible. `huTools.luids.guid128()` cre
 * Always test Iñtërnâtiônàlizætiøn by putting strange strings into input fields
 * Always test `<script>alert("XSS");</script> & <bold>Co</bold>` by putting strange strings into input fields
 * use [huTools](http://hudora.github.com/huTools/) where appropriate
-* `Iñtërnâtiônàlizætiøn <script>alert("XSS");</script> %+'"<!--` might be a goot test string. Suggested Test Address:
+* `Iñtërnâtiônàlizætiøn <script>alert("XSS");</script> %+'"<!--` might be a good test string. Suggested Test Address:
     
     --!> Müller's & Æeleen\'s <!--
     Rue <script>alert("!");</script>
@@ -129,8 +115,7 @@ Use global unique identifiers where ever possible. `huTools.luids.guid128()` cre
 
 ## Tools for internal Developers
 
-* We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests
-  ([Introduction][lighthousintro]) - you should create an account there
+* We use [hudora.lighthouseapp.com][lighthouseapp] for feature requests ([Introduction][lighthousintro]) - you should create an account there
 [lighthouseapp]: http://hudora.lighthouseapp.com
 [lighthousintro]: https://cybernetics.hudora.biz/intern/wordpress/2009/12/lighthouse-it-is/
 
