@@ -90,6 +90,8 @@ def get_yearspan(date):
 
     >>> get_yearspan(datetime.date(1980, 5, 4))
     (datetime.date(1980, 1, 1), datetime.date(1980, 12, 31))
+    >>> get_yearspan(datetime.date(1986, 3, 11))
+    (datetime.date(1986, 1, 1), datetime.date(1986, 12, 31))
     """
     startdate = date_trunc('year', date)
     enddate = type(startdate)(startdate.year, 12, 31)
