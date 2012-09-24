@@ -134,6 +134,19 @@ def get_monthspan(date):
     return startdate, enddate
 
 
+def get_yearspan(date):
+    """Gibt den ersten und letzten Tag des Jahrs zurück in dem `date` liegt
+
+    >>> get_yearspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 1, 1), datetime.date(1980, 12, 31))
+    >>> get_yearspan(datetime.date(1986, 3, 11))
+    (datetime.date(1986, 1, 1), datetime.date(1986, 12, 31))
+    """
+    startdate = date_trunc('year', date)
+    enddate = startdate.replace(month=12, day=31)
+    return startdate, enddate
+
+
 class DateTruncTestCase(unittest.TestCase):
     """Unittests for date_trunc"""
 
