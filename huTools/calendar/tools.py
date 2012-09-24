@@ -4,7 +4,7 @@
 tools.py - Functions for date manipulation
 
 Created by Christian Klein on 2010-04-22.
-Copyright (c) 2010 HUDORA GmbH. All rights reserved.
+Copyright (c) 2010, 2012 HUDORA GmbH. All rights reserved.
 """
 
 import calendar
@@ -85,6 +85,19 @@ def get_week(date):
     return week, first_monday.year
 
 
+def get_yearspan(date):
+    """Gibt den ersten und letzten Tag des Jahres zurück in dem `date` liegt
+
+    >>> get_yearspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 1, 1), datetime.date(1980, 12, 31))
+    >>> get_yearspan(datetime.date(1986, 3, 11))
+    (datetime.date(1986, 1, 1), datetime.date(1986, 12, 31))
+    """
+    startdate = date_trunc('year', date)
+    enddate = type(startdate)(startdate.year, 12, 31)
+    return startdate, enddate
+
+
 def get_tertialspan(date):
     """Gibt den ersten und den letzten Tag des Tertials zurück in dem `date` liegt
 
@@ -109,19 +122,6 @@ def get_quarterspan(date):
     return startdate, enddate
 
 
-def get_weekspan(date):
-    """Gibt den ersten und den letzten Tag der Woche, in der `date` liegt, zurück.
-
-    Dabei ist Montag der erste Tag der woche und Sonntag der letzte.
-
-    >>> get_weekspan(datetime.date(2011, 3, 23))
-    (datetime.date(2011, 3, 21), datetime.date(2011, 3, 27))
-    """
-    startdate = date_trunc('week', date)
-    enddate = startdate + datetime.timedelta(days=6)
-    return startdate, enddate
-
-
 def get_monthspan(date):
     """Gibt den ersten und letzten Tag des Monats zurück in dem `date` liegt
 
@@ -134,16 +134,16 @@ def get_monthspan(date):
     return startdate, enddate
 
 
-def get_yearspan(date):
-    """Gibt den ersten und letzten Tag des Jahrs zurück in dem `date` liegt
+def get_weekspan(date):
+    """Gibt den ersten und den letzten Tag der Woche, in der `date` liegt, zurück.
 
-    >>> get_yearspan(datetime.date(1980, 5, 4))
-    (datetime.date(1980, 1, 1), datetime.date(1980, 12, 31))
-    >>> get_yearspan(datetime.date(1986, 3, 11))
-    (datetime.date(1986, 1, 1), datetime.date(1986, 12, 31))
+    Dabei ist Montag der erste Tag der woche und Sonntag der letzte.
+
+    >>> get_weekspan(datetime.date(2011, 3, 23))
+    (datetime.date(2011, 3, 21), datetime.date(2011, 3, 27))
     """
-    startdate = date_trunc('year', date)
-    enddate = startdate.replace(month=12, day=31)
+    startdate = date_trunc('week', date)
+    enddate = startdate + datetime.timedelta(days=6)
     return startdate, enddate
 
 
