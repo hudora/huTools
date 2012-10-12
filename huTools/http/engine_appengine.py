@@ -13,7 +13,6 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 
 import huTools.http.tools
 import gzip
-import logging
 import os
 import zlib
 import StringIO

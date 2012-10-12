@@ -9,7 +9,7 @@ Created by Maximillian Dornseif on 2010-09-27.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
 import email.utils
-import hujson
+import hujson2
 import logging
 import unittest
 import urllib2
@@ -88,7 +88,7 @@ def send_mail(message, api_key=None):
     # Set up the url Request
     req = urllib2.Request(
         __POSTMARK_URL__ + 'email',
-        hujson.dumps(message),
+        hujson2.dumps(message),
         {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ def send_mail(message, api_key=None):
         elif err.code == 422:
             try:
                 jsontxt = err.read()
-                jsonobj = hujson.loads(jsontxt)
+                jsonobj = hujson2.loads(jsontxt)
                 desc = jsonobj['Message']
             except:
                 desc = 'Description not given'

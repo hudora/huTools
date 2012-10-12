@@ -27,7 +27,7 @@ File Upload just works::
 
 import logging
 
-from huTools import hujson
+from huTools import hujson2
 from huTools.http import exceptions
 from huTools.http import tools
 
@@ -88,7 +88,7 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
                                           caching)
     if not rheaders.get('content-type', '').startswith('application/json'):
         raise TypeError(u"Ungueltiger Content-Type %r: %r" % (rheaders.get('content-type', ''), rcontent))
-    return hujson.loads(rcontent)
+    return hujson2.loads(rcontent)
 
 
 def fetch_async(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
@@ -133,7 +133,7 @@ def fetch_json2xx_async(url, content='', method='GET', credentials=None, headers
             if rheaders.get('Content-Type', None) is not None:
                 raise TypeError(u"%s: Ungueltiger Content-Type %r: %r" % (url,
                                     rheaders.get('Content-Type', ''), rcontent))
-        return returnhandler(hujson.loads(rcontent))
+        return returnhandler(hujson2.loads(rcontent))
 
     return fetch_async(url, content, method, credentials, headers, multipart, ua, timeout,
                        decodingreturnhandler, caching)
