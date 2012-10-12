@@ -42,7 +42,7 @@ def request(url, method, content, headers, timeout=50, caching=None):
         if ret:
             return ret  # cache hit we are done
 
-    logging.debug('fetching %r %r', method, url)
+    #logging.debug('fetching %r %r', method, url)
     if method == 'GET':
         method = urlfetch.GET
     elif method == 'POST':
@@ -135,7 +135,7 @@ class AsyncHttpResult(object):
 
         # Cache miss or no cache wanted, do wait for the real http fetch
         self.rpc = create_rpc(deadline=timeout)
-        logging.info('fetching (async) %r %r', method, url)
+        #logging.info('fetching (async) %r %r', method, url)
         make_fetch_call(self.rpc, url, content, method, headers)
 
     def get_result(self):
