@@ -8,10 +8,9 @@ hujson can encode additional types like decimal and datetime into valid json.
 Created by Maximillian Dornseif on 2010-09-10.
 Copyright (c) 2010, 2012 HUDORA. All rights reserved.
 """
-
-
-import json
 import datetime
+import decimal
+import json
 
 
 def _unknown_handler(value):
@@ -20,6 +19,8 @@ def _unknown_handler(value):
         return str(value)
     elif isinstance(value, datetime.datetime):
         return value.isoformat() + 'Z'
+    elif isinstance(value, decimal.Decimal):
+        return unicode(value)
     elif hasattr(value, 'properties') and callable(value.properties):
         return dict([(key, getattr(value, key)) for key in value.properties().keys()])
     elif 'google.appengine.api.users.User' in str(type(value)):
