@@ -20,18 +20,21 @@ def _unknown_handler(value):
         return str(value)
     elif isinstance(value, datetime.datetime):
         return value.isoformat() + 'Z'
-    elif hasattr(value, 'properties') and callable(value.properties):
-        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
-    elif 'google.appengine.api.users.User' in str(type(value)):
-        return "%s/%s" % (value.user_id(), value.email())
-    elif 'google.appengine.api.datastore_types.Key' in str(type(value)):
-        return str(value)
     elif hasattr(value, 'as_dict') and callable(value.as_dict):
         # helpful for structured.Struct() Objects
         return value.as_dict()
     elif hasattr(value, 'dict_mit_positionen') and callable(value.dict_mit_positionen):
         # helpful for our internal data-modelling
         return value.dict_mit_positionen()
+    # for Google AppEngine
+    elif hasattr(value, '_to_entity') and callable(value._to_entity):
+        retdict = dict()
+        value._to_entity(retdict)
+        return retdict
+    elif 'google.appengine.api.users.User' in str(type(value)):
+        return "%s/%s" % (value.user_id(), value.email())
+    elif 'google.appengine.api.datastore_types.Key' in str(type(value)):
+        return str(value)
     raise TypeError("%s(%s)" % (type(value), value))
 
 
