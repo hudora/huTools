@@ -455,7 +455,7 @@ class GAEMemcachedCache(MemcachedCache):
 
 def get_cache(default_timeout=300):
     """Gets the best available cache object"""
-    version = os.environ.get('CURRENT_VERSION_ID', '')
+    version = os.environ.get('CURRENT_VERSION_ID', '').split('.')[0]
     try:
         cache = GAEMemcachedCache(default_timeout=default_timeout, key_prefix=version)
     except ImportError:
