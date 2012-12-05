@@ -18,7 +18,7 @@ import sys
 COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    + sorted([
                    ('AT', u'Österreich'),
-                   ('CH', 'Schweiz'),
+                   ('CH', u'Schweiz'),
                    ('BE', 'Belgien'),
                    ('FR', 'Frankreich'),
                    ('ES', 'Spanien'),
@@ -53,7 +53,6 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('RO', u'Rumänien'),
                    ('MT', 'Malta'),
                    ('CY', 'Zypern'),
-                   ('CH', u'Schweiz'),
                   ])
 
 
