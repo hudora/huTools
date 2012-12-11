@@ -33,6 +33,11 @@ def format_addr(address, encoding='utf-8'):
     return email.utils.formataddr((realname, address))
 
 
+class PMUnprocessableEntity(Exception):
+    """Exception for non deliverable mails"""
+    pass
+
+
 def send_mail(message, api_key=None):
     '''
     Send the email through the Postmark system.
@@ -114,7 +119,7 @@ def send_mail(message, api_key=None):
                 desc = jsonobj['Message']
             except:
                 desc = 'Description not given'
-            raise RuntimeError('Unprocessable Entity: %s' % desc)
+            raise PMUnprocessableEntity(desc)
         elif err.code == 500:
             raise RuntimeError('Internal server error at Postmark. Admins have been alerted.', err)
     except urllib2.URLError, err:
