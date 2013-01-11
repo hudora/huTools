@@ -222,9 +222,12 @@ def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
                     listelem.append(elem)
                     _convert_dict_to_xml_recurse(elem, listchild, listnames)
             else:
-                elem = ET.Element(tag)
-                parent.append(elem)
-                _convert_dict_to_xml_recurse(elem, child, listnames)
+                if tag.startswith('@'):
+                    parent.attrib[tag[1:]] = child
+                else: 
+                    elem = ET.Element(tag)
+                    parent.append(elem)
+                    _convert_dict_to_xml_recurse(elem, child, listnames)
     elif not dictitem is None:
         parent.text = unicode(dictitem)
 
