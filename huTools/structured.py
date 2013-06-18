@@ -8,7 +8,6 @@ Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
 import xml.etree.cElementTree as ET
 from StringIO import StringIO
 
-
 # Basic conversation goal here is converting a dict to an object allowing
 # more comfortable access. `Struct()` and `make_struct()` are used to archive
 # this goal.
@@ -206,20 +205,31 @@ def make_struct(obj, default=None, nodefault=False):
 
 
 # Code is based on http://code.activestate.com/recipes/573463/
-def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
+def _convert_dict_to_xml_recurse(parent, dictitem, listnames, sort=True):
     """Helper Function for XML conversion."""
-    # we can't convert bare lists
-    assert not isinstance(dictitem, list)
+
+    if isinstance(dictitem, list):
+        raise TypeError('Unable to convert bare lists')
 
     if isinstance(dictitem, dict):
-        for (tag, child) in sorted(dictitem.iteritems()):
+        items = dictitem.iteritems()
+        if sort:
+            items = sorted(items)
+        for (tag, child) in items:
             if isinstance(child, list):
                 # iterate through the array and convert
-                listelem = ET.Element(tag)
-                parent.append(listelem)
+                itemname = listnames.get(tag, 'item')
+                if itemname is not None:
+                    listelem = ET.SubElement(parent, tag)
+                else:
+                    listelem = parent
+
                 for listchild in child:
-                    elem = ET.Element(listnames.get(tag, 'item'))
-                    listelem.append(elem)
+                    if itemname is not None:
+                        elem = ET.SubElement(listelem, itemname)
+                    else:
+                        elem = ET.SubElement(listelem, tag)
+
                     _convert_dict_to_xml_recurse(elem, listchild, listnames)
             else:
                 if tag.startswith('@'):
@@ -232,7 +242,7 @@ def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
         parent.text = unicode(dictitem)
 
 
-def dict2et(xmldict, roottag='data', listnames=None):
+def dict2et(xmldict, roottag='data', listnames=None, sort=True):
     """Converts a dict to an ElementTree.
 
     Converts a dictionary to an XML ElementTree Element::
@@ -242,9 +252,9 @@ def dict2et(xmldict, roottag='data', listnames=None):
     >>> ET.tostring(root)
     '<data><nr>xq12</nr><positionen><item><m>12</m></item><item><m>2</m></item></positionen></data>'
 
-    Per default ecerything ins put in an enclosing '<data>' element. Also per default lists are converted
-    to collecitons of `<item>` elements. But by provding a mapping between list names and element names,
-    you van generate different elements::
+    Per default everything is put in an enclosing '<data>' element. Also per default lists are converted
+    to collections of `<item>` elements. By provding a mapping between list names and element names,
+    you can generate different elements:
 
     >>> data = {"positionen": [{"m": 12}, {"m": 2}]}
     >>> root = dict2et(data, roottag='xml')
@@ -254,6 +264,11 @@ def dict2et(xmldict, roottag='data', listnames=None):
     >>> root = dict2et(data, roottag='xml', listnames={'positionen': 'position'})
     >>> ET.tostring(root)
     '<xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>'
+
+    If you explictly set the elementname to None, a flat list is created:
+    >>> root = dict2et(data, roottag='flat', listnames={'positionen': None})
+    >>> ET.tostring(root)
+    '<flat><positionen><m>12</m></positionen><positionen><m>2</m></positionen></flat>'
 
     >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
     ... "ort": u"Hücksenwagen",
@@ -285,12 +300,14 @@ def dict2et(xmldict, roottag='data', listnames=None):
     <prioritaet>7</prioritaet>
     <kommiauftragsnr>2103839</kommiauftragsnr>
     </kommiauftrag>'''
+
+    Sorting can be disabled which is only useful for collections.OrderedDict.
     """
 
     if not listnames:
         listnames = {}
     root = ET.Element(roottag)
-    _convert_dict_to_xml_recurse(root, xmldict, listnames)
+    _convert_dict_to_xml_recurse(root, xmldict, listnames, sort=sort)
     return root
 
 
@@ -304,12 +321,12 @@ def list2et(xmllist, root, elementname):
     return basexml.find(root)
 
 
-def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
+def dict2xml(datadict, roottag='data', listnames=None, pretty=False, sort=True):
     """Converts a dictionary to an UTF-8 encoded XML string.
 
     See also dict2et()
     """
-    root = dict2et(datadict, roottag, listnames)
+    root = dict2et(datadict, roottag, listnames, sort=sort)
     return to_string(root, pretty=pretty)
 
 

@@ -1,7 +1,7 @@
 
 from distutils.core import setup
 
-version = '0.63'
+version = '0.64'
 
 setup(
     name='huTools',
