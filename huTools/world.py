@@ -53,18 +53,19 @@ COUNTRY_CHOICES = [('DE', 'Deutschland')] \
                    ('RO', u'Rumänien'),
                    ('MT', 'Malta'),
                    ('CY', 'Zypern'),
+                   ('HR', u'Kroatien'),
                   ])
 
 
 COUNTRIES = dict(COUNTRY_CHOICES).keys()
 
 
-# Stand: Mai 2009 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.
+# Stand: Juli 2013 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.
 EUROPEAN_UNION = ['BE', 'IT', 'RO', 'BG', 'LV', 'SE',
                   'DK', 'LT', 'SK', 'DE', 'LU', 'SI',
                   'EE', 'MT', 'ES', 'FI', 'NL', 'CZ',
                   'FR', 'AT', 'HU', 'GR', 'PL', 'GB',
-                  'IE', 'PT', 'CY']
+                  'IE', 'PT', 'CY', 'HR']
 
 
 def in_european_union(isoland):
