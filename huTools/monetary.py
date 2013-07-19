@@ -114,8 +114,11 @@ def tara(amount, tax=19):
 
 def spanne(verkaufspreis, selbstkosten, tax=19):
     """Berechne die Gewinnspanne für einen Verkaufspreis und einen Selbstkostenanteil"""
+
+    verkaufspreis = decimal.Decimal(str(verkaufspreis))
+    selbstkosten = decimal.Decimal(str(selbstkosten))
     nettopreis = netto(verkaufspreis, tax=tax)
-    return (nettopreis - selbstkosten) / selbstkosten
+    return (nettopreis - selbstkosten) / nettopreis
 
 
 if __name__ == "__main__":
