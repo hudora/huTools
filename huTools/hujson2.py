@@ -22,7 +22,11 @@ def _unknown_handler(value):
     elif isinstance(value, decimal.Decimal):
         return unicode(value)
     elif hasattr(value, 'properties') and callable(value.properties):
-        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
+        properties = value.properties()
+        if isinstance(properties, dict):
+            return dict([(key, getattr(value, key)) for key in value.properties().keys()])
+        else:
+            return {}
     elif hasattr(value, 'as_dict') and callable(value.as_dict):
         # helpful for structured.Struct() Objects
         return value.as_dict()
