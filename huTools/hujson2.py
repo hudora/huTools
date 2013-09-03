@@ -34,6 +34,9 @@ def _unknown_handler(value):
         # helpful for our internal data-modelling
         return value.dict_mit_positionen()
     # for Google AppEngine
+    elif hasattr(value, 'to_dict') and callable(value.to_dict):
+        # ndb
+        return value.to_dict()
     elif hasattr(value, '_to_entity') and callable(value._to_entity):
         retdict = dict()
         value._to_entity(retdict)
