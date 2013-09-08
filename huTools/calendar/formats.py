@@ -86,10 +86,16 @@ def convert_to_datetime(date):
         if len(date) < 11:
             return convert_to_datetime(convert_to_date(date))
         else:
+            # remove Timezone
+            if date.endswith(' +0000'):
+                date = date.rstrip(' +0')
+            date = date.rstrip('Z')
+
+            # handle milliseconds
             ms = 0
             if '.' in date:
                 date, ms = date.split('.')
-            date = date.rstrip('Z')
+
             try:
                 ret = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
             except ValueError:
@@ -160,7 +166,7 @@ class _FormatsTests(unittest.TestCase):
                          datetime.datetime(2007, 2, 3, 13, 14, 15))
         self.assertEqual(convert_to_datetime('2007-02-03 13:14:15.16'),
                          datetime.datetime(2007, 2, 3, 13, 14, 15, 16))
-
+        # 2013-09-03 21:39:09 +0000
 
 class _ApiTests(unittest.TestCase):
 
