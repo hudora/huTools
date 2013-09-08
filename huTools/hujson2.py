@@ -36,7 +36,10 @@ def _unknown_handler(value):
     # for Google AppEngine
     elif hasattr(value, 'to_dict') and callable(value.to_dict):
         # ndb
-        return value.to_dict()
+        tmp = value.to_dict()
+        if 'id' not in tmp and hasattr(value, 'key') and hasattr(value.key, 'id') and callable(value.key.id):
+            tmp['id'] = value.key.id()
+        return tmp
     elif hasattr(value, '_to_entity') and callable(value._to_entity):
         retdict = dict()
         value._to_entity(retdict)
