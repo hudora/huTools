@@ -65,7 +65,7 @@ dependencies: pythonenv/bin/python
 
 pythonenv/bin/python:
 	virtualenv pythonenv
-	pip -q install -E pythonenv -r requirements.txt
+	pip -q install -r requirements.txt
 
 doc: examples
 	paver gh_pages_build gh_pages_update -m "documentation fixup"
