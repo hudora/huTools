@@ -10,7 +10,7 @@ check:
 
 test: dependencies
 	PYTHONPATH=. ./pythonenv/bin/python huTools/aggregation.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
+	#PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
 	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/tools.py
