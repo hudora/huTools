@@ -7,3 +7,4 @@ docs/_build/doctrees/*
 huTools.egg-info/
 pythonenv/
 build/
+.coverage

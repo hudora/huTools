@@ -9,44 +9,20 @@ check:
 	-pylint -iy --max-line-length=110 --ignore=_httplib2 huTools
 
 test: dependencies
-	PYTHONPATH=. ./pythonenv/bin/python huTools/aggregation.py
+	PYTHONPATH=. coverage run huTools/aggregation.py
 	#PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/tools.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/workdays.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/checksumming.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/postmark.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/structured.py
-	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
+	PYTHONPATH=. coverage run huTools/NetStringIO.py
+	PYTHONPATH=. coverage run huTools/calendar/formats.py
+	PYTHONPATH=. coverage run huTools/calendar/tools.py
+	PYTHONPATH=. coverage run huTools/calendar/workdays.py
+	PYTHONPATH=. coverage run huTools/checksumming.py
+	PYTHONPATH=. coverage run huTools/humessaging.py
+	PYTHONPATH=. coverage run huTools/luids.py
+	PYTHONPATH=. coverage run huTools/obfuscation.py
+	PYTHONPATH=. coverage run huTools/postmark.py
+	PYTHONPATH=. coverage run huTools/structured.py
+	PYTHONPATH=. coverage run huTools/unicode.py
 	#PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
-
-coverage: dependencies
-	printf '.*/tests/.*\n.*test.py\n' > .figleaf-exclude.txt
-	printf '/usr/local/lib/.*\n/opt/.*\npythonenv/.*\n' >> .figleaf-exclude.txt
-	printf '.*manage.py\n.*settings.py\n.*setup.py\n.*urls.py\n' >> .figleaf-exclude.txt
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/NetStringIO.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/ReReadingConfigParser.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/async.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/calendar/formats.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/calendar/workdays.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/checksumming.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/daemon.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/decorators.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/fs.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/luids.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/obfuscation.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/printing.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/robusttypecasts.py
-	PYTHONPATH=. /usr/local/hudorakit/bin/hd_figleaf --ignore-pylibs huTools/unicode.py
-	python /usr/local/hudorakit/bin/hd_figleaf2html -d ./coverage -x .figleaf-exclude.txt
-	echo "Coverage: " `grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-13|cut -d'<' -f1`
-	test `grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-13|cut -d'.' -f1` -gt 70
-	printf 'YVALUE=' > .coverage.score
-	grep -A3 ">totals:<" coverage/index.html|tail -n1|cut -c 9-12 >> .coverage.score
 
 upload:
 	rm -Rf build dist
@@ -64,7 +40,6 @@ build:
 dependencies: pythonenv/bin/python
 
 pythonenv/bin/python:
-	virtualenv pythonenv
 	pip -q install -r requirements.txt
 
 doc: examples
