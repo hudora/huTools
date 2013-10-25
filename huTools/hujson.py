@@ -22,8 +22,13 @@ def _unknown_handler(value):
         return str(value)
     elif isinstance(value, datetime.datetime):
         return value.isoformat() + 'Z'
-    elif hasattr(value, 'properties'):
-        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
+    elif hasattr(value, 'properties') and callable(value.properties):
+        properties = value.properties()
+        if isinstance(properties, dict):
+            keys = properties.iterkeys()
+        else:
+            keys = properties
+        return dict((key, getattr(value, key)) for key in keys)
     elif 'google.appengine.api.users.User' in str(type(value)):
         return "%s/%s" % (value.user_id(), value.email())
     elif 'google.appengine.api.datastore_types.Key' in str(type(value)):

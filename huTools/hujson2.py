@@ -24,15 +24,21 @@ def _unknown_handler(value):
     elif hasattr(value, 'properties') and callable(value.properties):
         properties = value.properties()
         if isinstance(properties, dict):
-            return dict([(key, getattr(value, key)) for key in value.properties().keys()])
+            keys = properties.iterkeys()
+        elif isinstance(properties, (set, list)):
+            keys = properties
         else:
             return {}
+        return dict((key, getattr(value, key)) for key in keys)
     elif hasattr(value, 'as_dict') and callable(value.as_dict):
         # helpful for structured.Struct() Objects
         return value.as_dict()
     elif hasattr(value, 'dict_mit_positionen') and callable(value.dict_mit_positionen):
         # helpful for our internal data-modelling
         return value.dict_mit_positionen()
+    elif hasattr(value, 'as_dict') and callable(value.as_dict):
+        # helpful for structured.Struct() Objects
+        return value.as_dict()
     # for Google AppEngine
     elif hasattr(value, 'to_dict') and callable(value.to_dict):
         # ndb
