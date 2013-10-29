@@ -147,6 +147,14 @@ def get_weekspan(date):
     return startdate, enddate
 
 
+def tertial_add(date, tertials):
+    """Add number of tertials to date"""
+
+    date = date_trunc('tertial', date)
+    month = date.month + tertials * 4
+    return date.replace(year=date.year + month//12, month=month % 12)
+
+
 class DateTruncTestCase(unittest.TestCase):
     """Unittests for date_trunc"""
 
@@ -490,7 +498,6 @@ class TertialspanTestCase(unittest.TestCase):
     def test_all(self):
         """Tests the whole year"""
 
-        # year = 1980  #unused
         date = datetime.date(1980, 1, 1)
         while date < datetime.date(1981, 1, 1):
             if date.month <= 4:
@@ -507,6 +514,34 @@ class TertialspanTestCase(unittest.TestCase):
             self.assertTrue(enddate <= maxdate)
 
             date += datetime.timedelta(days=1)
+
+
+class TertialAddTestCase(unittest.TestCase):
+    """Unittests for tertial_add"""
+
+    def test_date(self):
+        """Tests with datatype datetime.date"""
+
+        date = datetime.date(1982, 11, 7)
+        self.assertEqual(tertial_add(date, -1), datetime.date(1982, 5, 1))
+        self.assertEqual(tertial_add(date, 0), datetime.date(1982, 9, 1))
+        self.assertEqual(tertial_add(date, 1), datetime.date(1983, 1, 1))
+        self.assertEqual(tertial_add(date, 2), datetime.date(1983, 5, 1))
+        self.assertEqual(tertial_add(date, 3), datetime.date(1983, 9, 1))
+        self.assertEqual(tertial_add(date, 4), datetime.date(1984, 1, 1))
+        self.assertEqual(tertial_add(date, 91), date_trunc('tertial', datetime.date(2013, 4, 20)))
+
+    def test_datetime(self):
+        """Tests with datatype datetime.datetime"""
+
+        date = datetime.datetime(1982, 11, 7)
+        self.assertEqual(tertial_add(date, -1), datetime.datetime(1982, 5, 1))
+        self.assertEqual(tertial_add(date, 0), datetime.datetime(1982, 9, 1))
+        self.assertEqual(tertial_add(date, 1), datetime.datetime(1983, 1, 1))
+        self.assertEqual(tertial_add(date, 2), datetime.datetime(1983, 5, 1))
+        self.assertEqual(tertial_add(date, 3), datetime.datetime(1983, 9, 1))
+        self.assertEqual(tertial_add(date, 4), datetime.datetime(1984, 1, 1))
+        self.assertEqual(tertial_add(date, 91), date_trunc('tertial', datetime.datetime(2013, 4, 20)))
 
 
 if __name__ == "__main__":
