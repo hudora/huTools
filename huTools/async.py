@@ -43,7 +43,7 @@ class Future:
 
     def __call__(self):
         self.__Cond.acquire()
-        while self.__done == False:
+        while self.__done is False:
             self.__Cond.wait()
         self.__Cond.release()
         # We deepcopy __result to prevent accidental tampering with it.

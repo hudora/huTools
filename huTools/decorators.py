@@ -6,12 +6,15 @@ decorators.py
 Created by Maximillian Dornseif on 2007-05-10.
 Copyright (c) 2007 HUDORA GmbH. All rights reserved.
 """
-
-
 import cPickle as pickle
 import functools
 import hashlib
 from _decorator import decorator
+from collections import namedtuple
+from functools import update_wrapper
+from threading import RLock
+
+
 # TODO: können wir _decorator durch "from functools import wraps" ersetzen?
 
 
@@ -80,11 +83,8 @@ def cache_function(length):
 
 # from http://code.activestate.com/recipes/578078-py26-and-py30-backport-of-python-33s-lru-cache/
 
-from collections import namedtuple
-from functools import update_wrapper
-from threading import RLock
-
 _CacheInfo = namedtuple("CacheInfo", ["hits", "misses", "maxsize", "currsize"])
+
 
 class _HashedSeq(list):
     __slots__ = 'hashvalue'
@@ -96,11 +96,12 @@ class _HashedSeq(list):
     def __hash__(self):
         return self.hashvalue
 
+
 def _make_key(args, kwds, typed,
-             kwd_mark = (object(),),
-             fasttypes = {int, str, frozenset, type(None)},
-             sorted=sorted, tuple=tuple, type=type, len=len):
-    'Make a cache key from optionally typed positional and keyword arguments'
+              kwd_mark=(object(),),
+              fasttypes={int, str, frozenset, type(None)},
+              sorted=sorted, tuple=tuple, type=type, len=len):
+    """Make a cache key from optionally typed positional and keyword arguments"""
     key = args
     if kwds:
         sorted_items = sorted(kwds.items())
@@ -114,6 +115,7 @@ def _make_key(args, kwds, typed,
     elif len(key) == 1 and type(key[0]) in fasttypes:
         return key[0]
     return _HashedSeq(key)
+
 
 def lru_cache(maxsize=100, typed=False):
     """Least-recently-used cache decorator.
@@ -244,7 +246,6 @@ def lru_cache(maxsize=100, typed=False):
         return update_wrapper(wrapper, user_function)
 
     return decorating_function
-
 
 
 # from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/425445

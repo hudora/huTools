@@ -152,7 +152,7 @@ def tertial_add(date, tertials):
 
     date = date_trunc('tertial', date)
     month = date.month + tertials * 4
-    return date.replace(year=date.year + month//12, month=month % 12)
+    return date.replace(year=date.year + month // 12, month=month % 12)
 
 
 class DateTruncTestCase(unittest.TestCase):

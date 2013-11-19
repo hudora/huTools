@@ -151,9 +151,9 @@ class _FormatsTests(unittest.TestCase):
     def test_convert_to_datetime(self):
         """Test convert_to_datetime() and convert_to_date() functionality"""
         self.assertEqual(convert_to_datetime(datetime.date(2007, 2, 3)),
-                                             datetime.datetime(2007, 2, 3, 0, 0))
+                         datetime.datetime(2007, 2, 3, 0, 0))
         self.assertEqual(convert_to_datetime(datetime.datetime(2007, 2, 3, 13, 14, 15, 16)),
-                                             datetime.datetime(2007, 2, 3, 13, 14, 15, 16))
+                         datetime.datetime(2007, 2, 3, 13, 14, 15, 16))
         self.assertEqual(convert_to_datetime('2007-02-03'), datetime.datetime(2007, 2, 3, 0, 0))
         self.assertEqual(convert_to_datetime('2007-2-3'), datetime.datetime(2007, 2, 3, 0, 0))
         self.assertEqual(convert_to_datetime('20070203'), datetime.datetime(2007, 2, 3, 0, 0))
@@ -167,6 +167,7 @@ class _FormatsTests(unittest.TestCase):
         self.assertEqual(convert_to_datetime('2007-02-03 13:14:15.16'),
                          datetime.datetime(2007, 2, 3, 13, 14, 15, 16))
         # 2013-09-03 21:39:09 +0000
+
 
 class _ApiTests(unittest.TestCase):
 

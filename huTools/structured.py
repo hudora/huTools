@@ -8,6 +8,7 @@ Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
 import xml.etree.cElementTree as ET
 from StringIO import StringIO
 
+
 # Basic conversation goal here is converting a dict to an object allowing
 # more comfortable access. `Struct()` and `make_struct()` are used to archive
 # this goal.
@@ -234,7 +235,7 @@ def _convert_dict_to_xml_recurse(parent, dictitem, listnames, sort=True):
             else:
                 if tag.startswith('@'):
                     parent.attrib[tag[1:]] = child
-                else: 
+                else:
                     elem = ET.Element(tag)
                     parent.append(elem)
                     _convert_dict_to_xml_recurse(elem, child, listnames, sort=sort)
@@ -390,66 +391,6 @@ def test():
     xmlstr = dict2xml(data, roottag='warenzugang')
     assert xmlstr == ('<?xml version="1.0" encoding="utf-8"?><warenzugang><artnr>14695</artnr>'
                       '<batchnr>3104247</batchnr><guid>3104247-7</guid><menge>7</menge></warenzugang>')
-
-    data = {"kommiauftragsnr": 2103839,
-     "anliefertermin": "2009-11-25",
-     "fixtermin": True,
-     "prioritaet": 7,
-     "info_kunde": "Besuch H. Gerlach",
-     "auftragsnr": 1025575,
-     "kundenname": "Ute Zweihaus 400424990",
-     "kundennr": "21548",
-     "name1": "Uwe Zweihaus",
-     "name2": "400424990",
-     "name3": "",
-     u"strasse": u"Bahnhofstr. 2",
-     "land": "DE",
-     "plz": "42499",
-     "ort": u"Hücksenwagen",
-     "positionen": [{"menge": 12,
-                     "artnr": "14640/XL",
-                     "posnr": 1},
-                    {"menge": 4,
-                     "artnr": "14640/03",
-                     "posnr": 2},
-                    {"menge": 2,
-                     "artnr": "10105",
-                     "posnr": 3}],
-     "versandeinweisungen": [{"guid": "2103839-XalE",
-                              "bezeichner": "avisierung48h",
-                              "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
-                             {"guid": "2103839-GuTi",
-                              "bezeichner": "abpackern140",
-                              "anweisung": u"Paletten höchstens auf 140 cm Packen"}]
-    }
-
-    xmlstr = dict2xml(data, roottag='kommiauftrag')
-
-    data = {"kommiauftragsnr": 2103839,
-     "positionen": [{"menge": 4,
-                     "artnr": "14640/XL",
-                     "posnr": 1,
-                     "nve": "23455326543222553"},
-                    {"menge": 8,
-                     "artnr": "14640/XL",
-                     "posnr": 1,
-                     "nve": "43255634634653546"},
-                    {"menge": 4,
-                     "artnr": "14640/03",
-                     "posnr": 2,
-                     "nve": "43255634634653546"},
-                    {"menge": 2,
-                     "artnr": "10105",
-                     "posnr": 3,
-                     "nve": "23455326543222553"}],
-     "nves": [{"nve": "23455326543222553",
-               "gewicht": 28256,
-               "art": "paket"},
-              {"nve": "43255634634653546",
-               "gewicht": 28256,
-                "art": "paket"}]}
-
-    xmlstr = dict2xml(data, roottag='rueckmeldung')
 
 
 if __name__ == '__main__':
