@@ -167,9 +167,10 @@ class _FormatsTests(unittest.TestCase):
                          datetime.datetime(2007, 2, 3, 13, 14, 15))
         self.assertEqual(convert_to_datetime('2007-02-03 13:14:15.16'),
                          datetime.datetime(2007, 2, 3, 13, 14, 15, 16))
-        # 2013-09-03 21:39:09 +0000
+        self.assertEqual(convert_to_datetime('2013-09-03 21:39:09 +0000'),
+                         datetime.datetime(2013, 9, 3, 21, 39, 9))
         self.assertEqual(convert_to_datetime('2013-12-03 13:14'),
-                         datetime.datetime(2013, 12, 3, 13, 14, 00, 00))
+                         datetime.datetime(2013, 12, 3, 13, 14, 0, 0))
 
 
 class _ApiTests(unittest.TestCase):
