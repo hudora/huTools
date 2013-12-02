@@ -21,8 +21,6 @@ def _unknown_handler(value):
         return value.isoformat() + 'Z'
     elif isinstance(value, decimal.Decimal):
         return unicode(value)
-    elif hasattr(value, 'properties') and callable(value.properties):
-        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
     elif hasattr(value, 'as_dict') and callable(value.as_dict):
         # helpful for structured.Struct() Objects
         return value.as_dict()
@@ -30,6 +28,8 @@ def _unknown_handler(value):
         # helpful for our internal data-modelling
         return value.dict_mit_positionen()
     # for Google AppEngine
+    elif hasattr(value, 'properties') and callable(value.properties):
+        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
     elif hasattr(value, '_to_entity') and callable(value._to_entity):
         retdict = dict()
         value._to_entity(retdict)
@@ -38,6 +38,18 @@ def _unknown_handler(value):
         return "%s/%s" % (value.user_id(), value.email())
     elif 'google.appengine.api.datastore_types.Key' in str(type(value)):
         return str(value)
+    elif 'google.appengine.api.datastore_types.BlobKey' in str(type(value)):
+        return str(value)
+    # for Google AppEngine `ndb`
+    elif (hasattr(value, '_properties') and hasattr(value._properties, 'items')
+        and callable(value._properties.items)):
+            return dict([(k, v._get_value(value)) for k, v in value._properties.items()])
+    elif hasattr(value, 'urlsafe') and callable(value.urlsafe):
+        return str(value.urlsafe())
+    #elif hasattr(value, '_get_value') and callable(value._get_value):
+    #    retdict = dict()
+    #    value._get_value(retdict)
+    #    return retdict
     raise TypeError("%s(%s)" % (type(value), value))
 
 
