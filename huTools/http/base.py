@@ -20,11 +20,11 @@ File Upload just works::
 
 `fetch2xx()` throws a `WrongStatusCode` if the server returns a status code outside the 200-299 range.
 `fetch_json2xx()` in addition decodes a JSON reply and returns that.
+
+Created by Maximillian Dornseif on 2010-10-24.
+Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
-
-# Created by Maximillian Dornseif on 2010-10-24.
-# Copyright (c) 2010, 2011 HUDORA. All rights reserved.
-
+import cgi
 import logging
 
 from huTools import hujson2
@@ -146,3 +146,34 @@ def add_query(url, params):
     warnings.warn("huTools.http.add_query() is obsolete, use huTools.http.tools.add_query() instead",
                   DeprecationWarning, stacklevel=2)
     return huTools.http.tools.add_query(url, params)
+
+
+def json_iterator(url, method='GET', content=None, credentials=None, datanodename='data'):
+    """
+    Rufe JSON-Daten ab.
+ 
+    Es wird die seitenweise Darstellung von gaetk.BasicHandler.paginate unterstützt.
+    """
+ 
+    if content is None:
+        content = {}
+ 
+    while True:
+        try:
+            response = fetch_json2xx(url,
+                                     method=method,
+                                     content=content,
+                                     credentials=credentials)
+        except exceptions.WrongStatusCode:
+            break
+ 
+        for element in response[datanodename]:
+            yield element
+ 
+        if not response['more_objects']:
+            break
+        else:
+            cursor_information = response.get('next_qs', '')
+            tmp = cgi.parse_qs(cursor_information)
+            for key, values in tmp.items():
+                content[key] = values[0]

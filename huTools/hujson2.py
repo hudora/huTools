@@ -6,7 +6,7 @@ hujson.py - extended json - tries to be compatible with simplejson
 hujson can encode additional types like decimal and datetime into valid json.
 
 Created by Maximillian Dornseif on 2010-09-10.
-Copyright (c) 2010, 2012 HUDORA. All rights reserved.
+Copyright (c) 2010, 2012, 2013 HUDORA. All rights reserved.
 """
 import datetime
 import decimal
@@ -21,15 +21,28 @@ def _unknown_handler(value):
         return value.isoformat() + 'Z'
     elif isinstance(value, decimal.Decimal):
         return unicode(value)
-    elif hasattr(value, 'as_dict') and callable(value.as_dict):
-        # helpful for structured.Struct() Objects
-        return value.as_dict()
     elif hasattr(value, 'dict_mit_positionen') and callable(value.dict_mit_positionen):
         # helpful for our internal data-modelling
         return value.dict_mit_positionen()
+    elif hasattr(value, 'as_dict') and callable(value.as_dict):
+        # helpful for structured.Struct() Objects
+        return value.as_dict()
     # for Google AppEngine
     elif hasattr(value, 'properties') and callable(value.properties):
-        return dict([(key, getattr(value, key)) for key in value.properties().keys()])
+        properties = value.properties()
+        if isinstance(properties, dict):
+            keys = properties.iterkeys()
+        elif isinstance(properties, (set, list)):
+            keys = properties
+        else:
+            return {}
+        return dict((key, getattr(value, key)) for key in keys)
+    elif hasattr(value, 'to_dict') and callable(value.to_dict):
+        # ndb
+        tmp = value.to_dict()
+        if 'id' not in tmp and hasattr(value, 'key') and hasattr(value.key, 'id') and callable(value.key.id):
+            tmp['id'] = value.key.id()
+        return tmp
     elif hasattr(value, '_to_entity') and callable(value._to_entity):
         retdict = dict()
         value._to_entity(retdict)

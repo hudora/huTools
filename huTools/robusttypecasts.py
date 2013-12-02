@@ -48,10 +48,10 @@ def int_or_0(data, default=0):
         return default
 
     try:
-        if type(data) in (ListType, TupleType):
+        if isinstance(data, (ListType, TupleType)):
             return int(data[0])
         return int(float(data))
-    except TypeError:
+    except (TypeError, ValueError):
         return default
 
 

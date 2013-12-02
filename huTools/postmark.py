@@ -83,10 +83,9 @@ def send_mail(message, api_key=None):
     attachments = []
     for attachment in message.get('Attachments', []):
         attachments.append({
-                "Name": attachment['Name'],
-                "Content": attachment['Content'].encode('base64'),
-                "ContentType": attachment['ContentType'],
-                })
+            "Name": attachment['Name'],
+            "Content": attachment['Content'].encode('base64'),
+            "ContentType": attachment['ContentType']})
     if attachments:
         message['Attachments'] = attachments
 

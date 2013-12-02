@@ -206,30 +206,44 @@ def make_struct(obj, default=None, nodefault=False):
 
 
 # Code is based on http://code.activestate.com/recipes/573463/
-def _convert_dict_to_xml_recurse(parent, dictitem, listnames):
+def _convert_dict_to_xml_recurse(parent, dictitem, listnames, sort=True):
     """Helper Function for XML conversion."""
-    # we can't convert bare lists
-    assert not isinstance(dictitem, list)
+
+    if isinstance(dictitem, list):
+        raise TypeError('Unable to convert bare lists')
 
     if isinstance(dictitem, dict):
-        for (tag, child) in sorted(dictitem.iteritems()):
+        items = dictitem.iteritems()
+        if sort:
+            items = sorted(items)
+        for (tag, child) in items:
             if isinstance(child, list):
                 # iterate through the array and convert
-                listelem = ET.Element(tag)
-                parent.append(listelem)
+                itemname = listnames.get(tag, 'item')
+                if itemname is not None:
+                    listelem = ET.SubElement(parent, tag)
+                else:
+                    listelem = parent
+
                 for listchild in child:
-                    elem = ET.Element(listnames.get(tag, 'item'))
-                    listelem.append(elem)
-                    _convert_dict_to_xml_recurse(elem, listchild, listnames)
+                    if itemname is not None:
+                        elem = ET.SubElement(listelem, itemname)
+                    else:
+                        elem = ET.SubElement(listelem, tag)
+
+                    _convert_dict_to_xml_recurse(elem, listchild, listnames, sort=sort)
             else:
-                elem = ET.Element(tag)
-                parent.append(elem)
-                _convert_dict_to_xml_recurse(elem, child, listnames)
+                if tag.startswith('@'):
+                    parent.attrib[tag[1:]] = child
+                else:
+                    elem = ET.Element(tag)
+                    parent.append(elem)
+                    _convert_dict_to_xml_recurse(elem, child, listnames, sort=sort)
     elif not dictitem is None:
         parent.text = unicode(dictitem)
 
 
-def dict2et(xmldict, roottag='data', listnames=None):
+def dict2et(xmldict, roottag='data', listnames=None, sort=True):
     """Converts a dict to an ElementTree.
 
     Converts a dictionary to an XML ElementTree Element::
@@ -239,9 +253,9 @@ def dict2et(xmldict, roottag='data', listnames=None):
     >>> ET.tostring(root)
     '<data><nr>xq12</nr><positionen><item><m>12</m></item><item><m>2</m></item></positionen></data>'
 
-    Per default ecerything ins put in an enclosing '<data>' element. Also per default lists are converted
-    to collecitons of `<item>` elements. But by provding a mapping between list names and element names,
-    you van generate different elements::
+    Per default everything is put in an enclosing '<data>' element. Also per default lists are converted
+    to collections of `<item>` elements. By provding a mapping between list names and element names,
+    you can generate different elements:
 
     >>> data = {"positionen": [{"m": 12}, {"m": 2}]}
     >>> root = dict2et(data, roottag='xml')
@@ -251,6 +265,11 @@ def dict2et(xmldict, roottag='data', listnames=None):
     >>> root = dict2et(data, roottag='xml', listnames={'positionen': 'position'})
     >>> ET.tostring(root)
     '<xml><positionen><position><m>12</m></position><position><m>2</m></position></positionen></xml>'
+
+    If you explictly set the elementname to None, a flat list is created:
+    >>> root = dict2et(data, roottag='flat', listnames={'positionen': None})
+    >>> ET.tostring(root)
+    '<flat><positionen><m>12</m></positionen><positionen><m>2</m></positionen></flat>'
 
     >>> data = {"kommiauftragsnr":2103839, "anliefertermin":"2009-11-25", "prioritaet": 7,
     ... "ort": u"Hücksenwagen",
@@ -282,12 +301,14 @@ def dict2et(xmldict, roottag='data', listnames=None):
     <prioritaet>7</prioritaet>
     <kommiauftragsnr>2103839</kommiauftragsnr>
     </kommiauftrag>'''
+
+    Sorting can be disabled which is only useful for collections.OrderedDict.
     """
 
     if not listnames:
         listnames = {}
     root = ET.Element(roottag)
-    _convert_dict_to_xml_recurse(root, xmldict, listnames)
+    _convert_dict_to_xml_recurse(root, xmldict, listnames, sort=sort)
     return root
 
 
@@ -301,12 +322,12 @@ def list2et(xmllist, root, elementname):
     return basexml.find(root)
 
 
-def dict2xml(datadict, roottag='data', listnames=None, pretty=False):
+def dict2xml(datadict, roottag='data', listnames=None, pretty=False, sort=True):
     """Converts a dictionary to an UTF-8 encoded XML string.
 
     See also dict2et()
     """
-    root = dict2et(datadict, roottag, listnames)
+    root = dict2et(datadict, roottag, listnames, sort=sort)
     return to_string(root, pretty=pretty)
 
 
@@ -370,66 +391,6 @@ def test():
     xmlstr = dict2xml(data, roottag='warenzugang')
     assert xmlstr == ('<?xml version="1.0" encoding="utf-8"?><warenzugang><artnr>14695</artnr>'
                       '<batchnr>3104247</batchnr><guid>3104247-7</guid><menge>7</menge></warenzugang>')
-
-    data = {"kommiauftragsnr": 2103839,
-     "anliefertermin": "2009-11-25",
-     "fixtermin": True,
-     "prioritaet": 7,
-     "info_kunde": "Besuch H. Gerlach",
-     "auftragsnr": 1025575,
-     "kundenname": "Ute Zweihaus 400424990",
-     "kundennr": "21548",
-     "name1": "Uwe Zweihaus",
-     "name2": "400424990",
-     "name3": "",
-     u"strasse": u"Bahnhofstr. 2",
-     "land": "DE",
-     "plz": "42499",
-     "ort": u"Hücksenwagen",
-     "positionen": [{"menge": 12,
-                     "artnr": "14640/XL",
-                     "posnr": 1},
-                    {"menge": 4,
-                     "artnr": "14640/03",
-                     "posnr": 2},
-                    {"menge": 2,
-                     "artnr": "10105",
-                     "posnr": 3}],
-     "versandeinweisungen": [{"guid": "2103839-XalE",
-                              "bezeichner": "avisierung48h",
-                              "anweisung": "48h vor Anlieferung unter 0900-LOGISTIK avisieren"},
-                             {"guid": "2103839-GuTi",
-                              "bezeichner": "abpackern140",
-                              "anweisung": u"Paletten höchstens auf 140 cm Packen"}]
-    }
-
-    xmlstr = dict2xml(data, roottag='kommiauftrag')
-
-    data = {"kommiauftragsnr": 2103839,
-     "positionen": [{"menge": 4,
-                     "artnr": "14640/XL",
-                     "posnr": 1,
-                     "nve": "23455326543222553"},
-                    {"menge": 8,
-                     "artnr": "14640/XL",
-                     "posnr": 1,
-                     "nve": "43255634634653546"},
-                    {"menge": 4,
-                     "artnr": "14640/03",
-                     "posnr": 2,
-                     "nve": "43255634634653546"},
-                    {"menge": 2,
-                     "artnr": "10105",
-                     "posnr": 3,
-                     "nve": "23455326543222553"}],
-     "nves": [{"nve": "23455326543222553",
-               "gewicht": 28256,
-               "art": "paket"},
-              {"nve": "43255634634653546",
-               "gewicht": 28256,
-                "art": "paket"}]}
-
-    xmlstr = dict2xml(data, roottag='rueckmeldung')
 
 
 if __name__ == '__main__':
