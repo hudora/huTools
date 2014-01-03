@@ -31,7 +31,8 @@ def _unknown_handler(value):
     elif hasattr(value, 'properties') and callable(value.properties):
         properties = value.properties()
         if isinstance(properties, dict):
-            keys = properties.iterkeys()
+            keys = (key for (key, datatype) in properties.iteritems()
+                if datatype.__class__.__name__ not in ['BlobProperty'])
         elif isinstance(properties, (set, list)):
             keys = properties
         else:
