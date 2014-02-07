@@ -66,7 +66,6 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
     * `timeout` is the maximum number of seconds the request might take. This is advisory and may not be
        enforced.
     """
-
     return request(*tools.prepare_headers(url, content, method, credentials, headers, multipart, ua,
                                           timeout, caching))
 
@@ -154,10 +153,7 @@ def json_iterator(url, method='GET', content=None, credentials=None, datanodenam
  
     Es wird die seitenweise Darstellung von gaetk.BasicHandler.paginate unterstützt.
     """
- 
-    if content is None:
-        content = {}
- 
+
     while True:
         try:
             response = fetch_json2xx(url,
