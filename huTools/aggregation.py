@@ -82,6 +82,11 @@ def _group_by_x(values, aggregationfunc, keyfunc):
     return ret
 
 
+def group_by_day(values, aggregationfunc):
+    """input should be [(datetime, stuff), ...]"""
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('day', x))
+
+
 def group_by_week(values, aggregationfunc):
     """input should be [(datetime, stuff), ...]
 
