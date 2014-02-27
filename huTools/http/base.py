@@ -171,5 +171,7 @@ def json_iterator(url, method='GET', content=None, credentials=None, datanodenam
         else:
             cursor_information = response.get('next_qs', '')
             tmp = cgi.parse_qs(cursor_information)
+            if content is None:
+                content = {}
             for key, values in tmp.items():
                 content[key] = values[0]
