@@ -155,6 +155,13 @@ def tertial_add(date, tertials):
     return date.replace(year=date.year + month // 12, month=month % 12)
 
 
+def month_add(date, months):
+    """Add number of months to date"""
+
+    year, month = divmod(date.year * 12 + date.month + months, 12)
+    return date.replace(year=year, month=month)
+
+
 class DateTruncTestCase(unittest.TestCase):
     """Unittests for date_trunc"""
 
@@ -542,6 +549,34 @@ class TertialAddTestCase(unittest.TestCase):
         self.assertEqual(tertial_add(date, 3), datetime.datetime(1983, 9, 1))
         self.assertEqual(tertial_add(date, 4), datetime.datetime(1984, 1, 1))
         self.assertEqual(tertial_add(date, 91), date_trunc('tertial', datetime.datetime(2013, 4, 20)))
+
+
+class MonthAddTestCase(unittest.TestCase):
+    """Unittests for month_add"""
+
+    def test_date(self):
+        """Tests with datatype datetime.date"""
+
+        date = datetime.date(1986, 3, 9)
+        self.assertEqual(month_add(date, -12), datetime.date(1985, 3, 9))
+        self.assertEqual(month_add(date, -1), datetime.date(1986, 2, 9))
+        self.assertEqual(month_add(date, 0), datetime.date(1986, 3, 9))
+        self.assertEqual(month_add(date, 1), datetime.date(1986, 4, 9))
+        self.assertEqual(month_add(date, 2), datetime.date(1986, 5, 9))
+        self.assertEqual(month_add(date, 3), datetime.date(1986, 6, 9))
+        self.assertEqual(month_add(date, 12), datetime.date(1987, 3, 9))
+
+    def test_datetime(self):
+        """Tests with datatype datetime.datetime"""
+
+        date = datetime.datetime(1986, 3, 9)
+        self.assertEqual(month_add(date, -12), datetime.datetime(1985, 3, 9))
+        self.assertEqual(month_add(date, -1), datetime.datetime(1986, 2, 9))
+        self.assertEqual(month_add(date, 0), datetime.datetime(1986, 3, 9))
+        self.assertEqual(month_add(date, 1), datetime.datetime(1986, 4, 9))
+        self.assertEqual(month_add(date, 2), datetime.datetime(1986, 5, 9))
+        self.assertEqual(month_add(date, 3), datetime.datetime(1986, 6, 9))
+        self.assertEqual(month_add(date, 12), datetime.datetime(1987, 3, 9))
 
 
 if __name__ == "__main__":
