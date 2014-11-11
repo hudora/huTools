@@ -247,6 +247,8 @@ class Markdown(object):
         # articles):
         self.reset()
 
+        if not text:
+            text = u''
         if not isinstance(text, unicode):
             #TODO: perhaps shouldn't presume UTF-8 for string input?
             text = unicode(text, 'utf-8')
