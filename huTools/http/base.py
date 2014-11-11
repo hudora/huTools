@@ -76,7 +76,7 @@ def fetch2xx(url, content='', method='GET', credentials=None, headers=None, mult
     status, rheaders, rcontent = fetch(url, content, method, credentials, headers, multipart, ua, timeout,
                                        caching)
     if (status < 200) or (status >= 300):
-        raise exceptions.WrongStatusCode(u"%s: Fehler: %r" % (status, rcontent))
+        raise exceptions.WrongStatusCode(u"%s: Fehler: %r %r" % (status, rcontent, url))
     return status, rheaders, rcontent
 
 
@@ -86,7 +86,7 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
     status, rheaders, rcontent = fetch2xx(url, content, method, credentials, headers, multipart, ua, timeout,
                                           caching)
     if not rheaders.get('content-type', '').startswith('application/json'):
-        raise TypeError(u"Ungueltiger Content-Type %r: %r" % (rheaders.get('content-type', ''), rcontent))
+        raise TypeError(u"Ungueltiger Content-Type %r: %r %r" % (rheaders.get('content-type', ''), rcontent, url))
     return hujson2.loads(rcontent)
 
 
@@ -150,9 +150,12 @@ def add_query(url, params):
 def json_iterator(url, method='GET', content=None, credentials=None, datanodename='data'):
     """
     Rufe JSON-Daten ab.
- 
+
     Es wird die seitenweise Darstellung von gaetk.BasicHandler.paginate unterstützt.
     """
+
+    if content is None:
+        content = {}
 
     while True:
         try:
@@ -162,10 +165,10 @@ def json_iterator(url, method='GET', content=None, credentials=None, datanodenam
                                      credentials=credentials)
         except exceptions.WrongStatusCode:
             break
- 
+
         for element in response[datanodename]:
             yield element
- 
+
         if not response['more_objects']:
             break
         else:

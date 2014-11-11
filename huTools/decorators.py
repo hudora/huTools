@@ -34,7 +34,7 @@ def _getattr_(obj, name, default_thunk):
 def memoize(func, *args):
     """This decorator caches the results of the function it decorates.
 
-    See http://en.wikipedia.org/wiki/Memoisation for fare more than ypou ever want to know on that topic.
+    See http://en.wikipedia.org/wiki/Memoisation for for more than ypou ever want to know on that topic.
     """
 
     dic = _getattr_(func, "memoize_dic", dict)

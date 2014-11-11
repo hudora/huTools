@@ -35,7 +35,7 @@ def build_url(base, *args):
         tmp.append(components.pop(0))
         if args:
             tmp.append(str(args.pop(0)))
-    return os.path.join(*tmp)  # pylint: disable=W0142
+    return os.path.join(*tmp)
 
 
 class ClientException(Exception):
