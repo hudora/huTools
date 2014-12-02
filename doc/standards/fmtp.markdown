@@ -136,7 +136,7 @@ Deswegen empfiehlt es sich im Client [Exponential Backoff][16] zu implementieren
 Analyse
 -------
 
-[HTTP ist als Protokoll "des Web" ein weit verbreitetets Protokoll][17] und kann problemlos in allen relevanten Programmiersprachen wie Java, Python, Perl, Ruby, RPG/4 und bash genutzt werden. HTTP stellt die Binärfähigkeit sicher und wird hervorragend von Firewalls udn dergleichen unterstützt. Die Nutzung von HTTPS/[Transport Layer Security 1.1][17] stellt die Sicherheit und Vertraulichkeit der Datenübertragung sicher.
+[HTTP ist als Protokoll "des Web" ein weit verbreitetets Protokoll][17] und kann problemlos in allen relevanten Programmiersprachen wie Java, Python, Perl, Ruby, RPG/4 und bash genutzt werden. HTTP stellt die Binärfähigkeit sicher und wird hervorragend von Firewalls und dergleichen unterstützt. Die Nutzung von HTTPS/[Transport Layer Security 1.1][18] stellt die Sicherheit und Vertraulichkeit der Datenübertragung sicher. Der Grad der Authentizitätssicherstellung kann durch [Certificate Pinning][19] und TLS Client Certificates weiter gesteigert werden.
 
 Die Nachrichtenlieferung ist garantiert. Bei einem PUSH-Client ist dies der Fall, wenn der Client dsa Hochladen so lange versucht, bis er den Status `201`, `409`, oder `410` erhält.
 Bei einem Pull Client, darf der Client erst das `DELETE` Kommando senden, wenn er die Daten verarbeitet hat, um eine Nachrichtenlieferung zu garantieren.
@@ -162,4 +162,5 @@ Die normal von einem HTTP-Server geführten Protokolldateien reichen aus, um Nac
 [16]: http://dthain.blogspot.com/2009/02/exponential-backoff-in-distributed.html
 [17]: http://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol
 [18]: http://de.wikipedia.org/wiki/Transport_Layer_Security
+[19]: http://en.wikipedia.org/wiki/Transport_Layer_Security#Certificate_pinning
 
