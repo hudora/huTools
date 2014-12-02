@@ -20,14 +20,14 @@ File Upload just works::
 
 `fetch2xx()` throws a `WrongStatusCode` if the server returns a status code outside the 200-299 range.
 `fetch_json2xx()` in addition decodes a JSON reply and returns that.
+
+Created by Maximillian Dornseif on 2010-10-24.
+Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
-
-# Created by Maximillian Dornseif on 2010-10-24.
-# Copyright (c) 2010, 2011 HUDORA. All rights reserved.
-
+import cgi
 import logging
 
-from huTools import hujson
+from huTools import hujson2
 from huTools.http import exceptions
 from huTools.http import tools
 
@@ -66,7 +66,6 @@ def fetch(url, content='', method='GET', credentials=None, headers=None, multipa
     * `timeout` is the maximum number of seconds the request might take. This is advisory and may not be
        enforced.
     """
-
     return request(*tools.prepare_headers(url, content, method, credentials, headers, multipart, ua,
                                           timeout, caching))
 
@@ -77,7 +76,7 @@ def fetch2xx(url, content='', method='GET', credentials=None, headers=None, mult
     status, rheaders, rcontent = fetch(url, content, method, credentials, headers, multipart, ua, timeout,
                                        caching)
     if (status < 200) or (status >= 300):
-        raise exceptions.WrongStatusCode(u"%s: Fehler: %r" % (status, rcontent))
+        raise exceptions.WrongStatusCode(u"%s: Fehler: %r %r" % (status, rcontent, url))
     return status, rheaders, rcontent
 
 
@@ -87,8 +86,8 @@ def fetch_json2xx(url, content='', method='GET', credentials=None, headers=None,
     status, rheaders, rcontent = fetch2xx(url, content, method, credentials, headers, multipart, ua, timeout,
                                           caching)
     if not rheaders.get('content-type', '').startswith('application/json'):
-        raise TypeError(u"Ungueltiger Content-Type %r: %r" % (rheaders.get('content-type', ''), rcontent))
-    return hujson.loads(rcontent)
+        raise TypeError(u"Ungueltiger Content-Type %r: %r %r" % (rheaders.get('content-type', ''), rcontent, url))
+    return hujson2.loads(rcontent)
 
 
 def fetch_async(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
@@ -133,7 +132,7 @@ def fetch_json2xx_async(url, content='', method='GET', credentials=None, headers
             if rheaders.get('Content-Type', None) is not None:
                 raise TypeError(u"%s: Ungueltiger Content-Type %r: %r" % (url,
                                     rheaders.get('Content-Type', ''), rcontent))
-        return returnhandler(hujson.loads(rcontent))
+        return returnhandler(hujson2.loads(rcontent))
 
     return fetch_async(url, content, method, credentials, headers, multipart, ua, timeout,
                        decodingreturnhandler, caching)
@@ -146,3 +145,36 @@ def add_query(url, params):
     warnings.warn("huTools.http.add_query() is obsolete, use huTools.http.tools.add_query() instead",
                   DeprecationWarning, stacklevel=2)
     return huTools.http.tools.add_query(url, params)
+
+
+def json_iterator(url, method='GET', content=None, credentials=None, datanodename='data'):
+    """
+    Rufe JSON-Daten ab.
+
+    Es wird die seitenweise Darstellung von gaetk.BasicHandler.paginate unterstützt.
+    """
+
+    if content is None:
+        content = {}
+
+    while True:
+        try:
+            response = fetch_json2xx(url,
+                                     method=method,
+                                     content=content,
+                                     credentials=credentials)
+        except exceptions.WrongStatusCode:
+            break
+
+        for element in response[datanodename]:
+            yield element
+
+        if not response['more_objects']:
+            break
+        else:
+            cursor_information = response.get('next_qs', '')
+            tmp = cgi.parse_qs(cursor_information)
+            if content is None:
+                content = {}
+            for key, values in tmp.items():
+                content[key] = values[0]

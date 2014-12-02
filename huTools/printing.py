@@ -9,7 +9,7 @@ Created by Maximillian Dornseif on 2006-11-19. BSD Licensed.
 import os
 import os.path
 import subprocess
-
+import warnings
 
 __revision__ = "$Revision$"
 
@@ -20,6 +20,7 @@ def print_file(filename, jobname=None, printer=None, copies=1):
     if not os.path.exists(filename):
         return
 
+    warnings.warn("hutools.printing is deprecated", DeprecationWarning, stacklevel=2)
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))
@@ -29,6 +30,7 @@ def print_file(filename, jobname=None, printer=None, copies=1):
 
 def print_data(data, jobname=None, printer=None, copies=1, printserver='printserver.local.hudora.biz'):
     """Print a datastream."""
+    warnings.warn("hutools.printing is deprecated", DeprecationWarning, stacklevel=2)
     args = ['/usr/local/bin/lpr', '-#%d' % copies]
     if printer:
         args.append('-P%s' % str(printer))

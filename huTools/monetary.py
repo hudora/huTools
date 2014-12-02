@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-monetary.py -
+monetary.py
 
 Created by Christian Klein on 2010-03-25.
 Copyright (c) 2010 Christian Klein. All rights reserved.
@@ -30,24 +30,24 @@ def cent_to_euro(amount):
     return value.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
 
-def euro_to_cent(amount):
+def euro_to_cent(amount, coerce=int):
     """
     Rechnet einen Cent-Betrag nach Euro um, inklusive Rundung
 
     Es wird mit ROUND_HALF_DOWN gerundet.
 
     >>> euro_to_cent(1)
-    Decimal('100')
+    100
     >>> euro_to_cent('0.5')
-    Decimal('50')
+    50
     >>> euro_to_cent('0.01')
-    Decimal('1')
+    1
     >>> euro_to_cent('0.001')
-    Decimal('0')
+    0
     """
 
     value = decimal.Decimal(amount) * 100
-    return value.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_DOWN)
+    return coerce(value.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_DOWN))
 
 
 def netto(amount, tax=19):
@@ -74,7 +74,7 @@ def netto(amount, tax=19):
 
 def brutto(amount, tax=19):
     """
-    Mehrwertsteuer aus den Preisen reinrechnen.
+    Mehrwertsteuer zu den Preisen rechnen.
 
     >>> brutto(decimal.Decimal('1.00'))
     Decimal('1.19')
@@ -110,6 +110,15 @@ def tara(amount, tax=19):
         raise ValueError('tax must not be greater than 100%')
 
     return amount - netto(amount, tax=tax)
+
+
+def spanne(verkaufspreis, selbstkosten, tax=19):
+    """Berechne die Gewinnspanne für einen Verkaufspreis und einen Selbstkostenanteil"""
+
+    verkaufspreis = decimal.Decimal(str(verkaufspreis))
+    selbstkosten = decimal.Decimal(str(selbstkosten))
+    nettopreis = netto(verkaufspreis, tax=tax)
+    return (nettopreis - selbstkosten) / nettopreis
 
 
 if __name__ == "__main__":

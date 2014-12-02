@@ -9,7 +9,7 @@ Created by Maximillian Dornseif on 2010-09-27.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
 import email.utils
-import hujson
+import hujson2
 import logging
 import unittest
 import urllib2
@@ -31,6 +31,11 @@ def format_addr(address, encoding='utf-8'):
     localpart, domain = address.split('@', 1)
     address = u'@'.join((localpart, domain.encode('idna')))
     return email.utils.formataddr((realname, address))
+
+
+class PMUnprocessableEntity(Exception):
+    """Exception for non deliverable mails"""
+    pass
 
 
 def send_mail(message, api_key=None):
@@ -78,17 +83,16 @@ def send_mail(message, api_key=None):
     attachments = []
     for attachment in message.get('Attachments', []):
         attachments.append({
-                "Name": attachment['Name'],
-                "Content": attachment['Content'].encode('base64'),
-                "ContentType": attachment['ContentType'],
-                })
+            "Name": attachment['Name'],
+            "Content": attachment['Content'].encode('base64'),
+            "ContentType": attachment['ContentType']})
     if attachments:
         message['Attachments'] = attachments
 
     # Set up the url Request
     req = urllib2.Request(
         __POSTMARK_URL__ + 'email',
-        hujson.dumps(message),
+        hujson2.dumps(message),
         {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -110,11 +114,11 @@ def send_mail(message, api_key=None):
         elif err.code == 422:
             try:
                 jsontxt = err.read()
-                jsonobj = hujson.loads(jsontxt)
+                jsonobj = hujson2.loads(jsontxt)
                 desc = jsonobj['Message']
             except:
                 desc = 'Description not given'
-            raise RuntimeError('Unprocessable Entity: %s' % desc)
+            raise PMUnprocessableEntity(desc)
         elif err.code == 500:
             raise RuntimeError('Internal server error at Postmark. Admins have been alerted.', err)
     except urllib2.URLError, err:

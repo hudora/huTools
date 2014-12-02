@@ -139,7 +139,7 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
                  'User-Agent': '%s/huTools.http (gzip)' % ua}
     if headers:
         myheaders.update(headers)
-    if method == 'POST':
+    if method in ['POST', 'PUT']:
         if hasattr(content, 'items'):
             # we assume content is a dict which needs to be encoded
             # decide to use multipart/form-data encoding or application/x-www-form-urlencoded

@@ -13,7 +13,6 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 
 import huTools.http.tools
 import gzip
-import logging
 import os
 import zlib
 import StringIO
@@ -42,7 +41,7 @@ def request(url, method, content, headers, timeout=50, caching=None):
         if ret:
             return ret  # cache hit we are done
 
-    logging.debug('fetching %r %r', method, url)
+    #logging.debug('fetching %r %r', method, url)
     if method == 'GET':
         method = urlfetch.GET
     elif method == 'POST':
@@ -130,12 +129,12 @@ class AsyncHttpResult(object):
             # try to read result from memcache
             self._resultcache = memcache.get(self._cachekey)
             if self._resultcache:
-                logging.info("resultcache for during fetch %s:", self._cachekey)
+                # logging.debug("resultcache for during fetch %s:", self._cachekey)
                 return  # cache hit we are done
 
         # Cache miss or no cache wanted, do wait for the real http fetch
         self.rpc = create_rpc(deadline=timeout)
-        logging.info('fetching (async) %r %r', method, url)
+        #logging.info('fetching (async) %r %r', method, url)
         make_fetch_call(self.rpc, url, content, method, headers)
 
     def get_result(self):

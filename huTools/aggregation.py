@@ -4,7 +4,7 @@
 aggregation.py - implement things similar to "group by" in SQL.
 
 Created by Maximillian Dornseif on 2010-03-07.
-Copyright (c) 2010, 2011 HUDORA. All rights reserved.
+Copyright (c) 2010, 2011, 2012 HUDORA. All rights reserved.
 """
 
 
@@ -80,6 +80,11 @@ def _group_by_x(values, aggregationfunc, keyfunc):
         ret.append((key, aggregationfunc(values)))
     ret.sort()
     return ret
+
+
+def group_by_day(values, aggregationfunc):
+    """input should be [(datetime, stuff), ...]"""
+    return _group_by_x(values, aggregationfunc, lambda x: date_trunc('day', x))
 
 
 def group_by_week(values, aggregationfunc):
@@ -171,6 +176,21 @@ def objectsum(objektliste, feldliste):
     return objectfunc(sum, objektliste, feldliste)
 
 
+def prozent(prozentwert, grundwert):
+    """Kleiner Helfer zur robusten Prozentrechnung
+
+    >>> prozent(3, 6)
+    50.0
+    >>> prozent(3, 0)
+    0
+    >>> prozent(0, 6)
+    0
+    """
+    if not (prozentwert and grundwert):
+        return 0
+    return (float(prozentwert) / grundwert) * 100.0
+
+
 def percentages(sumdir, basis, feldliste):
     """Fügt zu `sumdir` die prozentsaetze der keys in `feldliste` zur basis `basis` zu.
 
@@ -183,7 +203,7 @@ def percentages(sumdir, basis, feldliste):
         feldliste = feldliste.split()
     for feldname in feldliste:
         if sumdir.get(basis, 0):
-            sumdir["%sp" % feldname] = float(sumdir[feldname]) / sumdir[basis] * 100
+            sumdir["%sp" % feldname] = prozent(sumdir[feldname], sumdir[basis])
         else:
             sumdir["%sp" % feldname] = None
 

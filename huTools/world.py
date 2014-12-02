@@ -15,56 +15,56 @@ Copyright (c) 2007, 2010 HUDORA GmbH. BSD Licensed.
 import doctest
 import sys
 
-COUNTRY_CHOICES = [('DE', 'Deutschland')] \
-                   + sorted([
+COUNTRY_CHOICES = [('DE', u'Deutschland'),
+                   ('AR', u'Argentinien'),
                    ('AT', u'Österreich'),
-                   ('CH', 'Schweiz'),
-                   ('BE', 'Belgien'),
-                   ('FR', 'Frankreich'),
-                   ('ES', 'Spanien'),
-                   ('NL', 'Niederlande'),
-                   ('IT', 'Italien'),
-                   ('GB', 'Grossbritannien'),
-                   ('LI', 'Liechtenstein'),
-                   ('LU', 'Luxemburg'),
-                   ('PT', 'Portugal'),
-                   ('CZ', 'Tschechien'),
-                   ('SE', 'Schweden'),
-                   ('GR', 'Griechenland'),
-                   ('DK', 'Daenemark'),
-                   ('US', 'USA'),
-                   ('AR', 'Argentinien'),
-                   ('HU', 'Ungarn'),
-                   ('LV', 'Lettland'),
-                   ('PL', 'Polen'),
-                   ('LT', 'Litauen'),
-                   ('SK', 'Slowakei'),
-                   ('HR', 'Kroatien'),
-                   ('IE', 'Irland'),
-                   ('SI', 'Slowenien'),
-                   ('EE', 'Estland'),
-                   ('BG', 'Bulgarien'),
-                   ('NO', 'Norwegen'),
-                   ('AU', 'Australien'),
-                   ('IL', 'Israel'),
-                   ('FI', 'Finnland'),
-                   ('RS', 'Republik Serbien'),
-                   ('ZA', u'Südafrika'),
+                   ('AU', u'Australien'),
+                   ('BE', u'Belgien'),
+                   ('BG', u'Bulgarien'),
+                   ('CH', u'Schweiz'),
+                   ('CY', u'Zypern'),
+                   ('CZ', u'Tschechien'),
+                   ('DK', u'Daenemark'),
+                   ('EE', u'Estland'),
+                   ('ES', u'Spanien'),
+                   ('FI', u'Finnland'),
+                   ('FR', u'Frankreich'),
+                   ('GB', u'Grossbritannien'),
+                   ('GR', u'Griechenland'),
+                   ('HR', u'Kroatien'),
+                   ('HR', u'Kroatien'),
+                   ('HU', u'Ungarn'),
+                   ('IE', u'Irland'),
+                   ('IL', u'Israel'),
+                   ('IT', u'Italien'),
+                   ('LI', u'Liechtenstein'),
+                   ('LT', u'Litauen'),
+                   ('LU', u'Luxemburg'),
+                   ('LV', u'Lettland'),
+                   ('MT', u'Malta'),
+                   ('NL', u'Niederlande'),
+                   ('NO', u'Norwegen'),
+                   ('PL', u'Polen'),
+                   ('PT', u'Portugal'),
                    ('RO', u'Rumänien'),
-                   ('MT', 'Malta'),
-                   ('CY', 'Zypern'),
-                  ])
+                   ('RS', u'Republik Serbien'),
+                   ('SE', u'Schweden'),
+                   ('SI', u'Slowenien'),
+                   ('SK', u'Slowakei'),
+                   ('US', u'USA'),
+                   ('ZA', u'Südafrika'),
+                   ]
 
 
 COUNTRIES = dict(COUNTRY_CHOICES).keys()
 
 
-# Stand: Mai 2009 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.
+# Stand: Juli 2013 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.
 EUROPEAN_UNION = ['BE', 'IT', 'RO', 'BG', 'LV', 'SE',
                   'DK', 'LT', 'SK', 'DE', 'LU', 'SI',
                   'EE', 'MT', 'ES', 'FI', 'NL', 'CZ',
                   'FR', 'AT', 'HU', 'GR', 'PL', 'GB',
-                  'IE', 'PT', 'CY']
+                  'IE', 'PT', 'CY', 'HR']
 
 
 def in_european_union(isoland):

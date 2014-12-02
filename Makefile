@@ -9,21 +9,19 @@ check:
 	-pylint -iy --max-line-length=110 --ignore=_httplib2 huTools
 
 test: dependencies
-	PYTHONPATH=. coverage run huTools/aggregation.py
-	#PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
-	PYTHONPATH=. coverage run huTools/NetStringIO.py
-	# I suspect we have timezone issues lurking here:
-	#PYTHONPATH=. coverage run huTools/calendar/formats.py
-	PYTHONPATH=. coverage run huTools/calendar/tools.py
-	PYTHONPATH=. coverage run huTools/calendar/workdays.py
-	PYTHONPATH=. coverage run huTools/checksumming.py
-	PYTHONPATH=. coverage run huTools/humessaging.py
-	PYTHONPATH=. coverage run huTools/luids.py
-	PYTHONPATH=. coverage run huTools/obfuscation.py
-	PYTHONPATH=. coverage run huTools/postmark.py
-	PYTHONPATH=. coverage run huTools/structured.py
-	PYTHONPATH=. coverage run huTools/unicode.py
-	#PYJASPER_SERVLET_URL=http://127.0.0.1:8000/pyJasper/jasper.py PYTHONPATH=. ./pythonenv/bin/python huTools/pyjasper.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/aggregation.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/http/test.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/NetStringIO.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/formats.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/tools.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/calendar/workdays.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/checksumming.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/humessaging.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/luids.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/obfuscation.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/postmark.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/structured.py
+	PYTHONPATH=. ./pythonenv/bin/python huTools/unicode.py
 
 upload:
 	rm -Rf build dist

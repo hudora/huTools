@@ -11,6 +11,7 @@ import datetime
 import doctest
 import unittest
 import sys
+from huTools.calendar.formats import convert_to_date
 from huTools.decorators import memoize
 
 
@@ -87,6 +88,15 @@ def workdays(start, end):
     >>> workdays(datetime.date(2007, 1, 28), datetime.date(2007,  1,  29)) # Su - Mo
     0
     """
+    start = convert_to_date(start)
+    end = convert_to_date(end)
+    if start > end:
+        return -1 * _workdays(end, start)
+    else:
+        return _workdays(start, end)
+
+def _workdays(start, end):
+    "Helper for `workdays()`."
 
     if start > end:
         raise ValueError("can't handle  negative timespan! %r > %r" % (start, end))

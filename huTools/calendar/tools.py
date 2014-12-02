@@ -4,7 +4,7 @@
 tools.py - Functions for date manipulation
 
 Created by Christian Klein on 2010-04-22.
-Copyright (c) 2010 HUDORA GmbH. All rights reserved.
+Copyright (c) 2010, 2012 HUDORA GmbH. All rights reserved.
 """
 
 import calendar
@@ -85,6 +85,19 @@ def get_week(date):
     return week, first_monday.year
 
 
+def get_yearspan(date):
+    """Gibt den ersten und letzten Tag des Jahres zurück in dem `date` liegt
+
+    >>> get_yearspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 1, 1), datetime.date(1980, 12, 31))
+    >>> get_yearspan(datetime.date(1986, 3, 11))
+    (datetime.date(1986, 1, 1), datetime.date(1986, 12, 31))
+    """
+    startdate = date_trunc('year', date)
+    enddate = type(startdate)(startdate.year, 12, 31)
+    return startdate, enddate
+
+
 def get_tertialspan(date):
     """Gibt den ersten und den letzten Tag des Tertials zurück in dem `date` liegt
 
@@ -109,6 +122,18 @@ def get_quarterspan(date):
     return startdate, enddate
 
 
+def get_monthspan(date):
+    """Gibt den ersten und letzten Tag des Monats zurück in dem `date` liegt
+
+    >>> get_monthspan(datetime.date(1980, 5, 4))
+    (datetime.date(1980, 5, 1), datetime.date(1980, 5, 31))
+    """
+    startdate = date_trunc('month', date)
+    _, days = calendar.monthrange(startdate.year, startdate.month)
+    enddate = type(startdate)(startdate.year, startdate.month, days)
+    return startdate, enddate
+
+
 def get_weekspan(date):
     """Gibt den ersten und den letzten Tag der Woche, in der `date` liegt, zurück.
 
@@ -122,16 +147,19 @@ def get_weekspan(date):
     return startdate, enddate
 
 
-def get_monthspan(date):
-    """Gibt den ersten und letzten Tag des Monats zurück in dem `date` liegt
+def tertial_add(date, tertials):
+    """Add number of tertials to date"""
 
-    >>> get_monthspan(datetime.date(1980, 5, 4))
-    (datetime.date(1980, 5, 1), datetime.date(1980, 5, 31))
-    """
-    startdate = date_trunc('month', date)
-    _, days = calendar.monthrange(startdate.year, startdate.month)
-    enddate = type(startdate)(startdate.year, startdate.month, days)
-    return startdate, enddate
+    date = date_trunc('tertial', date)
+    month = date.month + tertials * 4
+    return date.replace(year=date.year + month // 12, month=month % 12)
+
+
+def month_add(date, months):
+    """Add number of months to date"""
+
+    year, month = divmod(date.year * 12 + date.month + months, 12)
+    return date.replace(year=year, month=month)
 
 
 class DateTruncTestCase(unittest.TestCase):
@@ -477,7 +505,6 @@ class TertialspanTestCase(unittest.TestCase):
     def test_all(self):
         """Tests the whole year"""
 
-        # year = 1980  #unused
         date = datetime.date(1980, 1, 1)
         while date < datetime.date(1981, 1, 1):
             if date.month <= 4:
@@ -494,6 +521,62 @@ class TertialspanTestCase(unittest.TestCase):
             self.assertTrue(enddate <= maxdate)
 
             date += datetime.timedelta(days=1)
+
+
+class TertialAddTestCase(unittest.TestCase):
+    """Unittests for tertial_add"""
+
+    def test_date(self):
+        """Tests with datatype datetime.date"""
+
+        date = datetime.date(1982, 11, 7)
+        self.assertEqual(tertial_add(date, -1), datetime.date(1982, 5, 1))
+        self.assertEqual(tertial_add(date, 0), datetime.date(1982, 9, 1))
+        self.assertEqual(tertial_add(date, 1), datetime.date(1983, 1, 1))
+        self.assertEqual(tertial_add(date, 2), datetime.date(1983, 5, 1))
+        self.assertEqual(tertial_add(date, 3), datetime.date(1983, 9, 1))
+        self.assertEqual(tertial_add(date, 4), datetime.date(1984, 1, 1))
+        self.assertEqual(tertial_add(date, 91), date_trunc('tertial', datetime.date(2013, 4, 20)))
+
+    def test_datetime(self):
+        """Tests with datatype datetime.datetime"""
+
+        date = datetime.datetime(1982, 11, 7)
+        self.assertEqual(tertial_add(date, -1), datetime.datetime(1982, 5, 1))
+        self.assertEqual(tertial_add(date, 0), datetime.datetime(1982, 9, 1))
+        self.assertEqual(tertial_add(date, 1), datetime.datetime(1983, 1, 1))
+        self.assertEqual(tertial_add(date, 2), datetime.datetime(1983, 5, 1))
+        self.assertEqual(tertial_add(date, 3), datetime.datetime(1983, 9, 1))
+        self.assertEqual(tertial_add(date, 4), datetime.datetime(1984, 1, 1))
+        self.assertEqual(tertial_add(date, 91), date_trunc('tertial', datetime.datetime(2013, 4, 20)))
+
+
+class MonthAddTestCase(unittest.TestCase):
+    """Unittests for month_add"""
+
+    def test_date(self):
+        """Tests with datatype datetime.date"""
+
+        date = datetime.date(1986, 3, 9)
+        self.assertEqual(month_add(date, -12), datetime.date(1985, 3, 9))
+        self.assertEqual(month_add(date, -1), datetime.date(1986, 2, 9))
+        self.assertEqual(month_add(date, 0), datetime.date(1986, 3, 9))
+        self.assertEqual(month_add(date, 1), datetime.date(1986, 4, 9))
+        self.assertEqual(month_add(date, 2), datetime.date(1986, 5, 9))
+        self.assertEqual(month_add(date, 3), datetime.date(1986, 6, 9))
+        self.assertEqual(month_add(date, 12), datetime.date(1987, 3, 9))
+
+    def test_datetime(self):
+        """Tests with datatype datetime.datetime"""
+
+        date = datetime.datetime(1986, 3, 9)
+        self.assertEqual(month_add(date, -12), datetime.datetime(1985, 3, 9))
+        self.assertEqual(month_add(date, -1), datetime.datetime(1986, 2, 9))
+        self.assertEqual(month_add(date, 0), datetime.datetime(1986, 3, 9))
+        self.assertEqual(month_add(date, 1), datetime.datetime(1986, 4, 9))
+        self.assertEqual(month_add(date, 2), datetime.datetime(1986, 5, 9))
+        self.assertEqual(month_add(date, 3), datetime.datetime(1986, 6, 9))
+        self.assertEqual(month_add(date, 12), datetime.datetime(1987, 3, 9))
 
 
 if __name__ == "__main__":
