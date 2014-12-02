@@ -1,34 +1,51 @@
 # Very Simple Order Protocol Version 3a
 
-Das *Very Simple Order Protocol* ist ein Weg, Lieferaufträge an HUDORA zu senden. In der Regel ist es auf Dreiecksgeschäfte gerichtet, wo unsere Kunden nicht nur die Ware bei uns kaufen, sondern als zusätzliche Dienstleistung das Fullfillment Endverbrauchern gegenüber. Das Protokoll baut auf dem [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown) auf.
+Das *Very Simple Order Protocol* ist ein Weg, Lieferaufträge an HUDORA zu senden. In der Regel ist es auf Dreiecksgeschäfte gerichtet, wo unsere Kunden nicht nur die Ware bei uns kaufen, sondern als zusätzliche Dienstleistung das Fullfillment Endverbrauchern gegenüber ("Dropshipping"). Das Protokoll baut auf dem [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown) auf.
 
-Das *Very Simple Order Protocol* wurde entwickelt, um in möglichst vielen Umgebungan abbildbar zu sein. Das bevorzugte Format ist jedoch XML.
+Das *Very Simple Order Protocol* wurde entwickelt, um in möglichst vielen Umgebungan abbildbar zu sein. Das bevorzugte Format ist jedoch XML oder JSON. Der bevorzugte Transportweg ist [FMTP](http://github.com/hudora/huTools/blob/master/doc/standards/fmtp.markdown).
 
-## Required Fields 
+
+## Pflichtfelder
 
 * Pflichtfelder des [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown)
+ * __name1__ - Primärer Name, der den Empfänger identifiziert
+ * __name2__ - weitere Informationen zum Empfänger. Muss vorhanden sien, kann aber leer bleiben
+ * __strasse__ - addressing information, usually the street address. might be empty.
+ * __land__ - Empfängerland (ISO 3166, 2-letter country code)
+ * __plz__ - Postleitzahl, kann leer bleiben (z.B.. in Irland).
+ * __ort__ - Stadt des Empfängers
 * __guid__ - Eindeutiger ID des Vorgangs, darf niemals doppelt verwendet werden - der inhalt des Feldes ist beliebig, Zeitstempel+Auftragsnummer funktionieren z.B. recht gut als GUID.
 * __orderline/guid__ - Eindeutiger ID der Position. GUID des Auftrags + Positionsnummer funktionieren ganz gut.
 * __orderline/menge__ - Menge des durch *ean* bezeichneten Artikels, die versendet werden soll.
-* __orderline/ean__ - EAN des zu versendenen Artikels. 
+* __orderline/ean__ - EAN des zu versendenen Artikels.
 
-## Optional Fields 
 
-* optional fields of the [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown) 
-* __kundenauftragsnr__ - Freitext, den der Kunde bei der Bestellung mit angegeben hat, 20 Zeichen.
-* __infotext_kunde___ - Freitext, der sich an den Warenempfänger richtet. Kann z.B. auf einem Lieferschein angedruckt werden. Der Umbruch des Textes kann durch das Backendsystem beliebig erfolgen, deshalb sollte der Text keine Zeilenumbrüche beinhalten.
-* __orderline/infotext_kunde___ - Freitext, der sich an den Warenempfänger richtet. Wird nicht bei allen Versandwegen angedruckt.
-* *wunschdatum_von** und **wunschdatum_bis** Timestamps im [RfC 3339](http://www.ietf.org/rfc/rfc3339) format. Dieses Feld kann nur nach gesonderter Vereinbarung befüllt werden. Die Verwendung des Feldes zieht zusätzliche Kosten nach sich.
-* __dokumente__ - Eine Liste von PDFs, die ausgedruckt und mit der Ware versendet werden sollen. Details siehe untern. 
+## Optionale Felder
 
-## Beispiele 
+* optionale Felder des [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown)
+ * __tel__ - Telefonnummer für die Anlieferung ([DIN 5008][6] or [E.123][7])
+ * __fax__ - Faxnummer für die Anlieferung ([DIN 5008][6] or [E.123][7])
+ * __mail__ - E-Mail address relevant to the address/delivery
+ * [GLN][8], die eindeutige Nummer der Firma/Lieferadresse [vergeben von GS1][9]
+* __kundenauftragsnr__ - Freitext, den der Kunde bei der Bestellung mit angegeben kann, 20 Zeichen. Erscheint auf allen weiteren Belegen.
+* __infotext_kunde__ - Freitext, der sich an den Warenempfänger richtet. Kann z.B. auf einem Lieferschein angedruckt werden. Der Umbruch des Textes kann durch das Backendsystem beliebig erfolgen, deshalb sollte der Text keine Zeilenumbrüche beinhalten. Sollte nciht luanger als 256 Zeichen sein.
+* __orderline/infotext_kunde__ - Freitext, der sich an den Warenempfänger richtet. Wird nicht bei allen Versandwegen angedruckt.
+* **wunschdatum_von** und **wunschdatum_bis** Timestamps im [RfC 3339](http://www.ietf.org/rfc/rfc3339) format. Dieses Feld kann nur nach gesonderter Vereinbarung befüllt werden. Die Verwendung des Feldes zieht zusätzliche Kosten nach sich.
+* __dokumente__ - Eine Liste von PDFs, die ausgedruckt und mit der Ware versendet werden sollen. Details siehe untern.
 
-### XML 
+[6]: http://de.wikipedia.org/wiki/Rufnummer#Schreibweise_in_Deutschland_und_.C3.96sterreich
+[7]: http://en.wikipedia.org/wiki/E.123
+[8]: http://en.wikipedia.org/wiki/Global_Location_Number
+[9]: http://www.gs1.org/glnrules/storyboard/
 
-Dieses Beispiel codiert das Order Protocol als  [Plain Old XML (POX)](http://en.wikipedia.org/wiki/Plain_Old_XML). Bei der Verpackung in XML können mehrere Bestellungen in einer einzigen Datei transportiert werden, indem die `<order>` Elemente als Kinder eines `<orders>` Elementes angeordnet werden. *Änderung zu Version 1*:Das Vorhandensein eines `<orders>` Elementes ist verpflichtend, auch wenn nur ein `<order>` Element übertragen wird.
+## Beispiele
+
+### XML
+
+Dieses Beispiel codiert das Order Protocol als  [Plain Old XML (POX)](http://en.wikipedia.org/wiki/Plain_Old_XML). Bei der Verpackung in XML können mehrere Bestellungen in einer einzigen Datei transportiert werden, indem die `<order>` Elemente als Kinder eines `<orders>` Elementes angeordnet werden. Das Vorhandensein eines `<orders>` Elementes ist verpflichtend, auch wenn nur ein `<order>` Element übertragen wird.
 
     <orders>
-      <order> 
+      <order>
         <guid>2008-08-21T15:16:17-id1222</guid>
         <name1>HUDORA GmbH</name1>
         <name2>Abt. Cybernetics</name2>
@@ -60,43 +77,41 @@ Dieses Beispiel codiert das Order Protocol als  [Plain Old XML (POX)](http://en.
       </order>
     </orders>
 
-### PDF Dateien in XML 
+#### PDF Dateien in XML
 
-Per XML können keine oder mehrere PDF-Dateien mit übergeben werden. Dazu kann ein `<dokumente>` Element verwendet werden, in dem ein oder mehrere `<file>` Elemente PDF Dateien kodieren. Jedes File Element muss ein Attribut contenttype="application/pdf" haben und ein name Attribut. Das Name Attribut darf nur die Zeichen A-Za-z0-9._- beinhalten. Innerhalb einer `<order>` darf kein {{name}}} Attribut doppelt vorkommen.
+Per XML können keine oder mehrere PDF-Dateien mit übergeben werden. Dazu kann ein `<dokumente>` Element verwendet werden, in dem ein oder mehrere `<file>` Elemente PDF Dateien kodieren. Jedes File Element muss ein Attribut `contenttype="application/pdf"` haben und ein `name` Attribut. Das Name Attribut darf nur die Zeichen A-Za-z0-9._- beinhalten. Innerhalb einer `<order>` darf kein `name` Attribut doppelt vorkommen.
 
-Die Daten selbst werden BASE-64 kodiert. Der Inhalt sollte kompatibel zu PDF-1.3 und nicht grösser als 1 MB sein. Es dürfen maximal 5 Dateien pro `<order>` übertragen werden.
+Die Daten selbst werden BASE-64 kodiert. Der Inhalt sollte kompatibel zu PDF-1.3 / ISO 15930-2001 und nicht grösser als 1 MB sein. Es dürfen maximal 5 Dateien pro `<order>` übertragen werden.
 
-Sollten Sie nicht in der Lage sein, Bese64 Kodierung zu erzeugen, können die PDF Dateien auch zusammen mit der XML Datei in einem ZIP-File übertragen werden. Dabei darf das ZIP File keine Unterordner enthalten. Das name Attribut gibt dann den Dateinamen des PDFs im Zipfile an und die Base64 kodierten innerhalb der `<file>` Elemente können weggelassen werden.
 
-### CSV 
+### CSV
 
-Das Order Protocol kann zur not auch als CSV kodiert werden. Gennerell ist jedoch davon abzuraten, weil es zu Kodierungsproblemen mit Umlauten und Sonderzeichen, wie ";:`,.'| kommen kann. Weiterhin kann nur eine Orderline pro Auftrag per CSV übertragen werden.
+Das Order Protocol kann *zur Not* auch als CSV kodiert werden. Gennerell ist jedoch davon abzuraten, weil es zu Kodierungsproblemen mit Umlauten und Sonderzeichen, wie ";:`,.'| kommen kann. Weiterhin kann nur eine Orderline pro Auftrag per CSV übertragen werden.
 
-Wenn doch CSV verwendet wird, ist UTF-8 Kodierung zu verwenden. Das Trennzeichen ist ,, Quoting erfolgt durch ". Soll das Quotingzeichen in einem String vorkommen ist es zu verdoppeln. Zeilen werden durch \r\n (Hex: 0a0d) beendet. Die erste Zeile muss eine Formatbeschreibung beinhalten und mit # beginnen. Alle weiteren Zeilen, die mit # beginnen, werden ignoriert. Wir verwenden den  [Python CSV Parser](http://docs.python.org/lib/module-csv.html) zum Einlesen der Daten.
+Wenn doch CSV verwendet wird, ist UTF-8 Kodierung zu verwenden. Das Trennzeichen ist `,` Quoting erfolgt durch `"`. Soll das Quotingzeichen in einem String vorkommen ist es zu verdoppeln. Zeilen werden durch \r\n (Hex: 0a0d) beendet. Die erste Zeile muss eine Formatbeschreibung beinhalten und mit # beginnen. Alle weiteren Zeilen, die mit # beginnen, werden ignoriert. Wir verwenden den [Python CSV Parser](http://docs.python.org/lib/module-csv.html) zum Einlesen der Daten.
 
     # guid,name1,name2,name3,strasse,land,plz,ort,tel,fax,mobil,email,menge,ean,kundenauftragsnr,infotext_kunde
     "2008-08-21T15:16:17-id1222","HUDORA GmbH","Abt. Cybernetics","","Jägerwald 13","DE","42897","Remscheid","+49 2191 60912 0","","","nobody@hudora.de","1","4005998651698","XQ03244231","Lieferung im Auftrag der ""Kawuschel Sportausrüstung AG"""
 
-## Unterscheide zu Version 1 
+## Unterscheide zu Version 1
 
 * Das guid Feld ist hinzugekommen
-* das `<orders>` Element in der XML Repräsentation wurde hinzugefügt. 
+* das `<orders>` Element in der XML Repräsentation wurde hinzugefügt.
 
-## Unterscheide zu Version 2 
+## Unterscheide zu Version 2
 
 * es muss ein oder mehrere `<orderline>` Elemente geben.
 * orderline hat guid und infotext_kunde felder hinzubekommen
-* `<wunschtermin>` 
+* `<wunschtermin>`
 
 ## Unterscheide zu Version 3
 
 Version 3a hat `<wunschtermin>` in `<wunschdatum_von>` und `<wunschdatum_bis>` umbenannt.
 
-## Siehe auch 
+## Siehe auch
 
 * [AddressProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/address_protocol.markdown)
 * [VerySimpleStatusProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/verysimplestatusprotocol.markdown)
 * [LieferungProtocol](http://github.com/hudora/huTools/blob/master/doc/standards/lieferungprotocol.markdown)
 * UBL [Ordering](http://docs.oasis-open.org/ubl/cs-UBL-2.0/UBL-2.0.html#d0e1620)
-* EDIFACT [ORDERS](http://www.edifactory.de/msginfo.php?s=D08A&m=ORDERS) 
-
+* EDIFACT [ORDERS](http://www.edifactory.de/msginfo.php?s=D08A&m=ORDERS)
