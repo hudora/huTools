@@ -5,7 +5,7 @@ HUDORA ist sehr interessiert an elektronischen Geschäftsprozessen. Wir bieten u
 
 ## HUDORA EDIhub
 
-EDIhub ist die Plattform zum Austausch elektronischer Geschäftsvorfälle bei HUDORA. EDIhub unterstützt Legacy-EDIFACT/EANCOM Nachrichten, bevorzugt aber den NAchrichtenaustausch über moderne Formate und Protokolle von PDF über E-Mail bis zu XML über HTTPS. Darüber hinaus beitet EDIhub eine Plattform zum Einsehen von Produktstammdaten udn Werbedaten, wie zB Bildern. In EDIhub können Rechungen, Lieferscheine udn Auftragsbestätigungen eingesehen und herunter geladen werden.
+EDIhub ist die Plattform zum Austausch elektronischer Geschäftsvorfälle bei HUDORA. EDIhub unterstützt Legacy-EDIFACT/EANCOM Nachrichten, bevorzugt aber den NAchrichtenaustausch über moderne Formate und Protokolle von PDF über E-Mail bis zu XML über HTTPS. Darüber hinaus beitet EDIhub eine Plattform zum Einsehen von Produktstammdaten udn Werbedaten, wie zB Bildern. In EDIhub können Rechungen, Lieferscheine und Auftragseingangsbestätigungen eingesehen und herunter geladen werden.
 
 
 ## HUDORA Express
