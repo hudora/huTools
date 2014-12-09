@@ -54,7 +54,8 @@ def request(url, method, content, headers, timeout=50, caching=None):
         method = urlfetch.HEAD
     headers['User-Agent'] = headers.get('User-Agent', '') + ' (urlfetch)'
     try:
-        result = urlfetch.fetch(url=url, deadline=timeout, payload=content, method=method, headers=headers)
+        result = urlfetch.fetch(url=url, deadline=timeout, payload=content,
+                                method=method, headers=headers)
     except urlfetch_errors.DownloadError, exception:
         # App Engine uses the same exception class for several types of errors.
         # It seems that the only mean to distinguish timeouts from other errors
@@ -65,6 +66,8 @@ def request(url, method, content, headers, timeout=50, caching=None):
         else:
             raise
     handle_compression(result)
+    if hasattr(result, 'final_url'):
+        result.headers['X-huTools-final_url'] = result.final_url
     ret = (int(result.status_code), result.headers, result.content)
     if caching:
         memcache.set(cachekey, ret, caching)
