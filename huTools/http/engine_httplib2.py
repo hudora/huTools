@@ -14,15 +14,14 @@ _http = None
 
 
 def request(url, method, content, headers, timeout=50, caching=None):
-    """Does a HTTP Request via httplib2 service."""
-
+    """Does a HTTP Request via httplib2."""
     global _http
     if not _http:
         import huTools.http._httplib2
         _http = huTools.http._httplib2.Http(timeout=timeout)
 
     headers['User-Agent'] = headers.get('User-Agent', '') + ' (httplib2)'
-
+    _http.clear_credentials()
     # Do not re-use the global Http object after a timeout.
     # To achieve this, it is set to None.
     try:
