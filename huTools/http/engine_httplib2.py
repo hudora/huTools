@@ -22,6 +22,7 @@ def request(url, method, content, headers, timeout=50, caching=None):
 
     headers['User-Agent'] = headers.get('User-Agent', '') + ' (httplib2)'
     _http.clear_credentials()
+    _http.forward_authorization_headers = True
     # Do not re-use the global Http object after a timeout.
     # To achieve this, it is set to None.
     try:
