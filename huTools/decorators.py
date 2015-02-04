@@ -4,15 +4,16 @@
 decorators.py
 
 Created by Maximillian Dornseif on 2007-05-10.
-Copyright (c) 2007 HUDORA GmbH. All rights reserved.
+Copyright (c) 2007, 2015 HUDORA GmbH. All rights reserved.
 """
 import cPickle as pickle
 import functools
 import hashlib
+import time
+import threading
 from _decorator import decorator
 from collections import namedtuple
 from functools import update_wrapper
-from threading import RLock
 
 
 # TODO: können wir _decorator durch "from functools import wraps" ersetzen?
@@ -27,24 +28,70 @@ def _getattr_(obj, name, default_thunk):
         setattr(obj, name, default)
         return default
 
-# from http://www.phyast.pitt.edu/~micheles/python/documentation.html
+# from https://github.com/carlsverre/wraptor/blob/master/wraptor/decorators/memoize.py
 
-
-@decorator
-def memoize(func, *args):
-    """This decorator caches the results of the function it decorates.
-
-    See http://en.wikipedia.org/wiki/Memoisation for for more than ypou ever want to know on that topic.
+class memoize(object):
+    """ Memoize the results of a function.  Supports an optional timeout
+        for automatic cache expiration.
+        If the optional manual_flush argument is True, a function called
+        "flush_cache" will be added to the wrapped function.  When
+        called, it will remove all the timed out values from the cache.
+        If you use this decorator as a class method, you must specify
+        instance_method=True otherwise you will have a single shared
+        cache for every instance of your class.
+        This decorator is thread safe.
     """
+    def __init__(self, timeout=None, manual_flush=False, instance_method=False):
+        self.timeout = timeout
+        self.manual_flush = manual_flush
+        self.instance_method = instance_method
+        self.cache = {}
+        self.cache_lock = threading.RLock()
 
-    dic = _getattr_(func, "memoize_dic", dict)
-    # memoize_dic is created at the first call
-    if args in dic:
-        return dic[args]
-    else:
-        result = func(*args)
-        dic[args] = result
-        return result
+    def __call__(self, fn):
+        if self.instance_method:
+            @functools.wraps(fn)
+            def rewrite_instance_method(instance, *args, **kwargs):
+                # the first time we are called we overwrite the method
+                # on the class instance with a new memoize instance
+                if hasattr(instance, fn.__name__):
+                    bound_fn = fn.__get__(instance, instance.__class__)
+                    new_memoizer = memoize(self.timeout, self.manual_flush)(bound_fn)
+                    setattr(instance, fn.__name__, new_memoizer)
+                    return getattr(instance, fn.__name__)(*args, **kwargs)
+
+            return rewrite_instance_method
+
+        def flush_cache():
+            with self.cache_lock:
+                for key in self.cache.keys():
+                    if (time.time() - self.cache[key][1]) > self.timeout:
+                        del(self.cache[key])
+
+        @functools.wraps(fn)
+        def wrapped(*args, **kwargs):
+            kw = kwargs.items()
+            kw.sort()
+            key_str = repr((args, kw))
+            key = hashlib.md5(key_str).hexdigest()
+
+            with self.cache_lock:
+                try:
+                    result, cache_time = self.cache[key]
+                    if self.timeout is not None and (time.time() - cache_time) > self.timeout:
+                        raise KeyError
+                except KeyError:
+                    result, _ = self.cache[key] = (fn(*args, **kwargs), time.time())
+
+            if not self.manual_flush and self.timeout is not None:
+                flush_cache()
+
+            return result
+
+        if self.manual_flush:
+            wrapped.flush_cache = flush_cache
+
+        return wrapped
 
 
 # from somewhere on the internet
@@ -150,7 +197,7 @@ def lru_cache(maxsize=100, typed=False):
         make_key = _make_key
         cache_get = cache.get           # bound method to lookup key or return None
         _len = len                      # localize the global len() function
-        lock = RLock()                  # because linkedlist updates aren't threadsafe
+        lock = threading.RLock()                  # because linkedlist updates aren't threadsafe
         root = []                       # root of the circular doubly linked list
         root[:] = [root, root, None, None]      # initialize by pointing to self
         nonlocal_root = [root]                  # make updateable non-locally
