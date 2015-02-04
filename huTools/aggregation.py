@@ -65,6 +65,13 @@ def robustmax(data):
     return None
 
 
+def robustdiv(a, b):
+    """Like / but handles 0."""
+    if b:
+        return a / b
+    return 0
+
+
 def _group_by_x(values, aggregationfunc, keyfunc):
     """input should be [(datetime, stuff), ...]"""
 

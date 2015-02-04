@@ -9,7 +9,9 @@ parts based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
 """
 
 import copy
+import logging
 import sys
+import time
 import threading
 
 
@@ -30,6 +32,7 @@ class Future:
         self.__result = None
         self.__status = 'working'
         self.__excpt = None
+        self.__namecache = func.__name__
 
         self.__Cond = threading.Condition()   # Notify on this Condition when result is ready
 
@@ -42,6 +45,7 @@ class Future:
         return '<Future at ' + hex(id(self)) + ':' + self.__status + '>'
 
     def __call__(self):
+        waitstart = time.time()
         self.__Cond.acquire()
         while self.__done is False:
             self.__Cond.wait()
@@ -50,6 +54,9 @@ class Future:
         ret = copy.deepcopy(self.__result)
         if self.__excpt:
             raise self.__excpt[0], self.__excpt[1], self.__excpt[2]
+        waitend = time.time()
+        if waitend - waitstart > 1:
+            logging.debug("waited %.1f s for %s", waitend - waitstart, self.__namecache)
         return ret
 
     def Wrapper(self, func, *args, **kwargs):

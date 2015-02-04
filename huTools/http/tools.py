@@ -6,8 +6,7 @@ tools.py - various helpers for HTTP access
 Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
-
-import cgi
+import base64
 import poster_encode
 import urllib
 import urlparse
@@ -125,7 +124,7 @@ def add_query(url, params):
     """
 
     url_parts = list(urlparse.urlparse(url))
-    query = dict(cgi.parse_qsl(url_parts[4]))
+    query = dict(urlparse.parse_qsl(url_parts[4]))
     query.update(params)
     url_parts[4] = urllib.urlencode(query, doseq=1)
     return urlparse.urlunparse(url_parts)
@@ -146,6 +145,7 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
             for val in content.values():
                 if hasattr(val, 'read'):  # file() or StringIO()
                     multipart = True
+                    break
             if multipart:
                 datagen, mp_headers = poster_encode.multipart_encode(content)
                 myheaders.update(mp_headers)
@@ -157,7 +157,7 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
         # url parmater encoding
         if hasattr(content, 'items'):
             scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
-            qdict = cgi.parse_qs(query)
+            qdict = urlparse.parse_qs(query)
             # ugly Unicode issues, see http://bugs.python.org/issue1712522
             qdict.update(content)
             query = urlencode(qdict)
@@ -168,11 +168,5 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
         myheaders[key] = str(val)
     # add authentication
     if credentials and not 'Authorization' in myheaders.keys():
-        # ''.encode('b64') zerbricht lange Strings (also bei langen Credentials)
-        # in mehrere Zeilen, was einer Verwendung als Wert im HTTP-Header extrem
-        # abtraeglich ist. Aufgetaucht ist das Problem bei den Login-Daten fuer
-        # den Import der Shopify-Auftraege aus dem hySkate-Shop. Zur Loesung werden
-        # deshalb alle moeglichen Einzelzeilen wieder zu einer Zeile zusammengezogen.
-        authheader = 'Basic %s' % ''.join(credentials.encode('base64').strip().split())
-        myheaders["Authorization"] = authheader
+        myheaders["Authorization"] = 'Basic %s' % base64.b64encode(credentials)
     return url, method, content, myheaders, timeout, caching
