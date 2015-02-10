@@ -63,7 +63,7 @@ def easter_related_holidays(year):
     return easter_days
 
 
-@memoize
+@memoize(120)
 def holidays_german(start, end):
     """Returns a list of dates between start and end that are holidays."""
     hdays = []
@@ -123,7 +123,7 @@ def _workdays(start, end):
     return days
 
 
-@memoize
+@memoize(120)
 def workdays_german(start, end):
     """Calculates the number of working days between two given dates while considering german holidays."""
 
@@ -161,7 +161,7 @@ def is_workday_german(day):
     return day not in holidays_german(day, day)
 
 
-@memoize
+@memoize(120)
 def next_workday_german(startday):
     """Returns the next workday after startday.
 
@@ -175,7 +175,7 @@ def next_workday_german(startday):
     return next_day
 
 
-@memoize
+@memoize(120)
 def previous_workday_german(startday):
     """Returns the workday before startday.
 
