@@ -3,7 +3,7 @@
 structured.py - handle structured data/dicts/objects
 
 Created by Maximillian Dornseif on 2009-12-27.
-Copyright (c) 2009, 2010, 2011 HUDORA. All rights reserved.
+Copyright (c) 2009-2011, 2015 HUDORA. All rights reserved.
 """
 import xml.etree.cElementTree as ET
 from StringIO import StringIO
@@ -197,7 +197,7 @@ def make_struct(obj, default=None, nodefault=False):
         # handle recursive sub-dicts and lists
         for key, val in obj.iteritems():
             if isinstance(val, (basestring, int, long)):
-                # optimisation saving a functioncall
+                # optimisation saving a function call
                 setattr(struc, key, val)
             else:
                 setattr(struc, key, make_struct(val, default, nodefault))
@@ -207,11 +207,11 @@ def make_struct(obj, default=None, nodefault=False):
         ret = []
         for val in obj:
             if isinstance(val, (basestring, int, long)):
+                # optimisation saving a function call
                 ret.append(val)
             else:
                 ret.append(make_struct(val, default, nodefault))
         return ret
-        #return [make_struct(val, default, nodefault) for val in obj]
     else:
         return obj
 
