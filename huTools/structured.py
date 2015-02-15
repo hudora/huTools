@@ -189,18 +189,29 @@ def make_struct(obj, default=None, nodefault=False):
     >>> obj.items()
     [('foo', [<Struct: {'bar': 'baz'}>])]
     """
-    if type(obj) == type(Struct):
+    if isinstance(obj, Struct):
         return obj
-    if (not hasattr(obj, '__dict__')) and hasattr(obj, 'iterkeys'):
+    if hasattr(obj, 'iteritems') and (not hasattr(obj, '__dict__')):
         # this should be a dict
         struc = Struct(obj, default, nodefault)
-        # handle recursive sub-dicts
-        for key, val in obj.items():
-            setattr(struc, key, make_struct(val, default, nodefault))
+        # handle recursive sub-dicts and lists
+        for key, val in obj.iteritems():
+            if isinstance(val, (basestring, int, long)):
+                # optimisation saving a functioncall
+                setattr(struc, key, val)
+            else:
+                setattr(struc, key, make_struct(val, default, nodefault))
         return struc
-    elif hasattr(obj, '__delslice__') and hasattr(obj, '__getitem__'):
-        #
-        return [make_struct(v, default, nodefault) for v in obj]
+    elif hasattr(obj, '__getitem__'):
+        # a list
+        ret = []
+        for val in obj:
+            if isinstance(val, (basestring, int, long)):
+                ret.append(val)
+            else:
+                ret.append(make_struct(val, default, nodefault))
+        return ret
+        #return [make_struct(val, default, nodefault) for val in obj]
     else:
         return obj
 
@@ -381,7 +392,16 @@ def indent(elem, level=0):
             elem.tail = i
 
 
-def test():
+def test1():
+    d = make_struct({
+        'item1': 'string',
+        'item2': ['dies', 'ist', 'eine', 'liste'] * 100,
+        'item3': dict(dies=1, ist=2, ein=3, dict=4),
+        'item4': 10,
+        'item5': [dict(dict=1, in_einer=2, liste=3)] * 100})
+    return d
+
+def test2():
     """Simple selftest."""
 
     data = {"guid": "3104247-7",
@@ -396,12 +416,11 @@ def test():
 if __name__ == '__main__':
     import doctest
     import sys
+    import timeit
+    import cProfile
     failure_count, test_count = doctest.testmod()
-    d = make_struct({
-        'item1': 'string',
-        'item2': ['dies', 'ist', 'eine', 'liste'],
-        'item3': dict(dies=1, ist=2, ein=3, dict=4),
-        'item4': 10,
-        'item5': [dict(dict=1, in_einer=2, liste=3)]})
-    test()
+    test1()
+    test2()
+    print timeit.timeit('test1()', setup="from __main__ import test1", number=1000)
+    cProfile.run('test1()')
     sys.exit(failure_count)
