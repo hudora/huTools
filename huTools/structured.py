@@ -5,6 +5,7 @@ structured.py - handle structured data/dicts/objects
 Created by Maximillian Dornseif on 2009-12-27.
 Copyright (c) 2009-2011, 2015 HUDORA. All rights reserved.
 """
+import csv
 import xml.etree.cElementTree as ET
 from StringIO import StringIO
 
@@ -364,6 +365,74 @@ def to_string(root, encoding='utf-8', pretty=False):
         fileobj.write('\n')
     tree.write(fileobj, 'utf-8')
     return fileobj.getvalue()
+
+
+def dict2tabular(items, fieldorder=None):
+    """Converts a dict of dicts to a list of lists."""
+    if not fieldorder:
+        fieldorder = []
+    allfieldnames = set()
+    for item in items.values():
+        allfieldnames.update(item.keys())
+    for fielname in fieldorder:
+        allfieldnames.remove(fielname)
+    fieldorder = fieldorder + list(sorted(allfieldnames))
+    ret = []
+    ret.append(fieldorder)
+    for item in items.values():
+        ret.append([item.get(key, '') for key in fieldorder])
+    return ret
+
+
+def list2tabular(items, fieldorder=None):
+    """Converts a list of dicts to a list of lists."""
+    if not fieldorder:
+        fieldorder = []
+    allfieldnames = set()
+    for item in items:
+        allfieldnames.update(item.keys())
+    for fielname in fieldorder:
+        allfieldnames.remove(fielname)
+    fieldorder = fieldorder + list(sorted(allfieldnames))
+    ret = []
+    ret.append(fieldorder)
+    for item in items:
+        ret.append([item.get(key, '') for key in fieldorder])
+    return ret
+
+def x2tabular(datalist):
+    if hasattr(datalist, 'items'):
+        return dict2tabular(datalist)
+    else:
+        return list2tabular(datalist)
+
+def list2csv(datalist):
+    """Export a list of dicts to CSV."""
+    data = x2tabular(datalist)
+    fileobj = StringIO()
+    csvwriter = csv.writer(fileobj, dialect='excel', delimiter='\t')
+    fixer = lambda row: [unicode(x).encode('utf-8') for x in row]
+    for row in data:
+        csvwriter.writerow(fixer(row))
+    return fileobj.getvalue()
+
+
+def dict2csv(data, datanodename='objects'):
+    return list2csv(data[datanodename])
+
+
+def list2xls(datalist):
+    """Export a list of dicts to XLS."""
+    import structured_xls
+    data = x2tabular(datalist)
+    writer = structured_xls.XLSwriter()
+    for row in data:
+        writer.writerow(row)
+    return writer.getvalue()
+
+
+def dict2xls(data, datanodename='objects'):
+    return list2xls(data[datanodename])
 
 
 # From http://effbot.org/zone/element-lib.htm
