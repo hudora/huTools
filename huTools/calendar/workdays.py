@@ -12,7 +12,7 @@ import doctest
 import unittest
 import sys
 from huTools.calendar.formats import convert_to_date
-from huTools.decorators import memoize
+from huTools.decorators import lru_cache
 
 
 STATIC_GERMAN_HOLIDAYS = ((1, 1),    # Neujahr
@@ -175,7 +175,7 @@ def next_workday_german(startday):
     return next_day
 
 
-@memoize(120)
+@lru_cache(5)
 def previous_workday_german(startday):
     """Returns the workday before startday.
 
