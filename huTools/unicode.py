@@ -2,16 +2,14 @@
 # encoding: utf-8
 
 """
-Copyright (c) 2007 HUDORA GmbH. BSD Licensed.
+Copyright (c) 2007, 2015 HUDORA GmbH. BSD Licensed.
 """
 
 import doctest
+import string
 import sys
 import unicodedata
 from types import StringType
-
-__revision__ = "$Revision$"
-
 
 def deUTF8(data):
     """This is meant to help with utf-8 data appearing where unicode should apperar."""
@@ -58,6 +56,33 @@ def deUmlaut(data):
         raise ValueError('%s: %r' % (msg, data))
     except UnicodeDecodeError, msg:
         raise ValueError('%s: %r' % (msg, data))
+
+
+# from http://stackoverflow.com/questions/561486
+ALPHABET = string.digits + string.ascii_uppercase + string.ascii_lowercase
+ALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(ALPHABET))
+BASE = len(ALPHABET)
+SIGN_CHARACTER = '$'
+
+def num_encode(n):
+    """Convert an integer to an base62 encoded string."""
+    if n < 0:
+        return SIGN_CHARACTER + num_encode(-n)
+    s = []
+    while True:
+        n, r = divmod(n, BASE)
+        s.append(ALPHABET[r])
+        if n == 0: break
+    return u''.join(reversed(s))
+
+def num_decode(s):
+    """Convert the result of num_encode() back to an integer."""
+    if s[0] == SIGN_CHARACTER:
+        return -num_decode(s[1:])
+    n = 0
+    for c in s:
+        n = n * BASE + ALPHABET_REVERSE[c]
+    return n
 
 
 if __name__ == '__main__':
