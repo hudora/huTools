@@ -34,9 +34,9 @@ class XLSwriter(object):
             if isinstance(coldata, (datetime.datetime, datetime.date, datetime.time)):
                 self.sheet.write(self.rownum, col, coldata, datestyle)
             else:
-                if len(coldata) > 8192:
+                if len(unicode(coldata)) > 8192:
                     # übergroße Felder RADIKAL verkürzen
-                    self.sheet.write(self.rownum, col, "%s ..." % coldata[:64])
+                    self.sheet.write(self.rownum, col, "%s ..." % unicode(coldata)[:64])
                 else:
                     self.sheet.write(self.rownum, col, coldata)
             col += 1
