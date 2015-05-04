@@ -62,7 +62,11 @@ def deUmlaut(data):
 ALPHABET = string.digits + string.ascii_uppercase + string.ascii_lowercase
 ALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(ALPHABET))
 BASE = len(ALPHABET)
+SHORTALPHABET = string.digits + string.ascii_uppercase
+SHORTALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(SHORTALPHABET))
+SHORTBASE = len(SHORTALPHABET)
 SIGN_CHARACTER = '$'
+
 
 def num_encode(n):
     """Convert an integer to an base62 encoded string."""
@@ -72,8 +76,10 @@ def num_encode(n):
     while True:
         n, r = divmod(n, BASE)
         s.append(ALPHABET[r])
-        if n == 0: break
+        if n == 0:
+            break
     return u''.join(reversed(s))
+
 
 def num_decode(s):
     """Convert the result of num_encode() back to an integer."""
@@ -84,6 +90,18 @@ def num_decode(s):
         n = n * BASE + ALPHABET_REVERSE[c]
     return n
 
+
+def num_encode_uppercase(n):
+    """Convert an integer to an base36 encoded string."""
+    if n < 0:
+        return SIGN_CHARACTER + num_encode_uppercase(-n)
+    s = []
+    while True:
+        n, r = divmod(n, SHORTBASE)
+        s.append(SHORTALPHABET[r])
+        if n == 0:
+            break
+    return u''.join(reversed(s))
 
 if __name__ == '__main__':
     failure_count, test_count = doctest.testmod()
