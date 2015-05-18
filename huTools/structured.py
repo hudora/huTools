@@ -24,7 +24,7 @@ class Struct(object):
         entries = dict([(str(x), y) for x, y in entries.items()])
         self.__dict__.update(entries)
         self.__default = default
-        self.__nodefault = nodefault
+        self.__nodefault = default is not None or nodefault
 
     def __getattr__(self, name):
         """Emulate Object access.
