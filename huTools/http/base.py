@@ -177,4 +177,5 @@ def json_iterator(url, method='GET', content=None, credentials=None, datanodenam
             if content is None:
                 content = {}
             for key, values in tmp.items():
-                content[key] = values[0]
+                if key != 'cursor_start':
+                    content[key] = values[0]
