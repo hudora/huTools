@@ -1859,6 +1859,8 @@ def _slugify(value):
     From Django's "django/template/defaultfilters.py".
     """
     import unicodedata
+    if isinstance(value, str):
+        value = value.decode('utf-8', 'ignore')
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
