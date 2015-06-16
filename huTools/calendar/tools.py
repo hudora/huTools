@@ -39,11 +39,9 @@ def date_trunc(trtype, timestamp):
     if trtype == "year":
         ret = datetime.datetime(tmp.tm_year, 1, 1)
     elif trtype == "tertial":
-        tertial = int(math.ceil(tmp.tm_mon / 4.0))
-        ret = datetime.datetime(tmp.tm_year, 1 + (tertial - 1) * 4, 1)
+        ret = datetime.datetime(tmp.tm_year, 1 + (get_tertial(timestamp) - 1) * 4, 1)
     elif trtype == "quarter":
-        quarter = int(math.ceil(tmp.tm_mon / 3.0))
-        ret = datetime.datetime(tmp.tm_year, 1 + (quarter - 1) * 3, 1)
+        ret = datetime.datetime(tmp.tm_year, 3 * (get_quarter(timestamp) - 1) + 1, 1)
     elif trtype == "month":
         ret = datetime.datetime(tmp.tm_year, tmp.tm_mon, 1)
     elif trtype == "week":
@@ -64,6 +62,70 @@ def date_trunc(trtype, timestamp):
     if isinstance(timestamp, datetime.datetime):
         return ret
     return ret.date()
+
+
+def get_tertial(date):
+    """
+    Calculates the tertial
+
+    >>> get_tertial(datetime.date(2015, 1, 9))
+    1
+    >>> get_tertial(datetime.datetime(2015, 2, 19))
+    1
+    >>> get_tertial(datetime.date(2015, 3, 9))
+    1
+    >>> get_tertial(datetime.datetime(2015, 4, 20))
+    1
+    >>> get_tertial(datetime.datetime(2015, 5, 4))
+    2
+    >>> get_tertial(datetime.datetime(2015, 6, 11))
+    2
+    >>> get_tertial(datetime.datetime(2015, 7, 22))
+    2
+    >>> get_tertial(datetime.date(2015, 8, 3))
+    2
+    >>> get_tertial(datetime.date(2015, 9, 23))
+    3
+    >>> get_tertial(datetime.datetime(2015, 10, 24))
+    3
+    >>> get_tertial(datetime.date(2015, 11, 11))
+    3
+    >>> get_tertial(datetime.datetime(2015, 12, 6))
+    3
+    """
+    return (date.month - 1) / 4 + 1
+
+
+def get_quarter(date):
+    """
+    Calculates the quarter
+
+    >>> get_quarter(datetime.date(2015, 1, 9))
+    1
+    >>> get_quarter(datetime.datetime(2015, 2, 19))
+    1
+    >>> get_quarter(datetime.date(2015, 3, 9))
+    1
+    >>> get_quarter(datetime.datetime(2015, 4, 20))
+    2
+    >>> get_quarter(datetime.datetime(2015, 5, 4))
+    2
+    >>> get_quarter(datetime.datetime(2015, 6, 11))
+    2
+    >>> get_quarter(datetime.datetime(2015, 7, 22))
+    3
+    >>> get_quarter(datetime.date(2015, 8, 3))
+    3
+    >>> get_quarter(datetime.date(2015, 9, 23))
+    3
+    >>> get_quarter(datetime.datetime(2015, 10, 24))
+    4
+    >>> get_quarter(datetime.date(2015, 11, 11))
+    4
+    >>> get_quarter(datetime.datetime(2015, 12, 6))
+    4
+    """
+    return (date.month - 1) / 3 + 1
 
 
 def get_week(date):
