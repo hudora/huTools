@@ -9,8 +9,9 @@ Copyright (c) 2007, 2015 HUDORA GmbH. All rights reserved.
 import cPickle as pickle
 import functools
 import hashlib
-import time
 import threading
+import time
+
 from _decorator import decorator
 from collections import namedtuple
 from functools import update_wrapper
@@ -164,7 +165,7 @@ def _make_key(args, kwds, typed,
     return _HashedSeq(key)
 
 
-def lru_cache(maxsize=100, typed=False):
+def lru_cache(maxsize=100, typed=False, ttl=None):
     """Least-recently-used cache decorator.
 
     If *maxsize* is set to None, the LRU features are disabled and the cache
@@ -173,6 +174,8 @@ def lru_cache(maxsize=100, typed=False):
     If *typed* is True, arguments of different types will be cached separately.
     For example, f(3.0) and f(3) will be treated as distinct calls with
     distinct results.
+
+    if *ttl* is set, cache entries are only served for `ttl` seconds.
 
     Arguments to the cached function must be hashable.
 
@@ -192,10 +195,12 @@ def lru_cache(maxsize=100, typed=False):
     def decorating_function(user_function):
 
         cache = dict()
+        maxage = dict()                 # stores the timestamp after wich result should be regeneratd
         stats = [0, 0]                  # make statistics updateable non-locally
         HITS, MISSES = 0, 1             # names for the stats fields
         make_key = _make_key
         cache_get = cache.get           # bound method to lookup key or return None
+        maxage_get = maxage.get
         _len = len                      # localize the global len() function
         lock = threading.RLock()                  # because linkedlist updates aren't threadsafe
         root = []                       # root of the circular doubly linked list
@@ -218,10 +223,14 @@ def lru_cache(maxsize=100, typed=False):
                 key = make_key(args, kwds, typed)
                 result = cache_get(key, root)   # root used here as a unique not-found sentinel
                 if result is not root:
-                    stats[HITS] += 1
-                    return result
+                    maxage = maxage_get(key, 0)
+                    if maxage < time.time():
+                        stats[HITS] += 1
+                        return result
                 result = user_function(*args, **kwds)
                 cache[key] = result
+                if ttl:
+                    maxage[key] = int(time.time() + ttl)
                 stats[MISSES] += 1
                 return result
 
@@ -233,18 +242,22 @@ def lru_cache(maxsize=100, typed=False):
                 with lock:
                     link = cache_get(key)
                     if link is not None:
-                        # record recent use of the key by moving it to the front of the list
-                        root, = nonlocal_root
-                        link_prev, link_next, key, result = link
-                        link_prev[NEXT] = link_next
-                        link_next[PREV] = link_prev
-                        last = root[PREV]
-                        last[NEXT] = root[PREV] = link
-                        link[PREV] = last
-                        link[NEXT] = root
-                        stats[HITS] += 1
-                        return result
+                        maxage = maxage_get(key, None)
+                        if maxage < time.time():
+                            # record recent use of the key by moving it to the front of the list
+                            root, = nonlocal_root
+                            link_prev, link_next, key, result = link
+                            link_prev[NEXT] = link_next
+                            link_next[PREV] = link_prev
+                            last = root[PREV]
+                            last[NEXT] = root[PREV] = link
+                            link[PREV] = last
+                            link[NEXT] = root
+                            stats[HITS] += 1
+                            return result
                 result = user_function(*args, **kwds)
+                if ttl:
+                    maxage[key] = int(time.time() + ttl)
                 with lock:
                     root, = nonlocal_root
                     if key in cache:
