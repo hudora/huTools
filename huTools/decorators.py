@@ -165,7 +165,7 @@ def _make_key(args, kwds, typed,
     return _HashedSeq(key)
 
 
-def lru_cache(maxsize=100, typed=False, ttl=None):
+def lru_cache(maxsize=64, typed=False, ttl=None):
     """Least-recently-used cache decorator.
 
     If *maxsize* is set to None, the LRU features are disabled and the cache
