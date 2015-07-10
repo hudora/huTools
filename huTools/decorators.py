@@ -223,7 +223,7 @@ def lru_cache(maxsize=64, typed=False, ttl=None):
                 key = make_key(args, kwds, typed)
                 result = cache_get(key, root)   # root used here as a unique not-found sentinel
                 if result is not root:
-                    if maxage_get(key, 0) < time.time():
+                    if time.time() <= maxage_get(key, 0):
                         stats[HITS] += 1
                         return result
                 result = user_function(*args, **kwds)
@@ -241,7 +241,7 @@ def lru_cache(maxsize=64, typed=False, ttl=None):
                 with lock:
                     link = cache_get(key)
                     if link is not None:
-                        if maxage_get(key, None) < time.time():
+                        if time.time() <= maxage_get(key, None):
                             # record recent use of the key by moving it to the front of the list
                             root, = nonlocal_root
                             link_prev, link_next, key, result = link
