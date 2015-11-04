@@ -162,10 +162,10 @@ Sie ist Voraussetzung für die Lieferscheingenerierung. Ein Kommiauftrag kann nu
   Pflichtfelder in jedem Dictionary sind zur Zeit `guid`, `menge` und `artnr`.
   Zusatzfelder ist `nve` und `referenzen` (siehe Warenzugang), insbesondere `referenzen.charge`.
 
-#### Zusatzfelder pro Rückmeldung
+### Zusatzfelder pro Rückmeldung
 * **nves** - Liste der Versandeinheiten. Enthält pro Versandeiheit ein Dictionary mit Gewicht in Gramm,
   der Art der Versandeinheit, der NVE sowie der von der Spedition verwendeten Sendungsnummer.
-
+* **kundenreferenz_lieferung** - Referenz der Lieferung beim Kunden.
 
 ### Transport
 Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet der Server mit Statuscode 201. Wird eine Rückmeldenachricht für eine Kommiauftragsnr doppelt geschickt, antwortet der Server mit Statuscode 409. Bei einer ungültigen Rückmeldenachricht antwortet der Server mit Statuscode 406.
@@ -176,6 +176,7 @@ Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet
 
     <rueckmeldung>
      <guid>93655290_65aaL11e0_ac31Q6fca6bf88d08</guid>
+     <kundenreferenz_lieferung>PV09031986</kundenreferenz_lieferung>
      <nves>
       <nve>
        <art>Flachpalette</art>
@@ -187,7 +188,7 @@ Die Rückmeldung erfolgt per HTTP POST. Bei erfolgreicher Übertragung antwortet
      <positionen>
         <position>
           <guid>916008efc09116e7a0a2e237dd64c709</guid>
-          <nve>00340406919300289930</nve>
+          <nve>00340406919300289725</nve>
           <menge>16</menge>
           <artnr>74206</artnr>
           <referenzen>

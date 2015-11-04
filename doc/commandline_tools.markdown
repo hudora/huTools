@@ -5,7 +5,7 @@ This guide explains how to write commandline tools for processing data in a repe
 An example would be reading new entries from a database table, sending them out as messages and marking the 
 database rows as `processed`.
 
-Tools should follow the [crash early, crash often][crasearly] design principle.
+Tools should follow the [crash early, crash often][crashearly] design principle.
 
 [crashearly]: http://blogs.23.nu/c0re/offensive-programming-crash-early-crash-often/
 
