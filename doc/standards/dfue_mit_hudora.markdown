@@ -17,7 +17,7 @@ HUDORA Express ist unsere neue Platform zur effizienten Abwicklung von E-Commerc
 
 Aufträge bzw. Bestellungen können im *[Very Simple Order Protocol][1]* an HUDORA geschickt werden. Der Transportweg dazu ist das *[Frugal Message Trasfer Protocol (FMTP)][2]*.
 
-Zur Datenübertragung bekommen Sie von HUDORA einen Benutzernamen (zB `u10001o4bd1a3`), ein Passwort (`DZE3UZVLO4FMOQ`) und einen Endpunkt (zB `https://edihub.hudora.de/SC10001/orders/`) mitgeteilt.
+Zur Datenübertragung bekommen Sie von HUDORA einen Benutzernamen (z.B. `u10001o4bd1a3`), ein Passwort (`DZE3UZVLO4FMOQ`) und einen Endpunkt (zB `https://edihub.hudora.de/SC10001/orders/`) mitgeteilt.
 
 Wie in der Dokumentation zum [Very Simple Order Protocol (FMTP)][1] beschrieben, können auch kundeneigene Lieferscheine übwrtragen werden. Diese Möglichkeit wird im folgenen nicht näher erörtert - es sei hierzu auf die [FMTP][1] Dokumentation verwiesen.
 
